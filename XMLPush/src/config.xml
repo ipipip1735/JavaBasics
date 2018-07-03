@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<websites
+        xmlns:sina="http://www.sina.com"
+        xmlns:baidu="http://www.baidu.com">
+
+    <sina:website sina:blog="blog.sina.com">新浪</sina:website>
+    <baidu:website baidu:blog="hi.baidu.com">百度</baidu:website>
+
+
+</websites>

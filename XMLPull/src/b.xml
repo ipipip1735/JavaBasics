@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<!DOCTYPE aoo  [
+        <!ELEMENT aoo (boo) >
+        <!ELEMENT boo (aentity) >
+        <!ELEMENT aentity      (#PCDATA)>
+        <!ENTITY entity "this is custom entity">
+        ]>
+<!--ddd--><as:aoo as:tt="1" xmlns:as="a.s.cm" />dd&lt;dd&gt;dd

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Annotation/Annotation.iml" filepath="$PROJECT_DIR$/Annotation/Annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AppTemp/AppTemp.iml" filepath="$PROJECT_DIR$/AppTemp/AppTemp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Class/Class.iml" filepath="$PROJECT_DIR$/Class/Class.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Collection/Collection.iml" filepath="$PROJECT_DIR$/Collection/Collection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Concurrent/Concurrent.iml" filepath="$PROJECT_DIR$/Concurrent/Concurrent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/File/File.iml" filepath="$PROJECT_DIR$/File/File.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IO/IO.iml" filepath="$PROJECT_DIR$/IO/IO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Interface/Interface.iml" filepath="$PROJECT_DIR$/Interface/Interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JUnit/JUnit.iml" filepath="$PROJECT_DIR$/JUnit/JUnit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lang/Lang.iml" filepath="$PROJECT_DIR$/Lang/Lang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NIO/NIO.iml" filepath="$PROJECT_DIR$/NIO/NIO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Socket/Socket.iml" filepath="$PROJECT_DIR$/Socket/Socket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Stream/Stream.iml" filepath="$PROJECT_DIR$/Stream/Stream.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Thread/Thread.iml" filepath="$PROJECT_DIR$/Thread/Thread.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Throwable/Throwable.iml" filepath="$PROJECT_DIR$/Throwable/Throwable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XMLPull/XMLPull.iml" filepath="$PROJECT_DIR$/XMLPull/XMLPull.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XMLPush/XMLPush.iml" filepath="$PROJECT_DIR$/XMLPush/XMLPush.iml" />
+    </modules>
+  </component>
+</project>
