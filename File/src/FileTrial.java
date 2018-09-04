@@ -1,35 +1,44 @@
-package dir;
-
 import java.io.File;
-import java.nio.file.Files;
 
 /**
- * Created by Administrator on 2016/11/22.
+ * Created by Administrator on 2018/9/4.
  */
-public class Dir {
-
-
-    private File files = null;
-
+public class FileTrial {
     public static void main(String[] args) {
-
-        Dir dir = new Dir("d:/kk/big");
-
-//        dir.PrintFileName();
-        dir.modifyFileName();
-//        dir.changeFileName();
+        FileTrial fileTrial = new FileTrial();
+        fileTrial.dir();
+//        fileTrial.scanSpace();
 
 
-
-
-
+//        fileTrial.PrintFileName();
+//        fileTrial.modifyFileName();
+//        fileTrial.changeFileName();
     }
 
-    public Dir(String path) {
-        this.files = new File(path);
+    private void dir() {
+//        File file = new File("D:/ki/gg/");
+//        boolean b = file.mkdir();
+//        System.out.println("b is " + b);
+
+
+        File file = new File("D:/ki/gg/");
+        boolean b = file.mkdirs();
+        System.out.println("b is " + b);
     }
+
+    private void scanSpace() {
+        File file = new File("File/res/");
+        long size;
+        size = file.getFreeSpace();
+        System.out.println("Free size is " + size/1024/1024 + "MB");
+        size = file.getTotalSpace();
+        System.out.println("Total size is " + size/1024/1024 + "MB");
+    }
+
+
 
     public void modifyFileName() {
+        File files = new File("d:/kk/big");
 
         int i = 17;
         for (File file : files.listFiles()) {
@@ -44,6 +53,7 @@ public class Dir {
     }
 
     public void changeFileName() {
+        File files = new File("d:/kk/big");
 
         int i = 1;
 
@@ -78,6 +88,7 @@ public class Dir {
     }
 
     public void PrintFileName() {
+        File files = new File("d:/kk/big");
 
         String[] strings = null;
         strings = files.list();

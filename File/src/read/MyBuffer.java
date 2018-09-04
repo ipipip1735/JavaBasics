@@ -18,7 +18,7 @@ public class MyBuffer {
 
     public void quizReadBuffer() throws IOException {
 
-        File file = new File("E:\\Program\\Java\\Intellij\\File\\src\\resource\\a.txt");
+        File file = new File("File/res/a.txt");
         FileInputStream fileInputStream = new FileInputStream(file);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream, 2);
         System.out.println(bufferedInputStream.available());
@@ -45,7 +45,7 @@ public class MyBuffer {
 
     public void quizWriteBuffer() throws IOException {
 
-        FileOutputStream fileOutputStream = new FileOutputStream("E:\\Program\\Java\\Intellij\\File\\src\\resource\\a.txt", false);
+        FileOutputStream fileOutputStream = new FileOutputStream("File/res/a.txt", false);
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream, 1024);
 
     }
@@ -53,7 +53,7 @@ public class MyBuffer {
 
     public void quizFileRead() throws IOException {
 
-        File file = new File("E:\\Program\\Java\\Intellij\\File\\src\\resource\\a.txt");
+        File file = new File("File/res/a.txt");
         FileReader fileReader = new FileReader(file);
 
         char[] chars = new char[1024];

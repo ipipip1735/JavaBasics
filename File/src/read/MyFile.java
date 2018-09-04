@@ -56,7 +56,7 @@ public class MyFile {
 
     public void mFileInputStream() throws Exception {
 
-        File file = new File("File/src/resource/a.txt");
+        File file = new File("File/res/a.txt");
         FileInputStream fileInputStream = new FileInputStream(file);
 
         byte[] b = new byte[fileInputStream.available()];
