@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by Administrator on 2018/9/4.
@@ -6,13 +8,29 @@ import java.io.File;
 public class FileTrial {
     public static void main(String[] args) {
         FileTrial fileTrial = new FileTrial();
-        fileTrial.dir();
+        fileTrial.base();
+//        fileTrial.dir();
 //        fileTrial.scanSpace();
 
 
 //        fileTrial.PrintFileName();
 //        fileTrial.modifyFileName();
 //        fileTrial.changeFileName();
+    }
+
+    private void base() {
+        File file = new File("File/res/", "a.log");
+        System.out.println(file);
+
+        try {
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write("slskdjf".getBytes());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void dir() {
@@ -38,28 +56,28 @@ public class FileTrial {
 
 
     public void modifyFileName() {
-        File files = new File("d:/kk/big");
+        File file = new File("d:/kk/big");
 
         int i = 17;
-        for (File file : files.listFiles()) {
+        for (File f : file.listFiles()) {
 
             String newPath = null;
 
             newPath = "d:/kk/big/" + (i++) + ".jpg";
             System.out.println(newPath);
-            file.renameTo(new File(newPath));
+            f.renameTo(new File(newPath));
         }
 
     }
 
     public void changeFileName() {
-        File files = new File("d:/kk/big");
+        File file = new File("d:/kk/big");
 
         int i = 1;
 
-//        big1.jpg
+
         String[] newPath = null;
-        newPath = files.list();
+        newPath = file.list();
 
         String newFile = null;
 //        for (String s : newPath) {
@@ -71,14 +89,14 @@ public class FileTrial {
 //            System.out.println(s);
 
 
-        for (File file : files.listFiles()) {
+        for (File f : file.listFiles()) {
 
 
-            newFile = file.getName();
+            newFile = f.getName();
             newFile = "d:/big/" + newFile.replace("big", "");
             System.out.println(newFile);
 
-            file.renameTo(new File(newFile));
+            f.renameTo(new File(newFile));
 
         }
 
@@ -88,10 +106,10 @@ public class FileTrial {
     }
 
     public void PrintFileName() {
-        File files = new File("d:/kk/big");
+        File file = new File("d:/kk/big");
 
         String[] strings = null;
-        strings = files.list();
+        strings = file.list();
         System.out.println(strings.length);
 
         for (String s : strings) {
