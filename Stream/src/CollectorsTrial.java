@@ -16,7 +16,7 @@ public class CollectorsTrial {
 
     public static void main(String[] args) {
         CollectorsTrial collectorTrial = new CollectorsTrial();
-//        collectorTrial.join();
+        collectorTrial.join();
 //        collectorTrial.maxBy();
 //        collectorTrial.minBy();
 //        collectorTrial.reducing();
@@ -27,7 +27,7 @@ public class CollectorsTrial {
 //        collectorTrial.toMap();
 //        collectorTrial.groupBy1();
 //        collectorTrial.groupBy2();
-        collectorTrial.mapping();
+//        collectorTrial.mapping();
 
 
     }

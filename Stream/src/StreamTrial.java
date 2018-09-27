@@ -25,7 +25,7 @@ public class StreamTrial {
         //Stateless
 //        streamDemo.filter();
 //        streamDemo.unordered();
-//        streamDemo.map();
+        streamDemo.map();
 //        streamDemo.flatMap();
 //        streamDemo.peek();
 
@@ -40,7 +40,7 @@ public class StreamTrial {
 //        streamDemo.groupBy();
 //        streamDemo.partitioningBy();
 //        streamDemo.collectingAndThen();
-        streamDemo.chain();
+//        streamDemo.chain();
 
 
 
@@ -272,11 +272,11 @@ public class StreamTrial {
 
     public void map() {
 
-//        List<String> list = Arrays.asList("a1", "a2", "a3", "a3");
+        List<String> list = Arrays.asList("a1", "a2", "a3", "a3");
 
-//        Stream stream = list.stream();
-//        stream.map(n -> "String is " + n)
-//                .forEach(System.out::println);
+        Stream stream = list.stream();
+        stream.map(n -> "String is " + n)
+                .forEach(System.out::println);
 
 //        Stream stream = list.stream();
 //        stream.map( n -> new Person((String)n))
