@@ -17,7 +17,7 @@ public class FilesTrial {
         FilesTrial filesTrial = new FilesTrial();
 
 
-//        filesTrial.createFile(); //empty
+//        filesTrial.createFile();
 
 //        filesTrial.writeBytes();
 //        filesTrial.writeLines();
@@ -28,7 +28,8 @@ public class FilesTrial {
 
 
 //        filesTrial.createDir();
-//        filesTrial.walk();
+        filesTrial.walk();
+
 
 //        filesTrial.find();
 //        filesTrial.list();
@@ -39,9 +40,10 @@ public class FilesTrial {
 
 //        filesTrial.states();
 //        filesTrial.attrs();
+//        filesTrial.attrsPosix();
 
         //不同平台下，获取属性视图和属性集
-        filesTrial.basicOS();  //通用文件系统
+//        filesTrial.basicOS();  //通用文件系统
 //        filesTrial.posixOS(); // posix文件系统
 
 
@@ -129,6 +131,7 @@ public class FilesTrial {
             System.out.println("size is " + size + " bytes");
 
 
+            //获取UID
             UserPrincipal userPrincipal = Files.getOwner(path);
             System.out.println("user is " + userPrincipal.getName());
 
@@ -138,6 +141,34 @@ public class FilesTrial {
         }
 
 
+    }
+
+
+    private void attrsPosix() {
+        try {
+
+            Path path = Paths.get("d:/aa.txt");
+            UserPrincipalLookupService lookupService =
+                    FileSystems.getDefault().getUserPrincipalLookupService();
+            UserPrincipal userPrincipal = lookupService.lookupPrincipalByName("root");
+            Files.setOwner(path, userPrincipal);
+
+
+            //获取GID
+//            PosixFileAttributes posixFileAttributes =
+//                    Files.readAttributes(path, PosixFileAttributes.class);
+//            GroupPrincipal groupPrincipal = posixFileAttributes.group();
+//            System.out.println(groupPrincipal.getName());
+
+            //设置GID
+//            GroupPrincipal groupPrincipal = lookupService.lookupPrincipalByGroupName("root");
+//            PosixFileAttributeView posixFileAttributeView =
+//                    Files.getFileAttributeView(path, PosixFileAttributeView.class);
+//            posixFileAttributeView.setGroup(groupPrincipal);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -164,9 +195,7 @@ public class FilesTrial {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-
-
+//
 
 
         try {
@@ -174,6 +203,7 @@ public class FilesTrial {
             PosixFileAttributes posixFileAttributes =
                     Files.readAttributes(path, PosixFileAttributes.class);
 
+            //从父类BasicFileAttributes接口继承
             System.out.println("creationTime is " + posixFileAttributes.creationTime());
             System.out.println("fileKey is " + posixFileAttributes.fileKey());
             System.out.println("isDirectory is " + posixFileAttributes.isDirectory());
@@ -183,6 +213,12 @@ public class FilesTrial {
             System.out.println("lastAccessTime is " + posixFileAttributes.lastAccessTime());
             System.out.println("lastModifiedTime is " + posixFileAttributes.lastModifiedTime());
             System.out.println("size is " + posixFileAttributes.size());
+
+            //PosixFileAttribute接口独有
+            System.out.println("group is " + posixFileAttributes.group());
+            System.out.println("owner is " + posixFileAttributes.owner());
+            System.out.println("permissions is " + posixFileAttributes.permissions());
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -303,16 +339,18 @@ public class FilesTrial {
         try {
             Path path = Paths.get("d:/aa");
 
-            //创建访问权限
+            //创建权限
             Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rw-rw-rw-");
-            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
+
+            //封装权限
+            FileAttribute<Set<PosixFilePermission>> attr =
+                    PosixFilePermissions.asFileAttribute(perms);
 
             Files.createFile(path, attr);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
