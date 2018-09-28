@@ -53,31 +53,38 @@ public class FilesTrial {
     private void walk() {
         Path start = Paths.get("d:/oo");
 
-        FileVisitor fileVisitor = new FileVisitor() {
+        FileVisitor fileVisitor = new FileVisitor<Path>() {
 
             @Override
-            public FileVisitResult preVisitDirectory(Object dir, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 System.out.println("~~preVisitDirectory~~");
                 System.out.println("dir is " + dir);
+                if (dir.compareTo(Paths.get("d:\\oo\\kc")) == 0) {
+                    return FileVisitResult.SKIP_SIBLINGS;
+                } else
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult visitFile(Object file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 System.out.println("~~visitFile~~");
                 System.out.println("file is " + file);
-                return FileVisitResult.CONTINUE;
+//                    if (file.compareTo(Paths.get("d:\\oo\\kc")) == 0) {
+//                    System.out.println("*************");
+//                    return FileVisitResult.SKIP_SIBLINGS;
+//                } else
+                    return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult visitFileFailed(Object file, IOException exc) throws IOException {
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
                 System.out.println("~~visitFileFailed~~");
                 System.out.println("file is " + file);
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Object dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 System.out.println("~~postVisitDirectory~~");
                 System.out.println("dir is " + dir);
                 return FileVisitResult.CONTINUE;
