@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
@@ -28,7 +29,9 @@ public class FilesTrial {
 
 
 //        filesTrial.createDir();
-        filesTrial.walk();
+        filesTrial.createDirStream();
+
+//        filesTrial.walk();
 
 
 //        filesTrial.find();
@@ -62,7 +65,7 @@ public class FilesTrial {
                 if (dir.compareTo(Paths.get("d:\\oo\\kc")) == 0) {
                     return FileVisitResult.SKIP_SIBLINGS;
                 } else
-                return FileVisitResult.CONTINUE;
+                    return FileVisitResult.CONTINUE;
             }
 
             @Override
@@ -73,7 +76,7 @@ public class FilesTrial {
 //                    System.out.println("*************");
 //                    return FileVisitResult.SKIP_SIBLINGS;
 //                } else
-                    return FileVisitResult.CONTINUE;
+                return FileVisitResult.CONTINUE;
             }
 
             @Override
@@ -112,6 +115,22 @@ public class FilesTrial {
             Path path = Paths.get("d:/oo/tt");
             Files.createDirectories(path);
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void createDirStream() {
+        try {
+            Path dir = Paths.get("d:/aa/");
+            DirectoryStream<Path> directoryStream = Files.
+                    newDirectoryStream(dir, "glob:*.txt");
+            directoryStream.forEach(path -> {
+                System.out.println("~path~");
+                System.out.println(path);
+            });
 
         } catch (IOException e) {
             e.printStackTrace();
