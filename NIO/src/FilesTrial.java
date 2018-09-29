@@ -28,8 +28,8 @@ public class FilesTrial {
 
 
 //        filesTrial.createDir();
-        filesTrial.createDirStream();
-        filesTrial.walk();
+//        filesTrial.walk();
+        filesTrial.directoryStream();
 
 
 //        filesTrial.find();
@@ -47,7 +47,6 @@ public class FilesTrial {
 //        filesTrial.basicOS();  //通用文件系统
 //        filesTrial.posixOS(); // posix文件系统
 
-        filesTrial.directoryStream();
 
 
     }
@@ -55,25 +54,26 @@ public class FilesTrial {
     private void directoryStream() {
 
         try {
+//            Path dir = Paths.get("D:\\oo");
+//            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir, p -> {
+//                if (p.getFileName().endsWith("kd")) return false;
+//                return true;
+//            });
+//
+//
+//            directoryStream.forEach(path -> {
+//                System.out.println(path);
+//            });
+
+
             Path dir = Paths.get("D:\\oo");
-            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir, p -> {
-                if (p.getFileName().endsWith("kd")) return false;
-                return true;
-            });
+            DirectoryStream<Path> directoryStream =
+                    Files.newDirectoryStream(dir, "{aa,bb}.txt");
 
 
             directoryStream.forEach(path -> {
                 System.out.println(path);
             });
-
-
-//            Path dir = Paths.get("D:\\oo");
-//            DirectoryStream<Path> directoryStream =
-//                    Files.newDirectoryStream(dir, "{a*,*.txt}");
-//
-//            directoryStream.forEach(path -> {
-//                System.out.println(path);
-//            });
 
 
         } catch (IOException e) {
@@ -94,7 +94,7 @@ public class FilesTrial {
                 if (dir.compareTo(Paths.get("d:\\oo\\kc")) == 0) {
                     return FileVisitResult.SKIP_SIBLINGS;
                 } else
-                return FileVisitResult.CONTINUE;
+                    return FileVisitResult.CONTINUE;
             }
 
             @Override
@@ -105,7 +105,7 @@ public class FilesTrial {
 //                    System.out.println("*************");
 //                    return FileVisitResult.SKIP_SIBLINGS;
 //                } else
-                    return FileVisitResult.CONTINUE;
+                return FileVisitResult.CONTINUE;
             }
 
             @Override
@@ -144,22 +144,6 @@ public class FilesTrial {
             Path path = Paths.get("d:/oo/tt");
             Files.createDirectories(path);
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void createDirStream() {
-        try {
-            Path dir = Paths.get("d:/aa/");
-            DirectoryStream<Path> directoryStream = Files.
-                    newDirectoryStream(dir, "glob:*.txt");
-            directoryStream.forEach(path -> {
-                System.out.println("~path~");
-                System.out.println(path);
-            });
 
         } catch (IOException e) {
             e.printStackTrace();
