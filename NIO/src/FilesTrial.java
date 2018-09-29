@@ -1,5 +1,9 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.ArrayList;
@@ -19,6 +23,10 @@ public class FilesTrial {
 
 //        filesTrial.createFile();
 
+//        filesTrial.writeBuffer();
+
+        filesTrial.SeekableByteChannel();
+
 //        filesTrial.writeBytes();
 //        filesTrial.writeLines();
 
@@ -29,7 +37,7 @@ public class FilesTrial {
 
 //        filesTrial.createDir();
 //        filesTrial.walk();
-        filesTrial.directoryStream();
+//        filesTrial.directoryStream();
 
 
 //        filesTrial.find();
@@ -48,7 +56,93 @@ public class FilesTrial {
 //        filesTrial.posixOS(); // posix文件系统
 
 
+    }
 
+    private void SeekableByteChannel() {
+
+        try {
+
+            //读一个字节
+//            Path path = Paths.get("NIO/res/tt");
+//            SeekableByteChannel seekableByteChannel =
+//                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.READ);
+//            seekableByteChannel.position(0);
+//            ByteBuffer buffer = ByteBuffer.allocate(3);
+//            seekableByteChannel.read(buffer);
+//            buffer.flip();
+//            System.out.println(buffer.get());
+
+
+
+            //读所有字节
+//            Path path = Paths.get("NIO/res/tt");
+//            SeekableByteChannel seekableByteChannel =
+//                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.READ);
+//            ByteBuffer buffer = ByteBuffer.allocate(3);
+//            while (seekableByteChannel.read(buffer) != -1) {
+//                System.out.println("file'posistion is " + seekableByteChannel.position());
+//                buffer.flip();
+//                while (buffer.hasRemaining()) {
+//                    System.out.println(buffer.get());
+//                }
+//                buffer.clear();
+//            }
+
+
+            //截断文件内容
+//            Path path = Paths.get("NIO/res/tt");
+//            SeekableByteChannel seekableByteChannel =
+//                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+//            System.out.println(seekableByteChannel.size());
+//            seekableByteChannel.position(2).truncate(3);
+//
+//            System.out.println(seekableByteChannel.position());
+//            System.out.println(seekableByteChannel.size());
+
+
+            //写文件
+            Path path = Paths.get("NIO/res/tt");
+            SeekableByteChannel seekableByteChannel =
+                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+            ByteBuffer buffer = ByteBuffer.allocate(10);
+
+            buffer.putChar('a');
+            buffer.putChar('b');
+            buffer.putChar('c');
+            buffer.rewind();
+            seekableByteChannel.write(buffer);
+
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeBuffer() {
+        try {
+
+            Path path = Paths.get("d:\\oo\\ak");
+            BufferedWriter bufferedWriter = Files.newBufferedWriter(path,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE);
+
+
+            bufferedWriter.write("aaaaaaaa");
+            bufferedWriter.newLine();
+            bufferedWriter.append("bbbbbb")
+                    .append("cccccc")
+                    .append("ddddd");
+
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void directoryStream() {
