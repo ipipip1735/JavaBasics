@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
@@ -30,8 +29,7 @@ public class FilesTrial {
 
 //        filesTrial.createDir();
         filesTrial.createDirStream();
-
-//        filesTrial.walk();
+        filesTrial.walk();
 
 
 //        filesTrial.find();
@@ -49,7 +47,38 @@ public class FilesTrial {
 //        filesTrial.basicOS();  //通用文件系统
 //        filesTrial.posixOS(); // posix文件系统
 
+        filesTrial.directoryStream();
 
+
+    }
+
+    private void directoryStream() {
+
+        try {
+            Path dir = Paths.get("D:\\oo");
+            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir, p -> {
+                if (p.getFileName().endsWith("kd")) return false;
+                return true;
+            });
+
+
+            directoryStream.forEach(path -> {
+                System.out.println(path);
+            });
+
+
+//            Path dir = Paths.get("D:\\oo");
+//            DirectoryStream<Path> directoryStream =
+//                    Files.newDirectoryStream(dir, "{a*,*.txt}");
+//
+//            directoryStream.forEach(path -> {
+//                System.out.println(path);
+//            });
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -65,7 +94,7 @@ public class FilesTrial {
                 if (dir.compareTo(Paths.get("d:\\oo\\kc")) == 0) {
                     return FileVisitResult.SKIP_SIBLINGS;
                 } else
-                    return FileVisitResult.CONTINUE;
+                return FileVisitResult.CONTINUE;
             }
 
             @Override
@@ -76,7 +105,7 @@ public class FilesTrial {
 //                    System.out.println("*************");
 //                    return FileVisitResult.SKIP_SIBLINGS;
 //                } else
-                return FileVisitResult.CONTINUE;
+                    return FileVisitResult.CONTINUE;
             }
 
             @Override
