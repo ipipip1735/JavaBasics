@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -470,22 +471,54 @@ public class FilesTrial {
     private void readBuffer() {
 
 
-        try {
 
+        try {
             Path path = Paths.get("NIO/res/", "sql.log");
-            Charset charset = Charset.forName("UTF-8");
-            BufferedReader bufferedReader = Files.newBufferedReader(path, charset);
-            String r;
-            while ((r = bufferedReader.readLine()) != null){
-                System.out.println(r);
+            System.out.println("path is " + path);
+
+            BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+
+
+            StringBuilder stringBuilder = new StringBuilder(128);
+            CharBuffer buffer = CharBuffer.allocate(1024);
+            while (bufferedReader.read(buffer) != -1) {
+
+                buffer.flip();
+                while (buffer.hasRemaining()) {
+                    stringBuilder.append(buffer.get());
+                }
+                buffer.clear();
             }
+
             bufferedReader.close();
 
-
+            System.out.println(stringBuilder.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
+
+//        try {
+//
+//            Path path = Paths.get("NIO/res/", "sql.log");
+//            Charset charset = Charset.forName("UTF-8");
+//            BufferedReader bufferedReader = Files.newBufferedReader(path, charset);
+//            StringBuilder stringBuilder = new StringBuilder(1024);
+//            String r;
+//            while ((r = bufferedReader.readLine()) != null){
+//                stringBuilder.append(r + "\n");
+//            }
+//            bufferedReader.close();
+//            System.out.println(stringBuilder.toString());
+//
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
