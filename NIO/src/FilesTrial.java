@@ -1,3 +1,4 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -23,15 +24,16 @@ public class FilesTrial {
 
 //        filesTrial.createFile();
 
-//        filesTrial.writeBuffer();
 
-        filesTrial.SeekableByteChannel();
+//        filesTrial.SeekableByteChannel();
 
 //        filesTrial.writeBytes();
 //        filesTrial.writeLines();
+//        filesTrial.writeBuffer();
 
 //        filesTrial.readBytes();
 //        filesTrial.readLines();
+        filesTrial.readBuffer();
 //        filesTrial.readStream();
 
 
@@ -57,6 +59,7 @@ public class FilesTrial {
 
 
     }
+
 
     private void SeekableByteChannel() {
 
@@ -122,28 +125,7 @@ public class FilesTrial {
         }
     }
 
-    private void writeBuffer() {
-        try {
 
-            Path path = Paths.get("d:\\oo\\ak");
-            BufferedWriter bufferedWriter = Files.newBufferedWriter(path,
-                    StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.WRITE);
-
-
-            bufferedWriter.write("aaaaaaaa");
-            bufferedWriter.newLine();
-            bufferedWriter.append("bbbbbb")
-                    .append("cccccc")
-                    .append("ddddd");
-
-            bufferedWriter.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void directoryStream() {
 
@@ -256,7 +238,7 @@ public class FilesTrial {
 
 
     private void attrs() {
-        Path path = Paths.get("File/res/", "sql.log");
+        Path path = Paths.get("NIO/res/", "sql.log");
         Charset charset = Charset.forName("UTF-8");
 
         try {
@@ -446,7 +428,7 @@ public class FilesTrial {
 
         try {
 
-            Path startPath = Paths.get("File/res/");
+            Path startPath = Paths.get("NIO/res/");
             Charset charset = Charset.forName("UTF-8");
             Stream<Path> pathStream = Files.find(startPath, 2,
                     (path, attrs) -> {
@@ -487,9 +469,32 @@ public class FilesTrial {
     }
 
 
+    private void readBuffer() {
+
+
+        try {
+
+            Path path = Paths.get("NIO/res/", "sql.log");
+            Charset charset = Charset.forName("UTF-8");
+            BufferedReader bufferedReader = Files.newBufferedReader(path, charset);
+            String r;
+            while ((r = bufferedReader.readLine()) != null){
+                System.out.println(r);
+            }
+            bufferedReader.close();
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private void readStream() {
 
-        Path path = Paths.get("File/res/", "stream");
+        Path path = Paths.get("NIO/res/", "stream");
         Charset charset = Charset.forName("UTF-8");
 
 
@@ -505,7 +510,7 @@ public class FilesTrial {
 
 
     private void readLines() {
-        Path path = Paths.get("File/res/", "sql.log");
+        Path path = Paths.get("NIO/res/", "sql.log");
         Charset charset = Charset.forName("UTF-8");
 
         try {
@@ -516,12 +521,12 @@ public class FilesTrial {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+
+
     private void readBytes() {
-        Path path = Paths.get("File/res/", "sql.log");
+        Path path = Paths.get("NIO/res/", "sql.log");
 
         try {
             byte[] bytes = Files.readAllBytes(path);
@@ -534,17 +539,19 @@ public class FilesTrial {
     }
 
     private void writeLines() {
-        Path path = Paths.get("File/res/", "sql.log");
-
-        ArrayList<String> lines = new ArrayList<>();
-        String sql = "SELECT * FROM Car;";
-        lines.add(sql);
-        lines.add(sql);
-        Charset charset = Charset.forName("UTF-8");
 
         try {
+
+            Path path = Paths.get("NIO/res/", "sql.log");
+
+            ArrayList<String> lines = new ArrayList<>();
+            String sql = "SELECT * FROM Car;";
+            lines.add(sql);
+            lines.add(sql);
+            Charset charset = Charset.forName("UTF-8");
             Files.write(path, lines, charset,
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -552,11 +559,35 @@ public class FilesTrial {
     }
 
     private void writeBytes() {
-        Path path = Paths.get("File/res/", "sql.log");
-        String sql = "SELECT * FROM Car;\n";
+        Path path = Paths.get("NIO/res/", "sql.log");
+        String sql = "UPDATE Car SET name = 'chris' WHERE id = 1;\n";
         try {
-            Files.write(path, sql.getBytes(),
+            path = Files.write(path, sql.getBytes(),
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+            System.out.println(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeBuffer() {
+        try {
+
+            Path path = Paths.get("d:\\oo\\ak");
+            BufferedWriter bufferedWriter = Files.newBufferedWriter(path,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE);
+
+
+            bufferedWriter.write("aaaaaaaa");
+            bufferedWriter.newLine();
+            bufferedWriter.append("bbbbbb")
+                    .append("cccccc")
+                    .append("ddddd");
+
+            bufferedWriter.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
