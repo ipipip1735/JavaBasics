@@ -1,0 +1,3 @@
+UPDATE Car SET name = 'chris' WHERE id = 1;
+SELECT * FROM Car;
+SELECT * FROM Car;
