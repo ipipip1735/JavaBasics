@@ -8,11 +8,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
+import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
@@ -34,12 +33,13 @@ public class FilesTrial {
 
 //        filesTrial.readBytes();
 //        filesTrial.readLines();
-        filesTrial.readBuffer();
+//        filesTrial.readBuffer();
 //        filesTrial.readStream();
 
 
 //        filesTrial.createDir();
-//        filesTrial.walk();
+        filesTrial.walk();
+//        filesTrial.tree();
 //        filesTrial.directoryStream();
 
 
@@ -75,7 +75,6 @@ public class FilesTrial {
 //            seekableByteChannel.read(buffer);
 //            buffer.flip();
 //            System.out.println(buffer.get());
-
 
 
             //读所有字节
@@ -118,12 +117,10 @@ public class FilesTrial {
             seekableByteChannel.write(buffer);
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 
     private void directoryStream() {
@@ -150,6 +147,19 @@ public class FilesTrial {
                 System.out.println(path);
             });
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void tree() {
+        Path start = Paths.get("d:/oo");
+        try {
+
+            Stream<Path> pathStream = Files.walk(start, 1);
+            pathStream.forEach(path -> System.out.println(path));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,7 +209,30 @@ public class FilesTrial {
         };
 
         try {
-            Files.walkFileTree(start, fileVisitor);
+            //方法一
+//            Files.walkFileTree(start, fileVisitor);
+
+            //方法二
+            Files.walkFileTree(start,
+                    EnumSet.noneOf(FileVisitOption.class), 3,
+                    new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    System.out.println("dir is " + dir);
+                    System.out.println("dir'size is " + attrs.size());
+                    return super.preVisitDirectory(dir, attrs);
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    System.out.println("file is " + file);
+                    System.out.println("size is " + attrs.size());
+
+
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -471,7 +504,6 @@ public class FilesTrial {
     private void readBuffer() {
 
 
-
         try {
             Path path = Paths.get("NIO/res/", "sql.log");
             System.out.println("path is " + path);
@@ -497,8 +529,6 @@ public class FilesTrial {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
 
 //        try {
@@ -553,7 +583,6 @@ public class FilesTrial {
             e.printStackTrace();
         }
     }
-
 
 
     private void readBytes() {
