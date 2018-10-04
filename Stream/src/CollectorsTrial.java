@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,10 +17,10 @@ public class CollectorsTrial {
 
     public static void main(String[] args) {
         CollectorsTrial collectorTrial = new CollectorsTrial();
-        collectorTrial.join();
+//        collectorTrial.join();
 //        collectorTrial.maxBy();
 //        collectorTrial.minBy();
-//        collectorTrial.reducing();
+        collectorTrial.reducing();
 //        collectorTrial.summingInt();
 //        collectorTrial.summarizingInt();
 //        collectorTrial.averagingInt();
@@ -28,11 +29,76 @@ public class CollectorsTrial {
 //        collectorTrial.groupBy1();
 //        collectorTrial.groupBy2();
 //        collectorTrial.mapping();
+//        collectorTrial.filtering();
+//        collectorTrial.flatMapping();
 
 
     }
 
+    private void filtering() {
+        //简单例子，过滤小于12岁的人
+//        List<Person> result = this.list.stream()
+//                .collect(Collectors.filtering(p -> p.getAge()>12, Collectors.toList()));
+//        System.out.println(result);
 
+
+        //高级例子，配合groupingBy()一起使用
+        Map<String, List<Person>> result = this.list.stream()
+                .collect(Collectors.groupingBy(Person::getName,
+                        Collectors.filtering(p -> p.getAge() > 12,
+                                Collectors.toList())));
+        System.out.println(result);
+
+    }
+
+    private void flatMapping() {
+
+        //简单例子
+//        List<List<Integer>> lists = new ArrayList<>();
+//        lists.addr(Arrays.asList(Integer.valueOf(11), Integer.valueOf(34), Integer.valueOf(21)));
+//        lists.addr(Arrays.asList(Integer.valueOf(3), Integer.valueOf(2)));
+//        List<Integer> list = lists.stream()
+//                .collect(Collectors.flatMapping(l -> l.stream().filter(o -> o > 15),
+//                        Collectors.toList()));
+//        System.out.println(list);
+
+
+        //简单例子，使用size分类
+//        Map<Integer, List<Integer>> map =
+//                Stream.of(List.of(1, 2, 3, 4, 5, 6), List.of(7, 8, 9, 10))
+//                        .collect(
+//                                Collectors.groupingBy(
+//                                        Collection::size,
+//                                        Collectors.flatMapping(
+//                                                l -> l.stream()
+//                                                        .filter(i -> i % 2 == 0),
+//                                                Collectors.toList())
+//                                )
+//                        );
+//        System.out.println(map);
+
+
+        //高级例子，介绍flatMapping()正真的力量
+        Map<Integer, Set<String>> result =
+                Stream.of(
+                        new Family(1, Arrays.asList("aa", "tom", "bob")),
+                        new Family(1, Arrays.asList("aa", "sam")),
+                        new Family(2, Arrays.asList("aa", "chris", "jone", "anna")))
+                        .collect(
+                                Collectors.groupingBy(Family::getAddr,
+                                        Collectors.flatMapping(f ->
+                                                        f.getPerson().
+                                                                stream().
+                                                                filter(i -> i != "aa"),
+                                                Collectors.toSet()
+                                        )
+                                )
+                        );
+
+        System.out.println(result);
+
+
+    }
 
 
     private void mapping() {
@@ -45,21 +111,13 @@ public class CollectorsTrial {
     }
 
 
-
-
     private void groupBy1() {
         Map<String, Integer> map = this.list.stream()
                 .collect(Collectors.groupingBy(Person::getName,
                         Collectors.summingInt(Person::getAge)));
 
-        for (String name : map.keySet()) {
-            System.out.println(">>" + name + "<<");
-            System.out.println(map.get(name));
-        }
+        System.out.println(map);
     }
-
-
-
 
 
     private void groupBy2() {
@@ -68,22 +126,10 @@ public class CollectorsTrial {
                 .collect(Collectors.groupingBy(Person::getName,
                         Collectors.groupingBy(Person::getAge)));
 
-        for (String name : map.keySet()) {
-            System.out.println("------" + name + "-------");
-
-            for (Integer i : map.get(name).keySet()) {
-                System.out.println("***" + i + "***");
-                for (Person p : map.get(name).get(i)) {
-                    System.out.println(p);
-                }
-            }
-        }
+        System.out.println(map);
 
 
     }
-
-
-
 
 
     private void toMap() {
@@ -99,7 +145,6 @@ public class CollectorsTrial {
     }
 
 
-
     private void toList() {
         List<Person> result = list.stream().collect(Collectors.toList());
 
@@ -110,9 +155,6 @@ public class CollectorsTrial {
     }
 
 
-
-
-
     private void averagingInt() {
 
         double result = list.stream().collect(Collectors.averagingInt(o -> o.age));
@@ -121,8 +163,6 @@ public class CollectorsTrial {
 
 
     }
-
-
 
 
     private void summarizingInt() {
@@ -138,8 +178,6 @@ public class CollectorsTrial {
     }
 
 
-
-
     private void summingInt() {
         int result = list.stream().collect(Collectors.summingInt(o -> o.age));
         System.out.println(result);
@@ -147,15 +185,26 @@ public class CollectorsTrial {
 
     private void reducing() {
 
-        Optional<Person> result = list.stream().collect(Collectors.reducing((p1, p2) -> {
-            System.out.println("p1 is " + p1);
-            System.out.println("p2 is " + p2);
-            return p1;
-        }));
+        //最简例子
+//        Optional<Person> result = list.stream().collect(Collectors.reducing((p1, p2) -> {
+//            System.out.println("p1 is " + p1);
+//            System.out.println("p2 is " + p2);
+//            return p1;
+//        }));
+//        System.out.println(">>" + result.get());
 
-        System.out.println(">>" + result.get());
+        //高级例子，先映射
+        int result = list.stream().collect(
+                Collectors.reducing(1, Person::getAge,
+                        (p1, p2) -> {
+                            System.out.println("p1 is " + p1);
+                            System.out.println("p2 is " + p2);
+                            return p1 + p2;
+                        }));
+        System.out.println(result);
+
+
     }
-
 
 
     private void minBy() {
@@ -165,7 +214,6 @@ public class CollectorsTrial {
         Optional<Integer> result = stream.collect(Collectors.minBy(Integer::compareTo));
         System.out.println(">>" + result.get());
     }
-
 
 
     private void maxBy() {
@@ -181,7 +229,6 @@ public class CollectorsTrial {
         System.out.println(">>" + result.get());
 
     }
-
 
 
     public void join() {
