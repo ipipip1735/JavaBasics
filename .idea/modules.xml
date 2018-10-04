@@ -17,6 +17,7 @@
       <module fileurl="file://$PROJECT_DIR$/Stream/Stream.iml" filepath="$PROJECT_DIR$/Stream/Stream.iml" />
       <module fileurl="file://$PROJECT_DIR$/Thread/Thread.iml" filepath="$PROJECT_DIR$/Thread/Thread.iml" />
       <module fileurl="file://$PROJECT_DIR$/Throwable/Throwable.iml" filepath="$PROJECT_DIR$/Throwable/Throwable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Util/Util.iml" filepath="$PROJECT_DIR$/Util/Util.iml" />
       <module fileurl="file://$PROJECT_DIR$/XMLPull/XMLPull.iml" filepath="$PROJECT_DIR$/XMLPull/XMLPull.iml" />
       <module fileurl="file://$PROJECT_DIR$/XMLPush/XMLPush.iml" filepath="$PROJECT_DIR$/XMLPush/XMLPush.iml" />
     </modules>
