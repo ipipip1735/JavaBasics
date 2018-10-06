@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 public class MyThrowable extends Throwable {
 
     public MyThrowable() {
-        super();
+//        super();
         System.out.println("  ------------  MyThrowable   MyThrowable0  ------------  ");
     }
 

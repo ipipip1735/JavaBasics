@@ -1,6 +1,6 @@
 import java.util.*;
-        import java.util.stream.Collectors;
-        import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Administrator on 2017/9/20.
@@ -25,8 +25,8 @@ public class StreamTrial {
         //Stateless
 //        streamDemo.filter();
 //        streamDemo.unordered();
-        streamDemo.map();
-//        streamDemo.flatMap();
+//        streamDemo.map();
+        streamDemo.flatMap();
 //        streamDemo.peek();
 
 
@@ -41,7 +41,6 @@ public class StreamTrial {
 //        streamDemo.partitioningBy();
 //        streamDemo.collectingAndThen();
 //        streamDemo.chain();
-
 
 
     }
@@ -64,7 +63,7 @@ public class StreamTrial {
                 .stream()
                 .mapToDouble(Employee::getIncome)
                 .sum();
-        System.out.println("Total Income:  "  + totalIncome);
+        System.out.println("Total Income:  " + totalIncome);
     }
 
     private void collectingAndThen() {
@@ -131,7 +130,7 @@ public class StreamTrial {
 //        List<String> names = Employee.persons()
 //                .stream()
 //                .map(Employee::getName)
-//                .collect(ArrayList::new,  ArrayList::add, ArrayList::addAll);
+//                .collect(ArrayList::new,  ArrayList::addr, ArrayList::addAll);
 //        System.out.println(names);
 //    }
 
@@ -243,7 +242,7 @@ public class StreamTrial {
         Stream stream = list.stream();
         stream.filter(s -> {
             System.out.println("filter: " + s);
-            if(s == "a2") {
+            if (s == "a2") {
                 return false;
             }
             return true;
@@ -288,9 +287,16 @@ public class StreamTrial {
 
     public void flatMap() {
 
-        Stream.of("XML", "Java", "CSS")
-                .map(name -> Stream.of(name, name))
-                .forEach(System.out::println);
+        List<String> line = Arrays.asList(
+                "I am a boy -",
+                "I love you -",
+                "I want to be a scientist -"
+        );
+
+        line.stream()
+                .flatMap(string -> Stream.of(string.split(" +"))
+                        .filter(s -> !s.equals("-")))
+                .forEach(r -> System.out.println(r));
 
     }
 
@@ -312,7 +318,6 @@ public class StreamTrial {
                         Collectors.groupingBy(Object::hashCode,
                                 Collectors.toList())));
         System.out.println(names.keySet());
-
 
 
     }

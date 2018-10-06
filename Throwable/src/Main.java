@@ -1,8 +1,5 @@
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.instrument.IllegalClassFormatException;
 
 /**
  * Created by Administrator on 2017/5/22.
@@ -30,7 +27,7 @@ public class Main {
     public void read() throws IOException {
 
         try (
-                FileReader fileReaderA = new FileReader("a.txt");
+                FileReader fileReaderA = new FileReader("res/a.txt");
                 FileReader fileReaderB = new FileReader("b.txt");
                 FileReader fileReaderC = new FileReader("c.txt")
 
