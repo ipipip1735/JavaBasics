@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.*;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -20,20 +21,49 @@ public class FileChannelTrial {
         FileChannelTrial fileChannel = new FileChannelTrial();
 
         //基本使用
-        fileChannel.createChannel();
-        fileChannel.createChannelFromInputStream();
-        fileChannel.createChannelFromOutputStream();
-        fileChannel.createChannelFromRandomAccessFile();
+//        fileChannel.createChannel();
+//        fileChannel.createChannelFromInputStream();
+//        fileChannel.createChannelFromOutputStream();
+//        fileChannel.createChannelFromRandomAccessFile();
+
+        fileChannel.read();
 
 
-
-        fileChannel.force(); //强制同步
-        fileChannel.mapped();//内存映射
-        fileChannel.transfer();//位传送
+//        fileChannel.force(); //强制同步
+//        fileChannel.mapped();//内存映射
+//        fileChannel.transfer();//位传送
 
 
     }
 
+    private void read() {
+
+        try {
+
+            RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
+            FileChannel fileChannel = file.getChannel();
+            System.out.println("position is " + fileChannel.position());
+
+
+            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
+            fileChannel.read(byteBuffer, 3);
+            byteBuffer.rewind();
+            while (byteBuffer.hasRemaining()) {
+                System.out.println(byteBuffer.get());
+            }
+
+
+            System.out.println("position is " + fileChannel.position());
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
     private void transfer() {
