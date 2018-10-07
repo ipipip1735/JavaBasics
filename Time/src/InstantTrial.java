@@ -1,4 +1,7 @@
 import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.ValueRange;
 
 /**
  * Created by Administrator on 2018/10/5.
@@ -9,10 +12,46 @@ public class InstantTrial {
         InstantTrial instantTrial = new InstantTrial();
 //        instantTrial.constructor();
 //        instantTrial.compare();
-//        instantTrial.zone();
+        instantTrial.zone();
 //        instantTrial.offset();
+//        instantTrial.with();
 //        instantTrial.gets();
-        instantTrial.minus();
+//        instantTrial.minus();
+//        instantTrial.range();
+
+    }
+
+    private void with() {
+
+        Instant instant = Instant.now();
+
+//        Duration duration = Duration.ofSeconds(10);
+//        Instant i = Instant.
+//        instant.with()
+    }
+
+    private void range() {
+        ValueRange valueRange;
+        Instant instant = Instant.now();
+        System.out.println("instant is " + instant);
+
+        valueRange = instant.range(ChronoField.NANO_OF_SECOND );
+        System.out.println("---NANO_OF_SECOND---");
+        System.out.println("getMaximum is " + valueRange.getMaximum());
+        System.out.println("getMinimum is " + valueRange.getMinimum());
+        System.out.println("getSmallestMaximum is " + valueRange.getSmallestMaximum());
+        System.out.println("getLargestMinimum is " + valueRange.getLargestMinimum());
+
+
+        valueRange = instant.range(ChronoField.INSTANT_SECONDS );
+        System.out.println("---INSTANT_SECONDS---");
+        System.out.println("getMaximum is " + valueRange.getMaximum());
+        System.out.println("getMinimum is " + valueRange.getMinimum());
+        System.out.println("getSmallestMaximum is " + valueRange.getSmallestMaximum());
+        System.out.println("getLargestMinimum is " + valueRange.getLargestMinimum());
+
+
+
 
     }
 
@@ -40,6 +79,12 @@ public class InstantTrial {
         System.out.println("toEpochMilli is " +instant.toEpochMilli());
 
 
+//        Instant instant = Instant.now();
+//        System.out.println(instant);
+//        System.out.println("NANO_OF_SECOND is " + instant.get(ChronoField.NANO_OF_SECOND));
+//        System.out.println("MICRO_OF_SECOND is " + instant.get(ChronoField.MICRO_OF_SECOND));
+//        System.out.println("MILLI_OF_SECOND is " + instant.get(ChronoField.MILLI_OF_SECOND));
+//        System.out.println("INSTANT_SECONDS is " + instant.get(ChronoField.INSTANT_SECONDS)); //不支持，报错
 
     }
 
@@ -79,23 +124,38 @@ public class InstantTrial {
         System.out.println(instant);
 
 //        OffsetDateTime offsetDateTime = instant.atOffset()
-
-
 //        System.out.println(zonedDateTime);
+
+
     }
 
     private void zone() {
         Instant instant = Instant.now();
+        System.out.println(instant);
 
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Asia/Shanghai"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Z"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("+8"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("UTC"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("UTC+8"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("GMT"));
-//        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("GMT-6"));
+//        ZonedDateTime zonedDateTime;
+//        zonedDateTime = instant.atZone(ZoneId.of("Asia/Shanghai"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("Z"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("+8"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("UTC"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("UTC+8"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("GMT"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("GMT-6"));
+//        System.out.println(zonedDateTime);
 
+
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Europe/Paris"));
         System.out.println(zonedDateTime);
+        OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.of("Europe/Paris"));
+        System.out.println(offsetDateTime);
+
+
     }
 
     private void compare() {
