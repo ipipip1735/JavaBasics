@@ -12,7 +12,7 @@ public class InstantTrial {
         InstantTrial instantTrial = new InstantTrial();
 //        instantTrial.constructor();
 //        instantTrial.compare();
-        instantTrial.zone();
+//        instantTrial.zone();
 //        instantTrial.offset();
 //        instantTrial.with();
 //        instantTrial.gets();
@@ -133,8 +133,7 @@ public class InstantTrial {
         Instant instant = Instant.now();
         System.out.println(instant);
 
-//        ZonedDateTime zonedDateTime;
-//        zonedDateTime = instant.atZone(ZoneId.of("Asia/Shanghai"));
+
 //        System.out.println(zonedDateTime);
 //        zonedDateTime = instant.atZone(ZoneId.of("Z"));
 //        System.out.println(zonedDateTime);
@@ -150,10 +149,17 @@ public class InstantTrial {
 //        System.out.println(zonedDateTime);
 
 
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Europe/Paris"));
-        System.out.println(zonedDateTime);
-        OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.of("Europe/Paris"));
+        //支持夏令时
+//        ZonedDateTime zonedDateTime;
+//        zonedDateTime = instant.atZone(ZoneId.of("Europe/Paris"));
+//        System.out.println(zonedDateTime);
+//        zonedDateTime = instant.atZone(ZoneId.of("Europe/Paris"));
+//        System.out.println(zonedDateTime);
+
+        //不支持夏令时
+        OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.of("+8"));
         System.out.println(offsetDateTime);
+
 
 
     }
