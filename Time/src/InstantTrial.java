@@ -17,9 +17,17 @@ public class InstantTrial {
     }
 
     private void minus() {
-        Instant instant = Instant.now();
-//        instant.minus();
 
+        Instant instant = Instant.now();
+        Instant result;
+
+        System.out.println(instant.getEpochSecond());
+
+        result = instant.minus(Duration.ofMinutes(1));
+        System.out.println(result.getEpochSecond());
+
+        result = result.plus(Duration.ofSeconds(30));
+        System.out.println(result.getEpochSecond());
 
     }
 
