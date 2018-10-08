@@ -18,6 +18,42 @@ public class InstantTrial {
 //        instantTrial.gets();
 //        instantTrial.minus();
 //        instantTrial.range();
+        instantTrial.adjust();
+//        instantTrial.util();
+
+    }
+
+    private void adjust() {
+
+        Instant instant1 = Instant.now();
+        System.out.println(instant1);
+        Instant instant2 = Instant.ofEpochSecond(3600);
+        System.out.println(instant2);
+
+        instant2.adjustInto(instant1);
+        System.out.println(instant1);
+
+
+    }
+
+    private void util() {
+
+        Instant start = Instant.ofEpochSecond(12345);
+        System.out.println(start);
+
+        Instant end = Instant.ofEpochSecond(12345 + 3600 * 24);
+        System.out.println(end);
+
+        System.out.println("NANOS     is " + start.until(end, ChronoUnit.NANOS));
+        System.out.println("MICROS    is " + start.until(end, ChronoUnit.MICROS));
+        System.out.println("MILLIS    is " + start.until(end, ChronoUnit.MILLIS));
+        System.out.println("SECONDS   is " + start.until(end, ChronoUnit.SECONDS));
+        System.out.println("MINUTES   is " + start.until(end, ChronoUnit.MINUTES));
+        System.out.println("HOURS     is " + start.until(end, ChronoUnit.HOURS));
+        System.out.println("HALF_DAYS is " + start.until(end, ChronoUnit.HALF_DAYS));
+        System.out.println("DAYS      is " + start.until(end, ChronoUnit.DAYS));
+
+
 
     }
 
@@ -110,9 +146,11 @@ public class InstantTrial {
         //创建时间截
         instant = Instant.ofEpochSecond(1234567890);
         System.out.println(instant);
+        instant = Instant.ofEpochSecond(1234567890,987654321);
+        System.out.println(instant);
 
         //创建毫秒级时间截
-        instant = Instant.ofEpochMilli(1234567890);
+        instant = Instant.ofEpochMilli(987654321);
         System.out.println(instant);
 
 
