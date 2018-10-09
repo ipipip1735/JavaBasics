@@ -6,7 +6,7 @@ package innerClass;
 public class InnerClass{
 
     public static void main(String[] args) {
-//        InnerClass innerClass = new InnerClass();
+//        innerClass.InnerClass innerClass = new innerClass.InnerClass();
 //        innerClass.see();
 
         InnerClass.MyInner myInner = new InnerClass().new MyInner();
