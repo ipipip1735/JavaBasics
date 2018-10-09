@@ -43,7 +43,7 @@ public class OffsetDateTimeTrial {
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
         System.out.println(offsetDateTime);
 
-        System.out.println("getOffset     is " + offsetDateTime.getLong());
+        System.out.println("getOffset     is " + offsetDateTime.getLong(ChronoField.YEAR));
 //        System.out.println(offsetDateTime.get(ChronoField.YEAR));
 //        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_WEEK));
 //        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_YEAR));

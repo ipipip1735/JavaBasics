@@ -1,7 +1,6 @@
 import java.time.*;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.ValueRange;
+import java.time.chrono.Chronology;
+import java.time.temporal.*;
 
 /**
  * Created by Administrator on 2018/10/5.
@@ -14,11 +13,53 @@ public class InstantTrial {
 //        instantTrial.compare();
 //        instantTrial.zone();
 //        instantTrial.offset();
-        instantTrial.with();
+//        instantTrial.with();
 //        instantTrial.gets();
 //        instantTrial.minus();
 //        instantTrial.range();
 //        instantTrial.util();
+        instantTrial.query();
+
+    }
+
+    private void query() {
+        //使用工具类
+//        Instant instant = Instant.now();
+//        Chronology chronology = instant.query(TemporalQueries.chronology());
+//        System.out.println("chronology is " + chronology);
+//
+//        LocalDate localDate = instant.query(TemporalQueries.localDate());
+//        System.out.println("localDate is " + localDate);
+//
+//        LocalTime localTime = instant.query(TemporalQueries.localTime());
+//        System.out.println("localTime is " + localTime);
+//
+//        ZoneOffset zoneOffset = instant.query(TemporalQueries.offset());
+//        System.out.println("zoneOffset is " + zoneOffset);
+//
+//        TemporalUnit temporalUnit = instant.query(TemporalQueries.precision());
+//        System.out.println("temporalUnit is " + temporalUnit);
+//
+//        ZoneId zoneId = instant.query(TemporalQueries.zone());
+//        System.out.println("zoneId is " + zoneId);
+
+
+
+        //实现TemporalQuery接口
+        Instant instant = Instant.now();
+        TemporalQuery<String> temporalQuery = new TemporalQuery<>(){
+            @Override
+            public String queryFrom(TemporalAccessor temporal) {
+                System.out.println("---temporal---");
+                System.out.println(temporal);
+                return "end";
+            }
+        };
+
+        String result = instant.query(temporalQuery);
+        System.out.println(result);
+
+
 
     }
 
@@ -159,16 +200,33 @@ public class InstantTrial {
 
 
 
-        Instant instant;
-        //创建时间截
-        instant = Instant.ofEpochSecond(1234567890);
-        System.out.println(instant);
-        instant = Instant.ofEpochSecond(1234567890,987654321);
+
+
+//        Instant instant;
+//        //创建时间截
+//        instant = Instant.ofEpochSecond(1234567890);
+//        System.out.println(instant);
+//        instant = Instant.ofEpochSecond(1234567890,987654321);
+//        System.out.println(instant);
+//
+//        //创建毫秒级时间截
+//        instant = Instant.ofEpochMilli(987654321);
+//        System.out.println(instant);
+
+
+
+
+
+        //类型转换
+        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+        System.out.println(offsetDateTime);
+
+        Instant instant = Instant.from(offsetDateTime);
         System.out.println(instant);
 
-        //创建毫秒级时间截
-        instant = Instant.ofEpochMilli(987654321);
-        System.out.println(instant);
+
+
+
 
 
 
