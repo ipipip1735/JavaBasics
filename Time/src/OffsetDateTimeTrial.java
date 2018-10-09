@@ -14,8 +14,8 @@ public class OffsetDateTimeTrial {
 //        OffsetDateTimeTrial.constructor();
 //        offsetDateTimeTrial.to();
 //        offsetDateTimeTrial.with();
-//        offsetDateTimeTrial.get();
-        offsetDateTimeTrial.compare();
+        offsetDateTimeTrial.get();
+//        offsetDateTimeTrial.compare();
     }
 
     private void compare() {
@@ -43,9 +43,25 @@ public class OffsetDateTimeTrial {
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
         System.out.println(offsetDateTime);
 
-        System.out.println(offsetDateTime.get(ChronoField.YEAR));
-        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_WEEK));
-        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_YEAR));
+        System.out.println("getOffset     is " + offsetDateTime.getLong());
+//        System.out.println(offsetDateTime.get(ChronoField.YEAR));
+//        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_WEEK));
+//        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_YEAR));
+
+
+
+        System.out.println("getOffset     is " + offsetDateTime.getOffset());
+        System.out.println("getHour       is " + offsetDateTime.getHour());
+        System.out.println("getMinute     is " + offsetDateTime.getMinute());
+        System.out.println("getSecond     is " + offsetDateTime.getSecond());
+        System.out.println("getNano       is " + offsetDateTime.getNano());
+        System.out.println("getYear       is " + offsetDateTime.getYear());
+        System.out.println("getMonth      is " + offsetDateTime.getMonth());
+        System.out.println("getMonthValue is " + offsetDateTime.getMonthValue());
+        System.out.println("getDayOfMonth is " + offsetDateTime.getDayOfMonth());
+        System.out.println("getDayOfWeek  is " + offsetDateTime.getDayOfWeek());
+        System.out.println("getDayOfYear  is " + offsetDateTime.getDayOfYear());
+
     }
 
     private void with() {

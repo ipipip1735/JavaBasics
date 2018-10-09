@@ -14,27 +14,14 @@ public class InstantTrial {
 //        instantTrial.compare();
 //        instantTrial.zone();
 //        instantTrial.offset();
-//        instantTrial.with();
+        instantTrial.with();
 //        instantTrial.gets();
 //        instantTrial.minus();
 //        instantTrial.range();
-        instantTrial.adjust();
 //        instantTrial.util();
 
     }
 
-    private void adjust() {
-
-        Instant instant1 = Instant.now();
-        System.out.println(instant1);
-        Instant instant2 = Instant.ofEpochSecond(3600);
-        System.out.println(instant2);
-
-        instant2.adjustInto(instant1);
-        System.out.println(instant1);
-
-
-    }
 
     private void util() {
 
@@ -59,11 +46,42 @@ public class InstantTrial {
 
     private void with() {
 
-        Instant instant = Instant.now();
+//        Instant instant1 = Instant.now();
+//        System.out.println(instant1);
+//        Instant instant2 = Instant.ofEpochSecond(123);
+//        System.out.println(instant2);
+//
+////        Instant instant3 = instant1.with(instant2);
+//        Instant instant3 = (Instant) instant2.adjustInto(instant1);
+//        System.out.println(instant3);
 
-//        Duration duration = Duration.ofSeconds(10);
-//        Instant i = Instant.
-//        instant.with()
+
+
+
+
+        Instant instant1 = Instant.now();
+        System.out.println(instant1);
+        Instant instant2 = instant1.with(ChronoField.INSTANT_SECONDS, 1);
+        System.out.println(instant2);
+
+        Instant instant3;
+
+        instant3 = instant1.with(ChronoField.MILLI_OF_SECOND, 1);
+        System.out.println(instant3);
+        instant3 = instant1.with(ChronoField.MILLI_OF_SECOND, 111);
+        System.out.println(instant3);
+
+        instant3 = instant1.with(ChronoField.MICRO_OF_SECOND, 222);
+        System.out.println(instant3);
+        instant3 = instant1.with(ChronoField.MICRO_OF_SECOND, 111222);
+        System.out.println(instant3);
+
+        instant3 = instant1.with(ChronoField.NANO_OF_SECOND, 333);
+        System.out.println(instant3);
+        instant3 = instant1.with(ChronoField.NANO_OF_SECOND, 111222333);
+        System.out.println(instant3);
+
+
     }
 
     private void range() {
@@ -71,12 +89,12 @@ public class InstantTrial {
         Instant instant = Instant.now();
         System.out.println("instant is " + instant);
 
-        valueRange = instant.range(ChronoField.NANO_OF_SECOND );
-        System.out.println("---NANO_OF_SECOND---");
-        System.out.println("getMaximum is " + valueRange.getMaximum());
-        System.out.println("getMinimum is " + valueRange.getMinimum());
-        System.out.println("getSmallestMaximum is " + valueRange.getSmallestMaximum());
-        System.out.println("getLargestMinimum is " + valueRange.getLargestMinimum());
+//        valueRange = instant.range(ChronoField.NANO_OF_SECOND );
+//        System.out.println("---NANO_OF_SECOND---");
+//        System.out.println("getMaximum is " + valueRange.getMaximum());
+//        System.out.println("getMinimum is " + valueRange.getMinimum());
+//        System.out.println("getSmallestMaximum is " + valueRange.getSmallestMaximum());
+//        System.out.println("getLargestMinimum is " + valueRange.getLargestMinimum());
 
 
         valueRange = instant.range(ChronoField.INSTANT_SECONDS );
@@ -120,7 +138,6 @@ public class InstantTrial {
 //        System.out.println("NANO_OF_SECOND is " + instant.get(ChronoField.NANO_OF_SECOND));
 //        System.out.println("MICRO_OF_SECOND is " + instant.get(ChronoField.MICRO_OF_SECOND));
 //        System.out.println("MILLI_OF_SECOND is " + instant.get(ChronoField.MILLI_OF_SECOND));
-//        System.out.println("INSTANT_SECONDS is " + instant.get(ChronoField.INSTANT_SECONDS)); //不支持，报错
 
     }
 
