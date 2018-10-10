@@ -1,23 +1,30 @@
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Created by Administrator on 2018/10/3.
  */
 public class LambdaTrial {
 
+    public static XX out = new XX();
+
 
     public static void main(String[] args) {
-//        forFunction();
-        forFun();
+        forFunction();
+//        forFun();
 
+
+
+//        LambdaTrial.out.look("ddd");
     }
 
     private static void forFun() {
         //引用静态方法
-        Fun funStatic = XX::view;
-        Object o = funStatic.show("oo");
-        System.out.println(o);
+//        Fun funStatic = XX::view;
+//        Object o = funStatic.show("oo");
+//        System.out.println(o);
 
         //引用实例方法
 //        XX x = new XX();
@@ -53,6 +60,17 @@ public class LambdaTrial {
 //        Function<IXX, Object> mapperImpl = IXX::show;
 //        Object r = mapperImpl.apply(ixx);
 //        System.out.println(r);
+
+
+//        StringTest stringTest = System.out::println;
+//        stringTest(1);
+
+
+
+
+        Consumer<Integer> action = LambdaTrial.out::strTest;
+        action.accept(Integer.valueOf(11));
+
     }
 }
 
@@ -61,11 +79,13 @@ class XX {
     int age = 11;
 
     public XX() {
-        System.out.println("construct ");;
+        System.out.println("construct ");
+        ;
     }
 
     public XX(String s) {
-        System.out.println("construct " +s);;
+        System.out.println("construct " + s);
+        ;
     }
 
     public int getAge() {
@@ -80,6 +100,11 @@ class XX {
     public long look(String s) {
         System.out.println("look " + s);
         return 123;
+    }
+
+    public void strTest(Integer i) {
+        System.out.println(this.age);
+        System.out.println("string test");
     }
 }
 
