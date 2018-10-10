@@ -1,8 +1,6 @@
-import java.time.Clock;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoField;
+import java.time.*;
+import java.time.chrono.Chronology;
+import java.time.temporal.*;
 
 /**
  * Created by Administrator on 2018/11/8.
@@ -14,8 +12,9 @@ public class OffsetDateTimeTrial {
 //        OffsetDateTimeTrial.constructor();
 //        offsetDateTimeTrial.to();
 //        offsetDateTimeTrial.with();
-        offsetDateTimeTrial.get();
+//        offsetDateTimeTrial.get();
 //        offsetDateTimeTrial.compare();
+        offsetDateTimeTrial.query();
     }
 
     private void compare() {
@@ -82,6 +81,47 @@ public class OffsetDateTimeTrial {
         System.out.println("toLocalDateTime is " + offsetDateTime.toLocalDateTime());
         System.out.println("    toLocalDate is " + offsetDateTime.toLocalDate());
         System.out.println("    toLocalTime is " + offsetDateTime.toLocalTime());
+
+    }
+
+    private void query() {
+        //使用工具类
+        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+        Chronology chronology = offsetDateTime.query(TemporalQueries.chronology());
+        System.out.println("chronology is " + chronology);
+
+        LocalDate localDate = offsetDateTime.query(TemporalQueries.localDate());
+        System.out.println("localDate is " + localDate);
+
+        LocalTime localTime = offsetDateTime.query(TemporalQueries.localTime());
+        System.out.println("localTime is " + localTime);
+
+        ZoneOffset zoneOffset = offsetDateTime.query(TemporalQueries.offset());
+        System.out.println("zoneOffset is " + zoneOffset);
+
+        TemporalUnit temporalUnit = offsetDateTime.query(TemporalQueries.precision());
+        System.out.println("temporalUnit is " + temporalUnit);
+
+        ZoneId zoneId = zoneOffset.query(TemporalQueries.zone());
+        System.out.println("zoneId is " + zoneId);
+
+
+
+        //实现TemporalQuery接口
+//        Instant instant = Instant.now();
+//        TemporalQuery<String> temporalQuery = new TemporalQuery<>(){
+//            @Override
+//            public String queryFrom(TemporalAccessor temporal) {
+//                System.out.println("---temporal---");
+//                System.out.println(temporal);
+//                return "end";
+//            }
+//        };
+//
+//        String result = instant.query(temporalQuery);
+//        System.out.println(result);
+
+
 
     }
 
