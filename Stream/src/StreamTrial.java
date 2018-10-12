@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -13,8 +14,8 @@ public class StreamTrial {
 
 
         //构造方式
-        streamDemo.builder();
-        streamDemo.of();
+//        streamDemo.builder();
+//        streamDemo.of();
         streamDemo.iterate();
 
 
@@ -50,8 +51,70 @@ public class StreamTrial {
 
     private void iterate() {
 
-        Stream<String> stringStream = Stream.iterate("ok", )
+        //简单例子
+//        Stream.iterate("Tom", s -> s.length() < 25, s -> s += new Random().nextInt(10))
+//                .forEach(System.out::println);
 
+
+        //等价操作，iterate()等价于for语句
+//        for (String s = "-"; !s.equals("-sssss") ; s+="s") {
+//            System.out.println(s);
+//        }
+
+
+        //生成流，映射为其他对象
+//        Stream.iterate("Tom0", s -> !s.equals("Tom9"),
+//                s -> "Tom" + new Random().nextInt(10))
+//                .map(s -> new Person(new Random().nextInt(100), s))
+//                .forEach(p -> System.out.println(p));
+
+
+        //无限流
+//        IntStream stream = IntStream.iterate(1, n -> n < 10, n-> n++);
+//        stream.forEach(s -> System.out.println(s));
+
+
+//        Stream<String> stream = Stream.of("xml", "mysql", "oracle", "db2");
+//        stream.takeWhile(s -> s.length() < 3)
+//                .forEach(System.out::println);
+
+
+//        Stream<String> stream = Stream.iterate("", s -> s + "s")
+//                .takeWhile(s -> s.length() < 10);
+//        stream.forEach(System.out::println);
+
+
+//        String[] s = {
+//                "s",
+//                "ss",
+//                "sssssssss",
+//                "sss",
+//                "sss",
+//                "ssss",
+//                "sssss",
+//                "ssssss",
+//                "sssssss",
+//                "www"
+//        };
+
+//        Stream<String> stringStream = Arrays.stream(s);
+//        Set<String> strings = stringStream.collect(Collectors.toSet());
+
+
+//        strings.stream().forEach(s1 -> System.out.println(s1));
+//        strings.stream().filter(k -> k.contains("w")).forEach(s1 -> System.out.println(s1));
+//        strings.stream().unordered().takeWhile(k -> k.contains("s")).forEach(s1 -> System.out.println(s1));
+//        strings.stream().takeWhile(k -> k.contains("s")).forEach(s1 -> System.out.println(s1));
+
+//        stringStream.unordered().takeWhile(k -> k.length() < 4)
+//                .forEach(System.out::println);
+
+
+
+        Set<Integer> numbers = Set.of(2, 4, 6, 3, 8);
+        numbers.stream()
+                .takeWhile(n -> n % 2 == 0)
+                .forEach(System.out::println);
 
     }
 
