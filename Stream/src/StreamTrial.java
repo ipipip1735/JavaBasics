@@ -12,30 +12,33 @@ public class StreamTrial {
         StreamTrial streamDemo = new StreamTrial();
 
 
-        //constructor
-//        streamDemo.builder();
+        //构造方式
+        streamDemo.builder();
+        streamDemo.of();
+        streamDemo.iterate();
 
 
-        //Stateful
+        //中间操作（Stateful）
 //        streamDemo.distinct();
 //        streamDemo.sorted();
 //        streamDemo.limit();
 //        streamDemo.skip();
 
-        //Stateless
+        //中间操作（Stateless）
 //        streamDemo.filter();
 //        streamDemo.unordered();
 //        streamDemo.map();
-        streamDemo.flatMap();
+//        streamDemo.flatMap();
 //        streamDemo.peek();
 
 
-        //Terminal
+        //结果操作
 //        streamDemo.reduce();
 //        streamDemo.aggregation();
 //        streamDemo.reduceParallel();
 //        streamDemo.collect();
 //        streamDemo.joining();
+//        streamDemo.toArray();
 
 //        streamDemo.groupBy();
 //        streamDemo.partitioningBy();
@@ -45,6 +48,18 @@ public class StreamTrial {
 
     }
 
+    private void iterate() {
+
+        Stream<String> stringStream = Stream.iterate("ok", )
+
+
+    }
+
+
+    private void of() {
+        Stream<String> stringStream = Stream.of("xml", "mysql", "oracle");
+        stringStream.forEach(System.out::println);
+    }
 
     private void builder() {
         Stream.Builder<String> b = Stream.builder();
@@ -123,6 +138,46 @@ public class StreamTrial {
                 .map(Employee::getName)
                 .collect(Collectors.joining(", "));
         System.out.println(s);
+
+    }
+
+    private void toArray() {
+        //最简方法（只能返回Object数组）
+//        List<Employee> employeeList = Employee.persons();
+//        Object[] Employees = employeeList.stream()
+//                .filter(Employee::isMale)
+//                .toArray();
+//        for (Object o : Employees) {
+//            System.out.println("o is " + o);
+//        }
+
+
+        //返回同类型数组
+//        List<Employee> employeeList = Employee.persons();
+//        Employee[] Employees = employeeList.stream()
+//                .filter(Employee::isMale)
+//                .toArray(n -> {
+//                    System.out.println("length of List is " + n);
+//                    Employee[] array = new Employee[n++]; //因为上面过滤删除了一些元素，这里的才可用自增
+//                    return array;
+//                });
+//        for (Employee e : Employees) {
+//            System.out.println("e is " + e);
+//        }
+
+
+        //返回任意类型数组
+        List<Employee> employeeList = Employee.persons();
+        Employee.Gender[] genders = employeeList.stream()
+                .map(Employee::getGender)
+                .<Employee.Gender>toArray(n -> {
+                    System.out.println("length of List is " + n);
+                    Employee.Gender[] array = new Employee.Gender[n];
+                    return array;
+                });
+        for (Employee.Gender g : genders) {
+            System.out.println(g);
+        }
 
     }
 
