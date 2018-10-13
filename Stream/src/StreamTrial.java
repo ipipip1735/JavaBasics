@@ -16,7 +16,7 @@ public class StreamTrial {
         //构造方式
 //        streamDemo.builder();
 //        streamDemo.of();
-        streamDemo.iterate();
+//        streamDemo.iterate();
 
 
         //中间操作（Stateful）
@@ -31,6 +31,11 @@ public class StreamTrial {
 //        streamDemo.map();
 //        streamDemo.flatMap();
 //        streamDemo.peek();
+
+
+        //短路函数
+//        streamDemo.whiles();
+        streamDemo.matchs();
 
 
         //结果操作
@@ -84,37 +89,59 @@ public class StreamTrial {
 //        stream.forEach(System.out::println);
 
 
-//        String[] s = {
+    }
+
+    private void whiles() {
+
+        //===takeWhile操作===
+        //有序流的情况
+//        List<String> stringList = Arrays.asList(
 //                "s",
 //                "ss",
 //                "sssssssss",
 //                "sss",
-//                "sss",
+//                "www",
 //                "ssss",
 //                "sssss",
 //                "ssssss",
-//                "sssssss",
-//                "www"
-//        };
-
-//        Stream<String> stringStream = Arrays.stream(s);
-//        Set<String> strings = stringStream.collect(Collectors.toSet());
+//                "sssssss");
+//        stringList.stream()
+//                .takeWhile(k -> k.contains("s"))
+//                .forEach(s1 -> System.out.println(s1));
 
 
-//        strings.stream().forEach(s1 -> System.out.println(s1));
-//        strings.stream().filter(k -> k.contains("w")).forEach(s1 -> System.out.println(s1));
-//        strings.stream().unordered().takeWhile(k -> k.contains("s")).forEach(s1 -> System.out.println(s1));
-//        strings.stream().takeWhile(k -> k.contains("s")).forEach(s1 -> System.out.println(s1));
+        //无序流的情况
+//        Set<Integer> numbers = Set.of(2, 4, 6, 3, 8);
+//        numbers.stream()
+//                .takeWhile(n -> n % 2 == 0)
+//                .forEach(System.out::println);
 
-//        stringStream.unordered().takeWhile(k -> k.length() < 4)
+        //无序流配合短路函数
+        Stream.iterate(0, n -> n++)
+        .takeWhile(n->n<1000)
+        .forEach(System.out::println);
+
+
+
+
+
+        //===dropWhile操作===
+//        Stream.of(2, 4, 6, 8, 9, 10, 12)
+//                .dropWhile(n -> n % 2 == 0)
 //                .forEach(System.out::println);
 
 
+    }
 
-        Set<Integer> numbers = Set.of(2, 4, 6, 3, 8);
-        numbers.stream()
-                .takeWhile(n -> n % 2 == 0)
-                .forEach(System.out::println);
+
+    private void matchs() {
+
+        Boolean b = Stream.of(23, 43, 63, 83, 523, 103, 123)
+                .noneMatch(n -> n % 2 == 0); //都不匹配返回true
+//                .allMatch(n -> n % 2 == 0); //全部配返回true
+//                .anyMatch(n -> n % 2 == 0); //某一匹配返回true
+        System.out.println(b);
+
 
     }
 
