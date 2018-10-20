@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -14,22 +11,105 @@ public class Output {
         Output out = new Output();
 
         out.outputStream();
+//        out.outputStreamWriter();
+//        out.fileWriter();
+//        out.BufferedWriter();
     }
 
-    public void outputStream() {
-
+    private void BufferedWriter() {
         File file = new File("IO/res/a");
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-            byte[] bytes = new byte[1024 * 1024];
-            Arrays.fill(bytes, (byte) 96);
-            fileOutputStream.write(bytes);
+
+        //JAVA 7 新特性
+        try (OutputStream outputStream = new FileOutputStream(file);
+             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+
+            String s = "cc";
+            bufferedWriter.write(s);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
+    }
+
+    private void fileWriter() {
+        File file = new File("IO/res/a");
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            String s = "cc";
+            fileWriter.write(s);
+//            fileWriter.flush();  //close()会调用flush()
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void outputStreamWriter() {
+        File file = new File("IO/res/a");
+        try {
+
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+
+            String s = "cc";
+            outputStreamWriter.write(s);
+//            outputStreamWriter.flush();  //close()会调用flush()
+
+            outputStreamWriter.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void outputStream() {
+
+        //输出到文件
+//        File file = new File("IO/res/a");
+//        try {
+//            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+//            byte[] bytes = new byte[1024 * 1024];
+//            Arrays.fill(bytes, (byte) 96);
+//            fileOutputStream.write(bytes);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        //输出到标准输出流
+//        try {
+//            FileOutputStream fileOutputStream = new FileOutputStream(FileDescriptor.out);
+//            byte[] bytes = new byte[1024];
+//            Arrays.fill(bytes, (byte) 99);
+//            fileOutputStream.write(bytes);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        //输出到标准输出流
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(FileDescriptor.err);
+            byte[] bytes = new byte[1024];
+            Arrays.fill(bytes, (byte) 99);
+            fileOutputStream.write(bytes);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
