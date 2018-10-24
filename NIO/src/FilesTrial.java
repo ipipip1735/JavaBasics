@@ -38,7 +38,7 @@ public class FilesTrial {
 
 
 //        filesTrial.createDir();
-        filesTrial.walk();
+//        filesTrial.walk();
 //        filesTrial.tree();
 //        filesTrial.directoryStream();
 
@@ -50,7 +50,7 @@ public class FilesTrial {
 //        filesTrial.copyDir();
 
 
-//        filesTrial.states();
+        filesTrial.states();
 //        filesTrial.attrs();
 //        filesTrial.attrsPosix();
 
@@ -67,7 +67,7 @@ public class FilesTrial {
         try {
 
             //读一个字节
-//            Path path = Paths.get("NIO/res/tt");
+//            Path path = Paths.get("NIO/res/tt.txt");
 //            SeekableByteChannel seekableByteChannel =
 //                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.READ);
 //            seekableByteChannel.position(0);
@@ -78,7 +78,7 @@ public class FilesTrial {
 
 
             //读所有字节
-//            Path path = Paths.get("NIO/res/tt");
+//            Path path = Paths.get("NIO/res/tt.txt");
 //            SeekableByteChannel seekableByteChannel =
 //                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.READ);
 //            ByteBuffer buffer = ByteBuffer.allocate(3);
@@ -93,7 +93,7 @@ public class FilesTrial {
 
 
             //截断文件内容
-//            Path path = Paths.get("NIO/res/tt");
+//            Path path = Paths.get("NIO/res/tt.txt");
 //            SeekableByteChannel seekableByteChannel =
 //                    Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 //            System.out.println(seekableByteChannel.size());
@@ -104,7 +104,7 @@ public class FilesTrial {
 
 
             //写文件
-            Path path = Paths.get("NIO/res/tt");
+            Path path = Paths.get("NIO/res/tt.txt");
             SeekableByteChannel seekableByteChannel =
                     Files.newByteChannel(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
@@ -216,22 +216,22 @@ public class FilesTrial {
             Files.walkFileTree(start,
                     EnumSet.noneOf(FileVisitOption.class), 3,
                     new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    System.out.println("dir is " + dir);
-                    System.out.println("dir'size is " + attrs.size());
-                    return super.preVisitDirectory(dir, attrs);
-                }
+                        @Override
+                        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                            System.out.println("dir is " + dir);
+                            System.out.println("dir'size is " + attrs.size());
+                            return super.preVisitDirectory(dir, attrs);
+                        }
 
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    System.out.println("file is " + file);
-                    System.out.println("size is " + attrs.size());
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            System.out.println("file is " + file);
+                            System.out.println("size is " + attrs.size());
 
 
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,7 +249,7 @@ public class FilesTrial {
 //            Files.createDirectory(path, attr);
 
 
-            Path path = Paths.get("d:/oo/tt");
+            Path path = Paths.get("d:/oo/tt.txt");
             Files.createDirectories(path);
 
 
@@ -261,10 +261,24 @@ public class FilesTrial {
 
     private void states() {
 
-        Path path = Paths.get("d://tt.lnk");
-        boolean b = Files.exists(path);
-//            Path path = Files.copy(srcPath, tgtPath, NOFOLLOW_LINKS);
-        System.out.println(b);
+//        Path path = Paths.get("d://tt.txt.lnk"); //软连接
+
+
+//        boolean b = Files.exists(path);
+//        System.out.println("is exist: " +b);
+
+
+
+        try {
+
+            Path path = Paths.get("NIO/res/tt.txt");
+            String type = Files.probeContentType(path);
+            System.out.println(type);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -445,7 +459,7 @@ public class FilesTrial {
     private void copy() {
         try {
 
-            Path srcPath = Paths.get("D:/tt.lnk");
+            Path srcPath = Paths.get("D:/tt.txt.lnk");
             Path tgtPath = Paths.get("D:/oo/", srcPath.getFileName().toString());
             Path path = Files.copy(srcPath, tgtPath, NOFOLLOW_LINKS);
             System.out.println(path);

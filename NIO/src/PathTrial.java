@@ -81,7 +81,7 @@ public class PathTrial {
             key = path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY);
             keyMap.put(key, path);
 
-            path = Paths.get("d:\\tt");
+            path = Paths.get("d:\\tt.txt");
             key = path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY);
             keyMap.put(key, path);
 
@@ -128,7 +128,7 @@ public class PathTrial {
         System.out.println(path.toUri());
 
 
-//        System.out.println(path.resolve("tt"));
+//        System.out.println(path.resolve("tt.txt"));
 
 
 //        System.out.println(path.resolve("/"));
