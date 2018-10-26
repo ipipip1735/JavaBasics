@@ -10,8 +10,8 @@ public class ScheduledExecutorServiceTrial {
 
     public static void main(String[] args) {
         ScheduledExecutorServiceTrial scheduled = new ScheduledExecutorServiceTrial();
-//        scheduled.base();
-        scheduled.scheduleAtFixedRate();
+        scheduled.base();
+//        scheduled.scheduleAtFixedRate();
 
     }
 
@@ -46,7 +46,7 @@ public class ScheduledExecutorServiceTrial {
     }
 
     private void base() {
-        ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(2);
+        ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(1);
 
         Runnable command = new Runnable() {
             @Override
