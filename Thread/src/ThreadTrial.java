@@ -1,8 +1,115 @@
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ThreadTrial {
 
     public static void main(String[] args) {
         ThreadTrial threadTrial = new ThreadTrial();
-        threadTrial.sync();
+//        threadTrial.sync();
+        threadTrial.atomic();
+
+    }
+
+    private void atomic() {
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    atomicInteger.compareAndExchange(1,3);
+
+                    System.out.println(atomicInteger.get());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    atomicInteger.set(4);
+                    System.out.println(atomicInteger.get());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+            }
+        }).start();
+    }
+
+    private void waits() {
+        Integer integer = Integer.valueOf(1);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    synchronized (integer) {
+                        System.out.println("1-" + integer);
+                        try {
+                            integer.wait();
+                            integer.notify();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println("Thread 1");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+            }
+        }).start();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    synchronized (integer) {
+                        System.out.println("2-" + integer);
+                        try {
+                            integer.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println("Thread 2");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+            }
+        }).start();
+
+        synchronized (integer) {
+            System.out.println("main");
+            integer.notify();
+        }
+
 
     }
 
