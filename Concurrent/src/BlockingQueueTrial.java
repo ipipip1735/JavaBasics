@@ -7,9 +7,9 @@ import java.util.concurrent.BlockingQueue;
 public class BlockingQueueTrial {
     public static void main(String[] args) {
         BlockingQueueTrial blockingQueueTrial = new BlockingQueueTrial();
-//        blockingQueueTrial.add();
+        blockingQueueTrial.add();
 //        blockingQueueTrial.minus();
-        blockingQueueTrial.iterate();
+//        blockingQueueTrial.iterate();
     }
 
     private void iterate() {
@@ -28,14 +28,14 @@ public class BlockingQueueTrial {
     private void add() {
         BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(3);
 
-//        try {
-//            blockingQueue.put("aa");
-//            blockingQueue.put("bb");
-//            blockingQueue.put("cc");
-//            blockingQueue.put("dd");
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            blockingQueue.put("aa");
+            blockingQueue.put("bb");
+            blockingQueue.put("cc");
+            blockingQueue.put("dd");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
 //        blockingQueue.add("aa");
@@ -44,10 +44,10 @@ public class BlockingQueueTrial {
 //        blockingQueue.add("dd");
 
 
-        System.out.println(blockingQueue.offer("aa"));
-        System.out.println(blockingQueue.offer("bb"));
-        System.out.println(blockingQueue.offer("cc"));
-        System.out.println(blockingQueue.offer("dd"));
+//        System.out.println(blockingQueue.offer("aa"));
+//        System.out.println(blockingQueue.offer("bb"));
+//        System.out.println(blockingQueue.offer("cc"));
+//        System.out.println(blockingQueue.offer("dd"));
     }
 
     private void minus() {

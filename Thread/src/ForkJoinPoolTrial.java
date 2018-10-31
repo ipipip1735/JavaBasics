@@ -1,4 +1,5 @@
 import javax.lang.model.type.NullType;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -11,88 +12,123 @@ public class ForkJoinPoolTrial {
     public static void main(String[] args) {
         ForkJoinPoolTrial forkJoinPoolTrial = new ForkJoinPoolTrial();
 
-//        ForkJoinPoolTrial.invoke();
-//        ForkJoinPoolTrial.submit();
-        ForkJoinPoolTrial.execute();
+        //test fork, 测试提交任务
+//        forkJoinPoolTrial.execute(); //异步提交，非阻塞
+//        forkJoinPoolTrial.invoke(); //同步提交，阻塞
+//        forkJoinPoolTrial.submit();
+
+
+        //test Join, 测试合并结果
+        forkJoinPoolTrial.join();
+
+
     }
 
-    private static void submit() {
+    private void join() {
 
-        //总任务
-        Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                System.out.println("runnable");
-
-                List<RAOne> list = new LinkedList<RAOne>();
-
-                for (int i = 0; i < 6; i++) {
-                    list.add(new RAOne(i));
-                }
-
-
-                for (RAOne raOne : list) {
-                    raOne.fork();
-                }
-
-//                for (RAOne raOne : list) {
-//                    raOne.join();
-//                }
-
-            }
-        };
-
-
-        System.out.println("-------");
-
+        int sum = 0;
         ForkJoinPool forkJoinPool = new ForkJoinPool(2); //创建线程池
-        ForkJoinTask<Integer> forkJoinTask = (ForkJoinTask<Integer>) forkJoinPool.submit(runnable); //发送总任务到线程池
+        List<ForkJoinTask<Integer>> list = new ArrayList<>();
 
-        forkJoinPool.shutdown(); //关闭线程池
-        try {
-            forkJoinPool.awaitTermination(10, TimeUnit.SECONDS); //设置最大等待时间为10秒
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        //Fork操作
+        System.out.println("-------");
+        for (int i = 0; i < 5; i++) {
+            RTOne rtOne = new RTOne(i); //创建任务
+            ForkJoinTask forkJoinTask = forkJoinPool.submit(rtOne); //发送任务到线程池
+            list.add(forkJoinTask);
         }
-        System.out.println(forkJoinTask.getRawResult()); //获取结果
-
         System.out.println("-------");
 
+        //Join操作
+        for (ForkJoinTask task : list) {
+            sum += (int) task.join(); //join()是阻塞式的
+        }
+
+        System.out.println(sum);
 
     }
 
-    private static void invoke() {
+    private void submit() {
 
         ForkJoinPool forkJoinPool = new ForkJoinPool(2); //创建线程池
-        RT<Integer> rt = new RT<Integer>(6); //创建总任务
+
+        //线程池运行前增加任务
         System.out.println("-------");
 
-        Integer integer = forkJoinPool.invoke(rt); //发送总任务到线程池
-        System.out.println(integer.intValue()); //执行总任务
+        for (int i = 0; i < 5; i++) {
+            RAOne raOne = new RAOne(i); //创建任务
+            forkJoinPool.submit(raOne); //发送任务到线程池
+        }
 
-        System.out.println("-------");
-
-    }
-
-    private static void execute() {
-        ForkJoinPool forkJoinPool = new ForkJoinPool(2); //创建线程池
-
-        System.out.println("-------");
-
-
-        RA ra = new RA(6); //创建总任务
-        forkJoinPool.execute(ra); //发送总任务到线程池
 
         forkJoinPool.shutdown();  //关闭线程池
         try {
-            forkJoinPool.awaitTermination(10, TimeUnit.SECONDS);  //设置最大关闭时间
+            forkJoinPool.awaitTermination(50, TimeUnit.SECONDS);  //设置最大关闭时间
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         System.out.println("-------");
 
+    }
+
+    private void invoke() {
+        ForkJoinPool forkJoinPool = new ForkJoinPool(2); //创建线程池
+
+        //线程池运行前增加任务
+        System.out.println("-------");
+
+        for (int i = 0; i < 5; i++) {
+            RTOne rtOne = new RTOne(i); //创建任务
+            Integer integer = forkJoinPool.invoke(rtOne); //发送任务到线程池，将阻塞当前线程，即阻塞主线程
+            System.out.println(integer);
+        }
+
+
+        forkJoinPool.shutdown();  //关闭线程池
+        try {
+            forkJoinPool.awaitTermination(50, TimeUnit.SECONDS);  //设置最大关闭时间
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("-------");
+
+    }
+
+    private void execute() {
+        ForkJoinPool forkJoinPool = new ForkJoinPool(2); //创建线程池
+
+
+        //线程池运行前增加任务
+//        System.out.println("-------");
+//
+//        for (int i = 0; i < 5; i++) {
+//            RAOne raOne = new RAOne(i); //创建任务
+//            forkJoinPool.execute(raOne); //发送任务到线程池
+//        }
+//
+//
+//        forkJoinPool.shutdown();  //关闭线程池
+//        try {
+//            forkJoinPool.awaitTermination(50, TimeUnit.SECONDS);  //设置最大关闭时间
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("-------");
+
+
+        //线程池运行时增加任务
+        System.out.println("-------");
+        RA ra = new RA(6); //创建总任务
+        forkJoinPool.execute(ra); //发送总任务到线程池
+        forkJoinPool.shutdown();  //关闭线程池
+        try {
+            forkJoinPool.awaitTermination(50,
+                    TimeUnit.SECONDS);  //设置最大关闭时间
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("-------");
+//
     }
 
 
@@ -117,11 +153,37 @@ class RA extends RecursiveAction {
 
         //发送任务
         for (RAOne raOne : list) {
-            raOne.fork();
+            raOne.fork(); //非阻塞式fork操作
+//            raOne.invoke(); //阻塞式fork操作
         }
 
+        System.out.println("[Tag RA]" + "RA start");
+        System.out.println(getPool());
+        System.out.println("[Tag RA]" + Thread.currentThread());
+        System.out.println("[Tag RA]" + "getQueuedTaskCount() is " + getQueuedTaskCount());
+        System.out.println("[Tag RA]" + "getSurplusQueuedTaskCount() is " + getSurplusQueuedTaskCount());
+        System.out.println("[Tag RA]" + "RA end");
+
+
+
         for (RAOne raOne : list) {
-            raOne.join();
+
+            //3种Join操作
+//            try {
+////                raOne.get(); //抛异常
+//                raOne.get(1, TimeUnit.SECONDS); //抛异常
+//
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            } catch (TimeoutException e) {
+//                e.printStackTrace();
+//            }
+
+            raOne.join(); //上面2种抛异常，这种不抛异常
+
+            System.out.println(n++);
         }
 
 
@@ -129,23 +191,27 @@ class RA extends RecursiveAction {
 }
 
 class RAOne extends RecursiveAction {
-    int n;
 
     public RAOne(int n) {
-        this.n = n;
+        setForkJoinTaskTag((short) n);
     }
+
+
 
     @Override
     protected void compute() {
-        System.out.println("RAOne'S is " + n);
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "RAOne start");
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + getPool());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + Thread.currentThread());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "getQueuedTaskCount() is " + getQueuedTaskCount());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "getSurplusQueuedTaskCount() is " + getSurplusQueuedTaskCount());
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(2000l);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-//        System.out.println(Thread.currentThread());
-        System.out.println("RAOne'E is " + n);
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "RAOne end");
     }
 }
 
@@ -162,6 +228,7 @@ class RT<Integer> extends RecursiveTask<Integer> {
     protected Integer compute() {
 
         List<RTOne> list = new LinkedList<RTOne>();
+
 
         for (int i = 0; i < n; i++) {
             list.add(new RTOne(i));
@@ -185,19 +252,23 @@ class RTOne extends RecursiveTask<Integer> {
 
     public RTOne(int n) {
         this.n = n;
+        setForkJoinTaskTag((short) n);
     }
 
     @Override
     protected Integer compute() {
-        System.out.println("RAOne'S is " + n);
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "RTOne start");
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + getPool());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + Thread.currentThread());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "getQueuedTaskCount() is " + getQueuedTaskCount());
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "getSurplusQueuedTaskCount() is " + getSurplusQueuedTaskCount());
         try {
-            Thread.sleep(1000l);
+            Thread.sleep(2000l);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-//        System.out.println(Thread.currentThread());
-        System.out.println("RAOne'E is " + n);
+        System.out.println("[Tag" + getForkJoinTaskTag() + "]" + "RTOne end");
         return Integer.valueOf(n);
     }
 }
