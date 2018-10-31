@@ -28,14 +28,14 @@ public class StreamTrial {
         //中间操作（Stateless）
 //        streamDemo.filter();
 //        streamDemo.unordered();
-//        streamDemo.map();
+        streamDemo.map();
 //        streamDemo.flatMap();
 //        streamDemo.peek();
 
 
         //短路函数
 //        streamDemo.whiles();
-        streamDemo.matchs();
+//        streamDemo.matchs();
 
 
         //结果操作
@@ -118,11 +118,8 @@ public class StreamTrial {
 
         //无序流配合短路函数
         Stream.iterate(0, n -> n++)
-        .takeWhile(n->n<1000)
-        .forEach(System.out::println);
-
-
-
+                .takeWhile(n -> n < 1000)
+                .forEach(System.out::println);
 
 
         //===dropWhile操作===
@@ -147,8 +144,13 @@ public class StreamTrial {
 
 
     private void of() {
-        Stream<String> stringStream = Stream.of("xml", "mysql", "oracle");
+//        Stream<String> stringStream = Stream.of("xml", "mysql", "oracle");
+//        stringStream.forEach(System.out::println);
+
+        String[] strings = new String[]{"xml", "mysql", "oracle"};
+        Stream<String> stringStream = Stream.of(strings);
         stringStream.forEach(System.out::println);
+
     }
 
     private void builder() {
@@ -416,16 +418,24 @@ public class StreamTrial {
 
     public void map() {
 
-        List<String> list = Arrays.asList("a1", "a2", "a3", "a3");
-
-        Stream stream = list.stream();
-        stream.map(n -> "String is " + n)
-                .forEach(System.out::println);
+//        List<String> list = Arrays.asList("a1", "a2", "a3", "a3");
+//        Stream stream = list.stream();
+//        stream.map(n -> "String is " + n)
+//                .forEach(System.out::println);
 
 //        Stream stream = list.stream();
 //        stream.map( n -> new Person((String)n))
 //                .forEach(System.out::println);
 
+
+        Person[] persons = new Person[]{new Person(11, "tom"),
+                new Person(12, "sam")};
+        Stream<Person> personStream = Stream.of(persons);
+//        personStream.forEach(s-> System.out.println(s));
+        String[] strings = personStream.map(p -> p.getName()).toArray(n -> new String[n]);
+        for (String s : strings) {
+            System.out.println(s);
+        }
 
     }
 

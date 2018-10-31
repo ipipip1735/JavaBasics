@@ -36,7 +36,6 @@ public class VarHandleTrial {
             methodHandle.invoke(new Car(222333, "Cadillac"));
 
 
-
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -116,7 +115,6 @@ class Man {
         this.age = age;
         this.name = name;
     }
-
 
 
     public boolean add(Car car) {
