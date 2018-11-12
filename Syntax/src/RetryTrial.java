@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/10/26 11:08.
  */
 
-public class retryTrial {
+public class RetryTrial {
     public static void main(String[] args) {
 
 
