@@ -22,7 +22,7 @@ public class TCPClient {
     public TCPClient() {
 
         try {
-            this.ip  = InetAddress.getByName("localhost");
+            this.ip  = InetAddress.getByName("192.168.0.102");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
