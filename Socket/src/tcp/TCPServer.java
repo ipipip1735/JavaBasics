@@ -2,6 +2,10 @@ package tcp;
 
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
+import java.util.Spliterators;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Created by Administrator on 2016/8/22.
@@ -14,89 +18,7 @@ public class TCPServer {
 //        tcpServer.create();
 //        tcpServer.isBind();
         tcpServer.listen();
-//        tcpServer.http();
-
     }
-
-    private void http() {
-
-//        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//
-//        String s;
-//        while ((s = in.readLine()) != null) {
-//            System.out.println(s);
-//            if (s.isEmpty()) {
-//                break;
-//            }
-//        }
-
-
-//        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-//        out.write("HTTP/1.0 200 OK\r\n");
-//        out.write("Date: Fri, 31 Dec 1999 23:59:59 GMT\r\n");
-//        out.write("Server: Apache/0.8.4\r\n");
-//        out.write("Content-Type: text/html\r\n");
-//        out.write("Content-Length: 59\r\n");
-//        out.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT\r\n");
-//        out.write("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT\r\n");
-//        out.write("\r\n");
-//        out.write("<html><body>111</body></html>");
-//
-//        out.close();
-//        socket.close();
-//        serverSocket.close();
-//
-//
-//
-//        out.write("<P>Ceci est une page d'exemple.</P>");
-//
-//        on ferme les flux.
-//        System.err.println("Connexion avec le client terminée");
-//        in.close();
-
-
-//        System.out.println(socket.getInetAddress().toString());
-//        OutputStream os = socket.getOutputStream();
-//
-//        String errorMessage = "HTTP/1.1 200 OK\r\n" +
-//                "Content-Type:application/binary\r\n" +
-//                "Content-Length: 26\r\n" +
-//                "\r\n" +
-//                "<h1>File Not Found111</h1>\r\n";
-//
-//        DataOutputStream dos = new DataOutputStream(os);
-//        dos.writeUTF(errorMessage);
-
-
-//        PrintStream writer = new PrintStream(socket.getOutputStream());
-//        writer.println("HTTP/1.0 200 OK"); 返回应答消息,并结束应答
-//        writer.println("Date: Fri, 31 Dec 1999 23:59:59 GMT"); 返回应答消息,并结束应答
-//        writer.println("Server: Apache/0.8.4"); 返回应答消息,并结束应答
-//        writer.println("Content-Type: text/html"); 返回应答消息,并结束应答
-//        writer.println("Content-Length: 29"); 返回应答消息,并结束应答
-//        writer.println("Expires: Sat, 01 Jan 2000 00:59:59 GMT"); 返回应答消息,并结束应答
-//        writer.println("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT");
-//        writer.println(""); 根据 HTTP 协议, 空行将结束头信息
-//
-//
-//        FileInputStream fis = new FileInputStream(fileToSend);
-//        byte[] buf = new byte[fis.available()];
-//        fis.read(buf);
-//
-//        writer.write("<html><body>111</body></html>".getBytes());
-//        writer.flush();
-//        writer.close();
-//
-//        fis.close();
-//        socket.close();
-//        serverSocket.close();
-//
-//
-//        dos.close();
-//        os.close();
-
-    }
-
 
     private void isBind() {
 
@@ -125,8 +47,8 @@ public class TCPServer {
     private void listen() {
 
         try {
-//            init();
-            initWhile();
+            init();
+//            initWhile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,22 +57,67 @@ public class TCPServer {
     public void init() throws IOException {
 
         ServerSocket serverSocket = new ServerSocket();
-        serverSocket.bind(new InetSocketAddress(InetAddress.getByName("192.168.0.102"), 6666));
+        serverSocket.bind(new InetSocketAddress(InetAddress.getByName("192.168.0.126"), 6666));
         Socket socket = serverSocket.accept();
 
-        OutputStream os = socket.getOutputStream();
-        DataOutputStream dos = new DataOutputStream(os);
-        dos.writeUTF("kkk卡kk");
 
-        dos.close();
-        os.close();
-        socket.close();
-        serverSocket.close();
+        //读字节数据
+//        InputStream inputStream = socket.getInputStream();
+//        byte[] bytes = new byte[10];
+//        int n;
+//        while ((n = inputStream.read(bytes)) != -1) {
+//            for (int i = 0; i < n; i++) {
+//                System.out.println(bytes[i]);
+//            }
+//        }
+//        inputStream.close(); //先不关闭，后面还要给客户端回应信息
+//        socket.close(); // 不需要调用，因为bufferedReader.close()将自动关闭socket
+
+
+        //读字符串数据
+        InputStream inputStream = socket.getInputStream();
+        InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+        String s;
+        while ((s = bufferedReader.readLine()) != null) {
+            if (s.getBytes().length == 0) //如果是字节，那么就表示客户端请求信息结束了
+                break; //socket是无限流，应该跳出循环，后面应该解析请求内容，然后回应信息
+            System.out.println(s);
+            break;
+        }
+//        bufferedReader.close(); //先不关闭，后面还要给客户端回应信息
+//        socket.close(); // 不需要调用，因为bufferedReader.close()将自动关闭socket
+
+
+        //给客户端回应请求
+        OutputStream outputStream = socket.getOutputStream();
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
+        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+        bufferedWriter.write("HTTP/1.0 200 OK"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Date: Fri, 31 Dec 1999 23:59:59 GMT"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Server: Apache/0.8.4"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Content-Type: text/html"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Content-Length: 29"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT"); //
+        bufferedWriter.write(""); // 根据 HTTP 协议, 空行将结束头信息
+
+        bufferedWriter.write("<html><body>");
+        bufferedWriter.write("gogogo");
+        bufferedWriter.write("</body></html>");
+
+        bufferedWriter.close();
+        socket.close(); // 不需要调用，因为bufferedReader.close()将自动关闭socket
+
+
+        serverSocket.close(); //关闭服务端
     }
 
 
     public void initWhile() throws IOException {
-        InetAddress ip = InetAddress.getByName("192.168.0.102");
+        InetAddress ip = InetAddress.getByName("192.168.0.126");
         InetSocketAddress isa = new InetSocketAddress(ip, 6666);
 
         ServerSocket serverSocket = new ServerSocket();
@@ -159,14 +126,42 @@ public class TCPServer {
 
         while (true) {
             Socket socket = serverSocket.accept();
-            OutputStream os = socket.getOutputStream();
-            DataOutputStream dos = new DataOutputStream(os);
-            dos.writeUTF("kkk卡kk");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
 
-            dos.close();
-            os.close();
-            socket.close();
-//            serverSocket.close();
+                        InputStream inputStream = socket.getInputStream();
+                        InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+
+                        OutputStream outputStream = socket.getOutputStream();
+                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
+                        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+
+                        String s;
+                        while ((s = bufferedReader.readLine()) != null) {
+                            if (s.getBytes().length == 0) //如果是字节，那么就表示客户端请求信息结束了
+                                break; //socket是无限流，应该跳出循环，后面应该解析请求内容，然后回应信息
+                            System.out.println(s);
+
+                            bufferedWriter.write("<html><body>");
+                            bufferedWriter.write("gogogo");
+                            bufferedWriter.write("</body></html>");
+                            bufferedWriter.write("\r\n");
+                            bufferedWriter.flush();
+                        }
+
+                        bufferedWriter.close();
+                        bufferedReader.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
         }
 //        serverSocket.close();
     }
