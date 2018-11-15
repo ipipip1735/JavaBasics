@@ -1,28 +1,24 @@
 package tcp;
 
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Created by Administrator on 2016/8/22.
  */
 public class TCPClient {
 
-    private InetAddress ip;
-    private Socket socket;
+    private InetAddress ip, serverIp;
 
 
     public TCPClient() {
 
         try {
-            this.ip  = InetAddress.getByName("192.168.0.102");
+            this.ip = InetAddress.getByName("192.168.0.126");
+            this.serverIp = InetAddress.getByName("192.168.0.126");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -34,54 +30,83 @@ public class TCPClient {
         try {
             tcpClient.init();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+//        tcpClient.reuse(); //测试失败了
+
+    }
+
+    private void reuse() {
+
+        try {
+
+            Socket socket = new Socket();
+            InetSocketAddress serverISA = new InetSocketAddress(serverIp, 6666);
+            InetSocketAddress clientISA = new InetSocketAddress(ip, 7778);
+//            socket.setReuseAddress(true);
+//            socket.bind(clientISA);
+            int port = socket.getPort();
+            System.out.println("port is " +  port);
+            socket.connect(serverISA);
+            System.out.println("localSocket is " + socket.getLocalSocketAddress());
+            socket.close();
+
+
+
+
+            socket = new Socket();
+            socket.bind(new InetSocketAddress(ip, port));
+//            socket.setReuseAddress(true);
+            socket.connect(serverISA);
+            System.out.println("localSocket is " + socket.getLocalSocketAddress());
+            socket.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
     }
 
     private void init() throws IOException {
 
-        socket = new Socket();
-        InetSocketAddress serverISA = new InetSocketAddress(ip, 6666);
-        InetSocketAddress clientISA = new InetSocketAddress(ip, 7777);
+        Socket socket = new Socket();
+        InetSocketAddress serverISA = new InetSocketAddress(serverIp, 6666);
+        InetSocketAddress clientISA = new InetSocketAddress(ip, 7771);
         socket.bind(clientISA);
         socket.connect(serverISA);
 
+        System.out.println("-ok-");
 
-        InputStream in = socket.getInputStream();
+        OutputStream outputStream = socket.getOutputStream();
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
+        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-//        DataInputStream dataInputStream = new DataInputStream(in);
-
-        System.out.println(in.available());
-        BufferedInputStream bis = new BufferedInputStream(in);
-//        String k = dataInputStream.readUTF();
-
-        System.out.println(bis.available());
-
-
-
+        bufferedWriter.write("GET / HTTP/1.1");
+        bufferedWriter.write("HOST:");
+        bufferedWriter.write(""); // 根据 HTTP 协议, 空行将结束头信息
+        bufferedWriter.flush();
+        socket.shutdownOutput();//关闭输出流，发送信息到服务端
 
 
-
-        byte[] bytes = new byte[1024];
-        bis.read(bytes);
-
-        System.out.println("start");
-        for (byte b : bytes) {
-            System.out.println("No." + b);
+        InputStream inputStream = socket.getInputStream();
+        InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        String s;
+        while ((s = bufferedReader.readLine()) != null) {
+            if (s.getBytes().length == 0) //如果是字节，那么就表示客户端请求信息结束了
+                break; //socket是无限流，应该跳出循环，后面应该解析请求内容，然后回应信息
+            System.out.println(s);
         }
-        String k = new String(bytes, "utf-8");
-
-        System.out.println(k);
-
-        in.close();
-//        dataInputStream.close();
-        socket.close();
+        bufferedReader.close();
+        bufferedWriter.close();
+        System.out.println(socket.isClosed());
 
     }
-
 
 
 }

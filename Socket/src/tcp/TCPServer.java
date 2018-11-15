@@ -15,9 +15,9 @@ public class TCPServer {
     public static void main(String[] args) {
 
         TCPServer tcpServer = new TCPServer();
-//        tcpServer.create();
+        tcpServer.create();
 //        tcpServer.isBind();
-        tcpServer.listen();
+//        tcpServer.listen();
     }
 
     private void isBind() {
@@ -35,8 +35,15 @@ public class TCPServer {
 
         try {
             ServerSocket serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress("localhost", 5656));
-            serverSocket.accept();
+            serverSocket.bind(new InetSocketAddress("192.168.0.126", 6666));
+            System.out.println("getLocalSocketAddress is " + serverSocket.getLocalSocketAddress());
+//            serverSocket.accept();
+            serverSocket.setReuseAddress(true);
+
+            while (true) {
+
+                serverSocket.accept();
+            }
 
 
         } catch (IOException e) {

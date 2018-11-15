@@ -20,7 +20,6 @@ public class Reader {
 
     private void bufferedRead() {
 
-
         try {
             Path path = Paths.get("IO/res/a");
             InputStream inputStream = new FileInputStream(path.toFile());
