@@ -11,17 +11,30 @@ import java.util.List;
 public class HttpCookieTrial {
     public static void main(String[] args) {
         HttpCookieTrial httpCookieTrial = new HttpCookieTrial();
-        try {
-            httpCookieTrial.baise();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            httpCookieTrial.baise();
+//
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        httpCookieTrial.parse();
+
+    }
+
+    private void parse() {
+
+        String s = "set-cookie:FEED_SIDS=304607_1116_16; path=/; domain=.baidu.com; BDSVRTM=231; path=/";
+        List<HttpCookie> httpCookies = HttpCookie.parse(s);
+        System.out.println(httpCookies);
 
     }
 
     private void baise() throws IOException {
 
-        String urlString = "http://m.yssp88.com/android.php";
+//        String urlString = "http://m.yssp88.com/android.php";
+        String urlString = "https://m.baidu.com";
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
         URL url = new URL(urlString);
@@ -53,6 +66,11 @@ public class HttpCookieTrial {
             //Gets the version of the protocol with which the given cookie is related.
             System.out.println("Cookie protocol version: " + ck.getVersion());
 
+            System.out.println("toString: " + ck);
+
         }
+
+
+
     }
 }
