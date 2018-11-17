@@ -11,21 +11,21 @@ import java.util.List;
 public class HttpCookieTrial {
     public static void main(String[] args) {
         HttpCookieTrial httpCookieTrial = new HttpCookieTrial();
-//        try {
-//            httpCookieTrial.baise();
-//
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        httpCookieTrial.parse();
+        try {
+            httpCookieTrial.baise();
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        httpCookieTrial.parse();
 
     }
 
     private void parse() {
 
-        String s = "set-cookie:FEED_SIDS=304607_1116_16; path=/; domain=.baidu.com; BDSVRTM=231; path=/";
+        String s = "set-cookie:FEED_SIDS=304607_1116_16; set-cookie:BDSVRTM=231;";
         List<HttpCookie> httpCookies = HttpCookie.parse(s);
         System.out.println(httpCookies);
 
@@ -42,6 +42,8 @@ public class HttpCookieTrial {
         urlConnection.getContent();
         CookieStore cookieStore = cookieManager.getCookieStore();
         List<HttpCookie> cookies = cookieStore.getCookies();
+
+        System.out.println(urlConnection.getHeaderFields());
 
 
 
