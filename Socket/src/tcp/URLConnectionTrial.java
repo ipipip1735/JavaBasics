@@ -1,6 +1,7 @@
 package tcp;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -13,7 +14,32 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class URLConnectionTrial {
     public static void main(String[] args) {
         URLConnectionTrial urlConnectionTrial = new URLConnectionTrial();
-        urlConnectionTrial.basic();
+//        urlConnectionTrial.basic();
+        urlConnectionTrial.disconnect();
+    }
+
+
+    private void disconnect() {
+
+        try {
+            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String s;
+            while ((s = bufferedReader.readLine()) != null) {
+                System.out.println(s);
+            }
+//            bufferedReader.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void basic() {

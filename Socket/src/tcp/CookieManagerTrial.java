@@ -17,17 +17,17 @@ public class CookieManagerTrial {
     public static void main(String[] args) {
         CookieManagerTrial cookieManagerTrial = new CookieManagerTrial();
 //        cookieManagerTrial.basic();
-        cookieManagerTrial.connectWithCookie();
+//        cookieManagerTrial.connectWithCookie();
+        cookieManagerTrial.requestAndCookieManager();
     }
 
-    private void connectWithCookie() {
+    private void requestAndCookieManager() {
         try {
-
             String urlString = "http://192.168.0.126:8008/cookies.php";
             URL url = new URL(urlString);
 
+
             CookieManager cookieManager = new CookieManager();
-            CookieHandler.setDefault(cookieManager);
             cookieManager.setCookiePolicy(new CookiePolicy() {
                 @Override
                 public boolean shouldAccept(URI uri, HttpCookie cookie) {
@@ -36,30 +36,20 @@ public class CookieManagerTrial {
                     return true;
                 }
             });
-            HttpCookie httpCookie = new HttpCookie("so", "sd");
-            httpCookie.setMaxAge(3600);
-            httpCookie.setPath("/");
-            cookieManager.getCookieStore().add(url.toURI(),  httpCookie);
+            CookieHandler.setDefault(cookieManager);
 
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.getContent();
-
+            System.out.println("------first request------");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            url.getContent();
+            System.out.println("-----Cookie------");
             for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
                 System.out.println(cookie);
             }
-            urlConnection.disconnect();
+            httpURLConnection.disconnect();
+//            urlConnection.disconnect();
 
 
-            System.out.println("------------");
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.getContent();
-
-            if (urlConnection.getRequestProperty("Accept") == null) {
-                String cookie = "ok=yes; Path=/; max-age=3600";
-                urlConnection.setRequestProperty("Cookies", cookie);
-            }
-
+            System.out.println("------second request------");
             InputStream inputStream = (InputStream) url.getContent();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -69,6 +59,54 @@ public class CookieManagerTrial {
                 System.out.println(s);
             }
             bufferedReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    private void connectWithCookie() {
+        try {
+            String urlString = "http://192.168.0.126:8008/cookies.php";
+            URL url = new URL(urlString);
+
+
+            CookieManager cookieManager = new CookieManager();
+            cookieManager.setCookiePolicy(new CookiePolicy() {
+                @Override
+                public boolean shouldAccept(URI uri, HttpCookie cookie) {
+                    System.out.println("uri is " + uri);
+                    System.out.println("cookie is " + cookie);
+                    return true;
+                }
+            });
+
+            //增加Cookie到Cookie池
+            HttpCookie httpCookie = new HttpCookie("myCookie", "ccc");
+            httpCookie.setPath("/");
+            cookieManager.getCookieStore().add(url.toURI(), httpCookie);
+
+
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+            //设置请求头Cookie字段
+            httpURLConnection.setRequestProperty("Cookie", "myCookie=MMM; myCookie2=NNN");
+
+
+            //读取回应主体
+            InputStream inputStream = httpURLConnection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String s;
+            while ((s = bufferedReader.readLine()) != null) {
+                System.out.println(s);
+            }
+            bufferedReader.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,7 +120,7 @@ public class CookieManagerTrial {
     private void basic() {
         try {
 
-            //绑定CookieManager对象方法一
+            //设置CookiePolicy方法一
 //            CookieManager cookieManager = new CookieManager(null, new CookiePolicy() {
 //                @Override
 //                public boolean shouldAccept(URI uri, HttpCookie cookie) {
@@ -93,7 +131,8 @@ public class CookieManagerTrial {
 //            });
 //            CookieHandler.setDefault(cookieManager);
 
-            //方法二
+
+            //设置CookiePolicy方法二
             CookieManager cookieManager = new CookieManager();
             CookieHandler.setDefault(cookieManager);
             cookieManager.setCookiePolicy(new CookiePolicy() {
@@ -106,24 +145,24 @@ public class CookieManagerTrial {
             });
 
 
-
             String urlString = "http://192.168.0.126:8008/cookies.php";
 //            String urlString = "https://m.baidu.com";
             URL url = new URL(urlString);
             URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("Cookie", "yes=ok");
+            urlConnection.getContent(); //发起链接
 
 
             CookieStore cookieStore = cookieManager.getCookieStore();
             List<HttpCookie> cookies = cookieStore.getCookies();
 
             //获取URI
+            System.out.println("------URI-------");
             for (URI uri : cookieStore.getURIs()) {
-                System.out.println(uri);
-
+                System.out.println("uri is " + uri);
             }
 
             //获取Cookie
+            System.out.println("------Cookie-------");
             int cookieIdx = 0;
             for (HttpCookie ck : cookies) {
                 System.out.println("-- Cookie." + ++cookieIdx + " --");
@@ -138,7 +177,8 @@ public class CookieManagerTrial {
             }
 
             //获取回应体
-            InputStream inputStream = (InputStream) url.getContent();
+            System.out.println("------Body-------");
+            InputStream inputStream = urlConnection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
 
