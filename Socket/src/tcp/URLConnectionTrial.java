@@ -20,16 +20,16 @@ public class URLConnectionTrial {
 
         try {
 
-            URLConnection urlConnection = new URL("https://www.baidu.com").openConnection();
-            urlConnection
-                    .connect();
-
+            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+            URLConnection urlConnection = url.openConnection();
 
             //设置请求头信息
             urlConnection.setConnectTimeout(3000);
             urlConnection.setReadTimeout(2000);
 
-
+            //设置Cookie
+            urlConnection.setRequestProperty("Cookie", "sessionID=123; name=chirs");
+            System.out.println(urlConnection.getRequestProperties());
 
 
             //获取回应头信息
