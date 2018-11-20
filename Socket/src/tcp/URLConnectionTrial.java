@@ -43,9 +43,15 @@ public class URLConnectionTrial {
         try {
             URL url = new URL("http://192.168.0.126:8008/cookies.php");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
             InputStream inputStream = httpURLConnection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
+
+
+
+//            httpURLConnection.disconnect();
 
             String s;
             while ((s = bufferedReader.readLine()) != null) {
