@@ -13,9 +13,9 @@ public class Input {
 
         Input myInput = new Input();
 //        myInput.readString();
-//        myInput.FileinputStream();
+        myInput.FileinputStream();
 //        myInput.BufferInputStream();
-        myInput.mark();
+//        myInput.mark();
 
 
     }
@@ -119,10 +119,17 @@ public class Input {
 
         try {
             FileInputStream file = new FileInputStream("IO/res/a");
+            System.out.println(file.available());
+            System.out.println(file.read());
+            System.out.println(file.available());
+            file.skip(1);
+            System.out.println(file.available());
 
 
 
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

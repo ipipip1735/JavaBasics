@@ -1,3 +1,7 @@
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -6,9 +10,9 @@ import java.util.*;
 public class MapTrial {
     public static void main(String[] args) {
         MapTrial mapTrial = new MapTrial();
-//        mapTrial.base();
+        mapTrial.base();
 //        mapTrial.sortMap();
-        mapTrial.navigableMap();
+//        mapTrial.navigableMap();
     }
 
     private void navigableMap() {
@@ -47,11 +51,54 @@ public class MapTrial {
     }
 
     private void base() {
-        HashMap<String, String> hashMap = new HashMap<String, String>();
-        hashMap.put("one", "11111");
-        hashMap.put("one", "22222");
+        HashMap<Person, String> hashMap = new HashMap<>();
+        Person p = new Person(121);
+        hashMap.put(p, "121");
+        System.out.println(hashMap.containsKey(p));
+        p.setAge(12);
+        System.out.println(hashMap.containsKey(p));
+        hashMap.remove(p);
         System.out.println(hashMap);
 
+
+        //Hashcode相同的情况，haseCode()方法被重写了
+//        try {
+//            HashMap<URI, String> hashMap = new HashMap<>();
+//            URI uri1 = new URI("content://abc/");
+//            URI uri2 = new URI("content://abc/");
+//            System.out.println(uri1.hashCode());
+//            System.out.println(uri2.hashCode());
+//
+//            hashMap.put(uri1, "abc");
+//            System.out.println("has is " + hashMap.containsKey(uri2));
+//            System.out.println(hashMap);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+
+
+//        try {
+//            HashMap<URL, String> hashMap = new HashMap<>();
+//            URL url1 = new URL("http://abc/");
+//            URL url2 = new URL("http://abc/");
+//            System.out.println(url1.hashCode());
+//            System.out.println(url2.hashCode());
+//
+//            hashMap.put(url1, "abc");
+//            System.out.println("has is " + hashMap.containsKey(url2));
+//            System.out.println(hashMap);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+
+
+//        HashMap<Person, String> hashMap = new HashMap<>();
+//        Person person1 = new Person(121);
+//        Person person2 = new Person(121);
+//        System.out.println(person1.hashCode());
+//        System.out.println(person2.hashCode());
+//        hashMap.put(person1, "121");
+//        System.out.println(hashMap.containsKey(person2));
 
     }
 
@@ -97,5 +144,18 @@ public class MapTrial {
 //            System.out.println(m.getValue());
 //        }
 
+    }
+}
+
+
+class Person {
+    private int age;
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Person(int age) {
+        this.age = age;
     }
 }
