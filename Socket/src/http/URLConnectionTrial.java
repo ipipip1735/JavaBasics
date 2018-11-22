@@ -16,6 +16,25 @@ public class URLConnectionTrial {
         URLConnectionTrial urlConnectionTrial = new URLConnectionTrial();
 //        urlConnectionTrial.basic();
         urlConnectionTrial.disconnect();
+        urlConnectionTrial.keepAlive();
+    }
+
+    private void keepAlive() {
+
+        try {
+            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestProperty("Connection", "close");
+            httpURLConnection.connect();
+
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -38,7 +57,7 @@ public class URLConnectionTrial {
             while ((s = bufferedReader.readLine()) != null) {
                 System.out.println(s);
             }
-//            bufferedReader.close();
+            bufferedReader.close();
 
 
         } catch (IOException e) {
