@@ -1,4 +1,4 @@
-package tcp;
+package cookie;
 
 import java.io.BufferedReader;
 import java.io.IOException;

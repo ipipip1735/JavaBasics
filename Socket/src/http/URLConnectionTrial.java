@@ -1,4 +1,4 @@
-package tcp;
+package http;
 
 import java.io.*;
 import java.net.HttpURLConnection;
