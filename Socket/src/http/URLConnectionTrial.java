@@ -1,4 +1,4 @@
-package tcp;
+package http;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -16,6 +16,25 @@ public class URLConnectionTrial {
         URLConnectionTrial urlConnectionTrial = new URLConnectionTrial();
 //        urlConnectionTrial.basic();
         urlConnectionTrial.disconnect();
+        urlConnectionTrial.keepAlive();
+    }
+
+    private void keepAlive() {
+
+        try {
+            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestProperty("Connection", "close");
+            httpURLConnection.connect();
+
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -24,15 +43,21 @@ public class URLConnectionTrial {
         try {
             URL url = new URL("http://192.168.0.126:8008/cookies.php");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
             InputStream inputStream = httpURLConnection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
+
+
+
+//            httpURLConnection.disconnect();
 
             String s;
             while ((s = bufferedReader.readLine()) != null) {
                 System.out.println(s);
             }
-//            bufferedReader.close();
+            bufferedReader.close();
 
 
         } catch (IOException e) {
