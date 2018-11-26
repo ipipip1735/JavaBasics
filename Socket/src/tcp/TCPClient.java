@@ -17,8 +17,8 @@ public class TCPClient {
     public TCPClient() {
 
         try {
-            this.ip = InetAddress.getByName("192.168.0.126");
-            this.serverIp = InetAddress.getByName("192.168.0.126");
+            this.ip = InetAddress.getByName("192.168.0.127");
+            this.serverIp = InetAddress.getByName("192.168.0.127");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -28,7 +28,8 @@ public class TCPClient {
     public static void main(String[] args) {
         TCPClient tcpClient = new TCPClient();
         try {
-            tcpClient.init();
+            tcpClient.httpGET();
+//            tcpClient.communication();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,6 +37,43 @@ public class TCPClient {
 
 
 //        tcpClient.reuse(); //测试失败了
+
+    }
+
+    private void communication() throws IOException {
+
+        Socket socket = new Socket();
+        InetSocketAddress serverISA = new InetSocketAddress(serverIp, 6666);
+        socket.connect(serverISA);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    InputStream inputStream = socket.getInputStream();
+                    int r;
+                    while ((r = inputStream.read()) != -1) {
+                        System.out.println("r is " + r);
+                    }
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        for (int i = 97; i < 100; i++) {
+            OutputStream outputStream = socket.getOutputStream();
+            outputStream.write(i);
+            outputStream.flush();
+            try {
+                Thread.sleep(1000l);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        socket.shutdownOutput();
 
     }
 
@@ -49,12 +87,10 @@ public class TCPClient {
 //            socket.setReuseAddress(true);
 //            socket.bind(clientISA);
             int port = socket.getPort();
-            System.out.println("port is " +  port);
+            System.out.println("port is " + port);
             socket.connect(serverISA);
             System.out.println("localSocket is " + socket.getLocalSocketAddress());
             socket.close();
-
-
 
 
             socket = new Socket();
@@ -72,23 +108,21 @@ public class TCPClient {
 
     }
 
-    private void init() throws IOException {
+    private void httpGET() throws IOException {
 
         Socket socket = new Socket();
         InetSocketAddress serverISA = new InetSocketAddress(serverIp, 6666);
-        InetSocketAddress clientISA = new InetSocketAddress(ip, 7771);
-        socket.bind(clientISA);
+//        InetSocketAddress clientISA = new InetSocketAddress(ip, 7771);
+//        socket.bind(clientISA); //不指定socket，然系统自动分配空闲socket
         socket.connect(serverISA);
-
-        System.out.println("-ok-");
 
         OutputStream outputStream = socket.getOutputStream();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
         BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-        bufferedWriter.write("GET / HTTP/1.1");
-        bufferedWriter.write("HOST:");
-        bufferedWriter.write(""); // 根据 HTTP 协议, 空行将结束头信息
+        bufferedWriter.write("GET / HTTP/1.1\n");
+        bufferedWriter.write("HOST: 192.168.0.126:80\n");
+        bufferedWriter.write("\n"); // 根据 HTTP 协议, 空行将结束头信息
         bufferedWriter.flush();
         socket.shutdownOutput();//关闭输出流，发送信息到服务端
 
@@ -103,7 +137,6 @@ public class TCPClient {
             System.out.println(s);
         }
         bufferedReader.close();
-        bufferedWriter.close();
         System.out.println(socket.isClosed());
 
     }
