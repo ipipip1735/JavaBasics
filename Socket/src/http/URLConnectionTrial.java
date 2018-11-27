@@ -19,10 +19,182 @@ public class URLConnectionTrial {
 //        urlConnectionTrial.basic();
 //        urlConnectionTrial.httpPOST();
 //        urlConnectionTrial.httpUpload();
-        urlConnectionTrial.httpUploadTwoFile();
+//        urlConnectionTrial.httpUploadTwoFile();
+        urlConnectionTrial.httpUploadMultipleFile();
+//        urlConnectionTrial.httpUploadWithMixed(); //测试失败了，应该用于邮件附件
+
+
+
 //        urlConnectionTrial.httpRedirect();
 //        urlConnectionTrial.disconnect();
 //        urlConnectionTrial.keepAlive();
+    }
+
+    private void httpUploadWithMixed() {
+        try {
+            URL url = new URL("http://192.168.0.126/upload.php");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+
+            //设置请求头信息
+            String boundaryString = UUID.randomUUID().toString().substring(0,6);
+            String subBoundaryString = UUID.randomUUID().toString().substring(0,6);
+            httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
+
+            //发送请求
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+            //字段1
+            bufferedWriter.write("--" + boundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"one\"" + "\n\n");
+            bufferedWriter.write("111" + "\n");
+
+            //字段2
+            bufferedWriter.write("--" + boundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"file\"" + "\n");
+            bufferedWriter.write("Content-Type: multipart/mixed;boundary=" + subBoundaryString + "\n\n");
+
+
+            bufferedWriter.write("--" + subBoundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"file1\";filename=\"a.jpg\"" + "\n");
+            bufferedWriter.write("Content-Type: image/jpeg" + "\n\n");
+            bufferedWriter.flush();
+            //发送w1.jpg
+            FileInputStream fileInputStream = new FileInputStream(new File("Socket/res/w1.jpg"));
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+            int bytesRead;
+            byte[] dataBuffer = new byte[1024];
+            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            }
+            bufferedOutputStream.flush();
+
+
+            //字段4
+            bufferedWriter.write("\n--" + subBoundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"file2\";filename=\"b.jpg\"" + "\n");
+            bufferedWriter.write("Content-Type: image/jpeg" + "\n\n");
+            bufferedWriter.flush();
+            //发送w2.jpg
+            fileInputStream = new FileInputStream(new File("Socket/res/w2.jpg"));
+            bufferedOutputStream = new BufferedOutputStream(outputStream);
+            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            }
+            bufferedOutputStream.flush();
+
+            bufferedWriter.write("\n--" + subBoundaryString + "--\n");
+            bufferedWriter.write("\n--" + boundaryString + "--\n");
+            bufferedWriter.flush();
+
+            bufferedOutputStream.close();
+            bufferedWriter.close();
+
+
+            //读取服务端回应
+            InputStream inputStream = httpURLConnection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String r;
+            while ((r = bufferedReader.readLine()) != null) {
+                System.out.println(r);
+            }
+            bufferedReader.close();
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void httpUploadMultipleFile() {
+        try {
+            URL url = new URL("http://192.168.0.126/upload.php");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setChunkedStreamingMode(1024 * 2);
+            httpURLConnection.setRequestProperty("Transfer-Encoding", "chunked"); //可选的，系统会自动设置
+
+
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+
+            //设置请求头信息
+            String boundaryString = UUID.randomUUID().toString().substring(0,6);
+            httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
+
+            //发送请求
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+            //字段1
+            bufferedWriter.write("--" + boundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"one\"" + "\n\n");
+            bufferedWriter.write("111" + "\n");
+
+            //字段2
+            bufferedWriter.write("--" + boundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"file[]\";filename=\"a.jpg\"" + "\n");
+            bufferedWriter.write("Content-Type: image/jpeg" + "\n\n");
+            bufferedWriter.flush();
+            //发送w1.jpg
+            FileInputStream fileInputStream = new FileInputStream(new File("Socket/res/w1.jpg"));
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+            int bytesRead;
+            byte[] dataBuffer = new byte[1024];
+            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            }
+            bufferedOutputStream.flush();
+
+
+            //字段4
+            bufferedWriter.write("\n--" + boundaryString + "\n");
+            bufferedWriter.write("Content-Disposition: form-data; name=\"file[]\";filename=\"b.jpg\"" + "\n");
+            bufferedWriter.write("Content-Type: image/jpeg" + "\n\n");
+            bufferedWriter.flush();
+            //发送w2.jpg
+            fileInputStream = new FileInputStream(new File("Socket/res/w2.jpg"));
+            bufferedOutputStream = new BufferedOutputStream(outputStream);
+            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            }
+            bufferedOutputStream.flush();
+
+            bufferedWriter.write("\n--" + boundaryString + "--\n");
+            bufferedWriter.flush();
+
+            bufferedOutputStream.close();
+            bufferedWriter.close();
+
+
+            //读取服务端回应
+            InputStream inputStream = httpURLConnection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String r;
+            while ((r = bufferedReader.readLine()) != null) {
+                System.out.println(r);
+            }
+            bufferedReader.close();
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void httpUploadTwoFile() {
@@ -83,7 +255,7 @@ public class URLConnectionTrial {
             }
             bufferedOutputStream.flush();
 
-            bufferedWriter.write("\n--" + boundaryString + "\n");
+            bufferedWriter.write("\n--" + boundaryString + "--\n");
             bufferedWriter.flush();
 
             bufferedOutputStream.close();
@@ -155,7 +327,7 @@ public class URLConnectionTrial {
             }
             bufferedOutputStream.flush();
 
-            bufferedWriter.write("\n--" + boundaryString + "\n");
+            bufferedWriter.write("\n--" + boundaryString + "--\n");
             bufferedWriter.flush();
 
             bufferedOutputStream.close();
