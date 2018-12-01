@@ -10,9 +10,36 @@ import java.util.*;
 public class MapTrial {
     public static void main(String[] args) {
         MapTrial mapTrial = new MapTrial();
-        mapTrial.base();
+//        mapTrial.base();
 //        mapTrial.sortMap();
 //        mapTrial.navigableMap();
+        mapTrial.LinkedHashMap();
+    }
+
+    private void LinkedHashMap() {
+
+        LinkedHashMap<String, Integer> linkedHashMap =
+//                new LinkedHashMap<>(0, 0.75f, false);
+                new LinkedHashMap<>(0, 0.75f, true);
+        linkedHashMap.put("zero", 0);
+        System.out.println(linkedHashMap);
+        linkedHashMap.put("one", 1);
+        System.out.println(linkedHashMap);
+        linkedHashMap.put("two", 2);
+        System.out.println(linkedHashMap);
+        linkedHashMap.put("three", 3);
+        System.out.println(linkedHashMap);
+        linkedHashMap.put("four", 4);
+        System.out.println(linkedHashMap);
+
+        linkedHashMap.get("two");
+        System.out.println(linkedHashMap);
+        linkedHashMap.get("three");
+        System.out.println(linkedHashMap);
+        linkedHashMap.put("seven", 7);
+        System.out.println(linkedHashMap);
+
+
     }
 
     private void navigableMap() {
@@ -51,11 +78,31 @@ public class MapTrial {
     }
 
     private void base() {
+
+        //输出顺序和插入顺序不一致
+//        Map<String, Integer> map = new HashMap<>();
+//        map.put("three", 3);
+//        map.put("one", 1);
+//        map.put("two", 2);
+//
+//        for (String s : map.keySet()) {
+//            System.out.println(s);
+//        }
+//        for (Integer i : map.values()) {
+//            System.out.println(i);
+//        }
+//        for (Map.Entry entry : map.entrySet()) {
+//            System.out.println(entry);
+//        }
+
+
+        //由于重写hashCode导致内存泄漏
         HashMap<Person, String> hashMap = new HashMap<>();
-        Person p = new Person(121);
-        hashMap.put(p, "121");
+        Person p = new Person(121, "bob");
+        hashMap.put(p, "bob");
         System.out.println(hashMap.containsKey(p));
-        p.setAge(12);
+//        p.setAge(12);
+        p.setName("sam");
         System.out.println(hashMap.containsKey(p));
         hashMap.remove(p);
         System.out.println(hashMap);
@@ -150,12 +197,23 @@ public class MapTrial {
 
 class Person {
     private int age;
+    private String name;
 
     public void setAge(int age) {
         this.age = age;
     }
 
-    public Person(int age) {
+    public Person(int age, String name) {
         this.age = age;
+        this.name = name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }
