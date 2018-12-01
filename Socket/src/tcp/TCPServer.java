@@ -15,9 +15,42 @@ public class TCPServer {
     public static void main(String[] args) {
 
         TCPServer tcpServer = new TCPServer();
-        tcpServer.create();
+//        tcpServer.communication();
 //        tcpServer.isBind();
-//        tcpServer.listen();
+        tcpServer.listen();
+    }
+
+    private void communication() {
+
+        try {
+            InetAddress inetAddress = InetAddress.getByName("192.168.0.127");
+
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, 6666);
+            ServerSocket serverSocket = new ServerSocket();
+            serverSocket.bind(inetSocketAddress);
+            Socket socket = serverSocket.accept();
+
+            //获取读写流
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
+
+            int r;
+            while ((r = inputStream.read()) != -1) {
+                System.out.println(r);
+                System.out.println("r1 is " + r);
+                outputStream.write(r);
+            }
+            outputStream.close();
+            serverSocket.close(); //关闭服务端
+
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void isBind() {
@@ -31,31 +64,11 @@ public class TCPServer {
 
     }
 
-    private void create() {
-
-        try {
-            ServerSocket serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress("192.168.0.126", 6666));
-            System.out.println("getLocalSocketAddress is " + serverSocket.getLocalSocketAddress());
-//            serverSocket.accept();
-            serverSocket.setReuseAddress(true);
-
-            while (true) {
-
-                serverSocket.accept();
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void listen() {
 
         try {
-            init();
-//            initWhile();
+//            init();
+            initOnThread();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,10 +101,7 @@ public class TCPServer {
 
         String s;
         while ((s = bufferedReader.readLine()) != null) {
-            if (s.getBytes().length == 0) //如果是字节，那么就表示客户端请求信息结束了
-                break; //socket是无限流，应该跳出循环，后面应该解析请求内容，然后回应信息
             System.out.println(s);
-            break;
         }
 //        bufferedReader.close(); //先不关闭，后面还要给客户端回应信息
 //        socket.close(); // 不需要调用，因为bufferedReader.close()将自动关闭socket
@@ -102,14 +112,14 @@ public class TCPServer {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
         BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-        bufferedWriter.write("HTTP/1.0 200 OK"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Date: Fri, 31 Dec 1999 23:59:59 GMT"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Server: Apache/0.8.4"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Content-Type: text/html"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Content-Length: 29"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT"); // 返回应答消息,并结束应答
-        bufferedWriter.write("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT"); //
-        bufferedWriter.write(""); // 根据 HTTP 协议, 空行将结束头信息
+        bufferedWriter.write("HTTP/1.0 200 OK\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Date: Fri, 31 Dec 1999 23:59:59 GMT\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Server: Apache/0.8.4\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Content-Type: text/html\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Content-Length: 29\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT\n"); // 返回应答消息,并结束应答
+        bufferedWriter.write("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT\n"); //
+        bufferedWriter.write("\n"); // 根据 HTTP 协议, 空行将结束头信息
 
         bufferedWriter.write("<html><body>");
         bufferedWriter.write("gogogo");
@@ -123,7 +133,7 @@ public class TCPServer {
     }
 
 
-    public void initWhile() throws IOException {
+    public void initOnThread() throws IOException {
         InetAddress ip = InetAddress.getByName("192.168.0.126");
         InetSocketAddress isa = new InetSocketAddress(ip, 6666);
 
@@ -156,7 +166,7 @@ public class TCPServer {
                             bufferedWriter.write("<html><body>");
                             bufferedWriter.write("gogogo");
                             bufferedWriter.write("</body></html>");
-                            bufferedWriter.write("\r\n");
+                            bufferedWriter.write("\n");
                             bufferedWriter.flush();
                         }
 
