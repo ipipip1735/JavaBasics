@@ -10,11 +10,87 @@ import java.util.*;
 public class MapTrial {
     public static void main(String[] args) {
         MapTrial mapTrial = new MapTrial();
-//        mapTrial.base();
+//        mapTrial.map();
+//        mapTrial.mapCURD();
+
 //        mapTrial.sortMap();
 //        mapTrial.navigableMap();
-        mapTrial.LinkedHashMap();
+
+//        mapTrial.LinkedHashMap();
+        mapTrial.LinkedHashMapStale();
     }
+
+    private void LinkedHashMapStale() {
+        LinkedHashMap<String, Integer> linkedHashMap =
+//                new LinkedHashMap<>(0, 0.75f, false){
+                new LinkedHashMap<>(0, 0.75f, true) {
+                    private static final int MAX_ENTRIES = 3;
+
+                    @Override
+                    protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
+                        System.out.println("~~removeEldestEntry~~");
+                        System.out.println(eldest);
+                        return size() > MAX_ENTRIES;
+//                        return super.removeEldestEntry(eldest);
+                    }
+                };
+
+        linkedHashMap.put("zero", 0);
+        linkedHashMap.put("one", 1);
+        linkedHashMap.put("two", 2);
+        linkedHashMap.put("three", 3);
+        linkedHashMap.put("four", 4);
+        linkedHashMap.put("one1", 11);
+        linkedHashMap.put("two1", 12);
+        linkedHashMap.put("three1", 13);
+        linkedHashMap.put("four1", 14);
+        System.out.println(linkedHashMap);
+
+//        linkedHashMap.put("zero", 0);
+//        System.out.println(linkedHashMap);
+
+//        HashMap<String, Integer> map = new HashMap<>();
+//        map.put("thirty", 30);
+//        map.put("fourty", 40);
+//        System.out.println(map);
+//        linkedHashMap.merge("one", 90, (k,v)->{
+//            System.out.println("k is " + k);
+//            System.out.println("v is " + v);
+//            return 99;
+//        });
+//        System.out.println(linkedHashMap);
+
+//        HashMap<String, Integer> map = new HashMap<>();
+//        map.put("thirty", 30);
+//        map.put("fourty", 40);
+//        System.out.println(map);
+//        linkedHashMap.putAll(map);
+//        System.out.println(linkedHashMap);
+
+//        linkedHashMap.putIfAbsent("one", 8);
+//        System.out.println(linkedHashMap);
+
+
+//        linkedHashMap.computeIfAbsent("five", (k) -> {
+//            System.out.println("k is " + k);
+//            return 99;
+//        });
+
+//        linkedHashMap.computeIfAbsent("five", (k) -> {
+//            System.out.println("k is " + k);
+//            return 99;
+//        });
+
+//        linkedHashMap.computeIfPresent("one", (k, v) -> {
+//            System.out.println("k is " + k);
+//            System.out.println("v is " + v);
+//            return 99;
+//        });
+//        System.out.println(linkedHashMap);
+
+
+    }
+
 
     private void LinkedHashMap() {
 
@@ -27,16 +103,35 @@ public class MapTrial {
         System.out.println(linkedHashMap);
         linkedHashMap.put("two", 2);
         System.out.println(linkedHashMap);
-        linkedHashMap.put("three", 3);
+        linkedHashMap.put("three", null);
         System.out.println(linkedHashMap);
         linkedHashMap.put("four", 4);
         System.out.println(linkedHashMap);
 
-        linkedHashMap.get("two");
-        System.out.println(linkedHashMap);
-        linkedHashMap.get("three");
-        System.out.println(linkedHashMap);
-        linkedHashMap.put("seven", 7);
+//        linkedHashMap.get("two");
+//        System.out.println(linkedHashMap);
+
+//        linkedHashMap.computeIfAbsent("one", (k)->{
+//            System.out.println("k is " + k);
+//            return 99;
+//        });
+//        System.out.println(linkedHashMap);
+
+
+//        linkedHashMap.replace("five", 65);
+//        System.out.println(linkedHashMap);
+//        HashMap<String, Integer> hashMap = new HashMap<>();
+
+
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("thirty", 30);
+        map.put("fourty", 40);
+        map.put("sfourty1", 410);
+        map.put("tfourty2", 420);
+        map.put("fourty3", 430);
+        System.out.println(map);
+
+        linkedHashMap.putAll(map);
         System.out.println(linkedHashMap);
 
 
@@ -77,7 +172,7 @@ public class MapTrial {
 
     }
 
-    private void base() {
+    private void map() {
 
         //输出顺序和插入顺序不一致
 //        Map<String, Integer> map = new HashMap<>();
@@ -97,15 +192,15 @@ public class MapTrial {
 
 
         //由于重写hashCode导致内存泄漏
-        HashMap<Person, String> hashMap = new HashMap<>();
-        Person p = new Person(121, "bob");
-        hashMap.put(p, "bob");
-        System.out.println(hashMap.containsKey(p));
-//        p.setAge(12);
-        p.setName("sam");
-        System.out.println(hashMap.containsKey(p));
-        hashMap.remove(p);
-        System.out.println(hashMap);
+//        HashMap<Person, String> hashMap = new HashMap<>();
+//        Person p = new Person(121, "bob");
+//        hashMap.put(p, "bob");
+//        System.out.println(hashMap.containsKey(p));
+////        p.setAge(12);
+//        p.setName("sam");
+//        System.out.println(hashMap.containsKey(p));
+//        hashMap.remove(p);
+//        System.out.println(hashMap);
 
 
         //Hashcode相同的情况，haseCode()方法被重写了
@@ -139,6 +234,7 @@ public class MapTrial {
 //        }
 
 
+        //hashcode test
 //        HashMap<Person, String> hashMap = new HashMap<>();
 //        Person person1 = new Person(121);
 //        Person person2 = new Person(121);
@@ -146,6 +242,88 @@ public class MapTrial {
 //        System.out.println(person2.hashCode());
 //        hashMap.put(person1, "121");
 //        System.out.println(hashMap.containsKey(person2));
+
+    }
+
+
+    private void mapCURD() {
+
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("zero", 0);
+        hashMap.put("one", 1);
+        hashMap.put("two", 2);
+        hashMap.put("three", 3);
+        hashMap.put("four", 4);
+        System.out.println(hashMap);
+
+        //put()操作
+//        hashMap.put("two", 100);
+//        System.out.println(hashMap);
+
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("thirty", 30);
+        map.put("fourty", 40);
+        System.out.println(map);
+
+        hashMap.putAll(map);
+        System.out.println(hashMap);
+
+
+//        Integer integer = hashMap.putIfAbsent("four", 65);
+//        System.out.println("integer is " + integer);
+//        System.out.println("hashMap is " + hashMap);
+//
+//        integer = hashMap.putIfAbsent("five", 65);
+//        System.out.println("integer is " + integer);
+//        System.out.println("hashMap is " + hashMap);
+
+
+        //replace()操作
+//        hashMap.replace("zero", 100); //等价于put()某个已存在的KEY
+//        System.out.println(hashMap);
+
+
+//        hashMap.replaceAll((k, v)->{
+//            System.out.println("k is " + k);
+//            System.out.println("v is " + v);
+//            return v;
+//        });
+//        System.out.println(hashMap);
+
+
+        //mege()操作
+////        hashMap.merge("one", 11, (origin, newV)->{
+//        hashMap.merge("five", 11, (origin, newV)->{
+//            System.out.println("origin is " + origin);
+//            System.out.println("new is " + newV);
+//            return newV;
+//        });
+//        System.out.println(hashMap);
+
+
+        //compute()操作
+//        hashMap.compute("one", (k, v)->{
+//        hashMap.compute("five", (k, v)->{
+//            System.out.println("k is " + k);
+//            System.out.println("v is " + v);
+//            return 99;
+//        });
+//        System.out.println(hashMap);
+
+//        hashMap.computeIfAbsent("one", (k)->{
+//            System.out.println("k is " + k);
+//            return 99;
+//        });
+//        System.out.println(hashMap);
+
+
+//        hashMap.computeIfPresent("five", (k, v)->{
+//            System.out.println("k is " + k);
+//            System.out.println("v is " + v);
+//            return 99;
+//        });
+//        System.out.println(hashMap);
+
 
     }
 
