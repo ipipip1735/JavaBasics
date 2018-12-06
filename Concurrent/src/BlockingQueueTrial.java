@@ -7,9 +7,27 @@ import java.util.concurrent.BlockingQueue;
 public class BlockingQueueTrial {
     public static void main(String[] args) {
         BlockingQueueTrial blockingQueueTrial = new BlockingQueueTrial();
-        blockingQueueTrial.add();
-//        blockingQueueTrial.minus();
-//        blockingQueueTrial.iterate();
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                blockingQueueTrial.add();
+//                blockingQueueTrial.minus();
+//                blockingQueueTrial.iterate();
+            }
+        });
+
+        System.out.println("start");
+
+        thread.start();
+        try {
+            Thread.sleep(3000);
+            thread.interrupt();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("end");
+
     }
 
     private void iterate() {
