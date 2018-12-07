@@ -8,8 +8,8 @@ import java.util.concurrent.*;
 public class ThreadPoolExecutorTrial {
     public static void main(String[] args) {
         ThreadPoolExecutorTrial threadPoolExecutorTrial = new ThreadPoolExecutorTrial();
-//        threadPoolExecutorTrial.base();
-        threadPoolExecutorTrial.custom();
+        threadPoolExecutorTrial.base();
+//        threadPoolExecutorTrial.custom();
 
 
     }
@@ -17,10 +17,11 @@ public class ThreadPoolExecutorTrial {
     private void custom() {
 
         Runnable runnable = new Runnable() {
-            int i = new Random().nextInt(10);
+
             @Override
             public void run() {
-                System.out.println("one");
+                int i = new Random().nextInt(10);
+                System.out.println("[run]" + i);
                 try {
                     Thread.sleep(1000l);
                 } catch (InterruptedException e) {
@@ -51,10 +52,10 @@ public class ThreadPoolExecutorTrial {
     private void base() {
 
         Runnable runnable = new Runnable() {
-            int i = new Random().nextInt(10);
             @Override
             public void run() {
-                System.out.println("one");
+                int i = new Random().nextInt(10);
+                System.out.println("[run]" + i);
                 try {
                     Thread.sleep(2000l);
                 } catch (InterruptedException e) {
@@ -73,8 +74,7 @@ public class ThreadPoolExecutorTrial {
 }
 
 
-
-class BaseThreadPoolExecutor extends ThreadPoolExecutor{
+class BaseThreadPoolExecutor extends ThreadPoolExecutor {
     public BaseThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }

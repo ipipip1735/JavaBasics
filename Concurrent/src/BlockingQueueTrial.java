@@ -23,6 +23,7 @@ public class BlockingQueueTrial {
         try {
             Thread.sleep(3000);
             thread.interrupt();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
