@@ -1,13 +1,34 @@
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
 
 public class QueueTrial {
 
     public static void main(String[] args) {
         QueueTrial queueTrial = new QueueTrial();
 //        queueTrial.base();
-        queueTrial.priority();
+//        queueTrial.priority();
+        queueTrial.SynchronousQueue();
+
+
+    }
+
+    private void SynchronousQueue() {
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+
+        SynchronousQueue<String> synchronousQueue = new SynchronousQueue();
+
+        try {
+            synchronousQueue.put("String");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
     }

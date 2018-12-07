@@ -8,8 +8,8 @@ import java.util.concurrent.*;
 public class ThreadPoolExecutorTrial {
     public static void main(String[] args) {
         ThreadPoolExecutorTrial threadPoolExecutorTrial = new ThreadPoolExecutorTrial();
-        threadPoolExecutorTrial.base();
-//        threadPoolExecutorTrial.custom();
+//        threadPoolExecutorTrial.base();
+        threadPoolExecutorTrial.custom();
 
 
     }
@@ -70,6 +70,7 @@ public class ThreadPoolExecutorTrial {
         executorService.execute(runnable);
         executorService.execute(runnable);
         executorService.shutdown();
+        System.out.println("end");
     }
 }
 
