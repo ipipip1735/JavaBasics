@@ -11,7 +11,9 @@ public class BufferTrial {
         BufferTrial trialBuffer = new BufferTrial();
 
 
-//        trialBuffer.flip();
+
+//        trialBuffer.rewind();
+        trialBuffer.flip();
 //        trialBuffer.getBuffer();
 //        trialBuffer.getAbsoluteBuffer();
 //        trialBuffer.getBulkBuffer();
@@ -21,7 +23,7 @@ public class BufferTrial {
 
 
 //        trialBuffer.writeToRead();
-        trialBuffer.duplicate();
+//        trialBuffer.duplicate();
 
 
 
@@ -183,18 +185,18 @@ public class BufferTrial {
 
         RandomAccessFile aFile = null;
         try {
-            aFile = new RandomAccessFile("Buffer/res/flipData", "rw");
+            aFile = new RandomAccessFile("NIO/res/flipData", "rw");
 
             FileChannel inChannel = aFile.getChannel();
 
             ByteBuffer buf = ByteBuffer.allocate(48);
 //        System.out.println("position is at " + buf.position());
 
-            int bytesRead = inChannel.read(buf);
+            int bytesRead;
 //        System.out.println("position is at " + buf.position());
 
 
-            while (bytesRead != -1) {
+            while ((bytesRead = inChannel.read(buf)) != -1) {
 
                 System.out.println("Read " + bytesRead);
                 System.out.println("position is at " + buf.position());
@@ -205,7 +207,6 @@ public class BufferTrial {
                 }
 
                 buf.clear();
-                bytesRead = inChannel.read(buf);
             }
             aFile.close();
 
@@ -215,6 +216,17 @@ public class BufferTrial {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    public void rewind() {
+        ByteBuffer b = ByteBuffer.allocate(1);
+        b.put((byte) 123);
+        b.flip();
+//        b.rewind();
+        b.put((byte) 123);
+//        b.put((byte) 123);
 
     }
 
