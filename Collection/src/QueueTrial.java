@@ -11,24 +11,7 @@ public class QueueTrial {
         QueueTrial queueTrial = new QueueTrial();
 //        queueTrial.base();
 //        queueTrial.priority();
-        queueTrial.SynchronousQueue();
 
-
-    }
-
-    private void SynchronousQueue() {
-
-
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-
-
-        SynchronousQueue<String> synchronousQueue = new SynchronousQueue();
-
-        try {
-            synchronousQueue.put("String");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
 
     }
