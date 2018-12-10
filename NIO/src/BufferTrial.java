@@ -4,18 +4,19 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
+import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.charset.StandardCharsets.*;
 
 public class BufferTrial {
     public static void main(String[] args) {
         BufferTrial trialBuffer = new BufferTrial();
 
 
-        trialBuffer.convert();
+        trialBuffer.as();
 //        trialBuffer.rewind();
 //        trialBuffer.flip();
 //        trialBuffer.getBuffer();
@@ -32,6 +33,58 @@ public class BufferTrial {
 
     }
 
+    private void as() {
+
+        //ByteBuffer写入字符串
+//        ByteBuffer byteBuffer =  ByteBuffer.allocate(6);
+//        byteBuffer.asCharBuffer().put("x叉x");
+//
+//        while (byteBuffer.hasRemaining()) {
+//            System.out.println(byteBuffer.getChar());
+//        }
+
+
+        //ByteBuffer 转换为 CharBuffer
+        CharBuffer charBuffer = CharBuffer.allocate(2);
+        charBuffer.put("吃饭");
+        charBuffer.flip();
+
+        ByteBuffer byteBuffer = UTF_8.encode(charBuffer);
+        while (byteBuffer.hasRemaining()) {
+            System.out.println(byteBuffer.get());
+        }
+
+
+        //CharBuffer 转换为 ByteBuffer
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
+//        byteBuffer.put("吃饭".getBytes(UTF_8)).flip();
+//
+//        CharBuffer charBuffer = UTF_8.decode(byteBuffer);
+//        while (charBuffer.hasRemaining()) {
+//            System.out.println(charBuffer.get());
+//        }
+
+
+        //导出剩余视图
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(502);
+//        System.out.println("BB|position is " + byteBuffer.position());
+//        System.out.println("BB|limit is " + byteBuffer.limit());
+//        System.out.println("BB|capacity is " + byteBuffer.capacity());
+//        byteBuffer.put((byte) 97);
+//        byteBuffer.put((byte) 98);
+//        byteBuffer.put((byte) 99);
+//        byteBuffer.put((byte) 99);
+//        System.out.println("BB|position is " + byteBuffer.position());
+//        System.out.println("BB|limit is " + byteBuffer.limit());
+//        System.out.println("BB|capacity is " + byteBuffer.capacity());
+//
+//        CharBuffer charBuffer = byteBuffer.asCharBuffer();
+//        System.out.println("CB|position is " + charBuffer.position());
+//        System.out.println("CB|limit is " + charBuffer.limit());
+//        System.out.println("CB|capacity is " + charBuffer.capacity());
+
+    }
+
     private void convert() {
 
 //        String k = "张s实;例11大。";
@@ -44,11 +97,42 @@ public class BufferTrial {
 //        System.out.println(UTF_8.decode(byteBuffer));
 
 
+        String k = "abc";
+        ByteBuffer byteBuffer = UTF_8.encode(k);
+        byteBuffer.get();
+        System.out.println("position is " + byteBuffer.position());
+        System.out.println("limit is " + byteBuffer.limit());
+//        while (byteBuffer.hasRemaining()) {
+//            System.out.println(byteBuffer.get());
+//        }
+//        byteBuffer.flip();
+//        String k = new String({'吃'}, UTF_8);
+//        ByteBuffer byteBuffer = ByteBuffer.wrap(k.getBytes(), 0, 4);
 
-        String k = new String({'吃'}, UTF_8);
-        ByteBuffer byteBuffer = ByteBuffer.wrap(k.getBytes(), 0, 4);
+//        System.out.println("result is ");
+//        byteBuffer.flip();
+        CharBuffer charBuffer = byteBuffer.asCharBuffer();
+        System.out.println("position is " + charBuffer.position());
+        System.out.println("limit is " + charBuffer.limit());
 
-        System.out.println(byteBuffer.asCharBuffer());
+        while (charBuffer.hasRemaining()) {
+            System.out.println((byte) charBuffer.get());
+        }
+
+
+//        System.out.println("position is " + charBuffer.position());
+//        System.out.println("limit is " + charBuffer.limit());
+//        char c = charBuffer.get();
+
+//        System.out.println((byte)c);
+
+
+//        char c =  charBuffer.get();
+//        char chars[] = charBuffer.array();
+
+
+//        String s = new String(chars);
+//        System.out.println(s);
 
 
 //        char c[] = {'吃', '饭'};
@@ -265,3 +349,48 @@ public class BufferTrial {
 
     }
 }
+
+
+//class BufferToText {
+//    private static final int BSIZE = 1024;
+//    public static void main(String[] args) throws Exception {
+//        FileChannel fc =
+//                new FileOutputStream("data2.txt").getChannel();
+//        fc.write(ByteBuffer.wrap("Some text".getBytes()));
+//        fc.close();
+//        fc = new FileInputStream("data2.txt").getChannel();
+//        ByteBuffer buff = ByteBuffer.allocate(BSIZE);
+//        fc.read(buff);
+//        buff.flip();
+//// Doesn’t work:
+//        System.out.println(buff.asCharBuffer());
+//// Decode using this system’s default Charset:
+//        buff.rewind();
+//        String encoding = System.getProperty("file.encoding");
+//        System.out.println("Decoded using " + encoding + ": "
+//                + Charset.forName(encoding).decode(buff));
+//// Or, we could encode with something that will print:
+//        fc = new FileOutputStream("data2.txt").getChannel();
+//        fc.write(ByteBuffer.wrap(
+//                "Some text".getBytes("UTF-16BE")));
+//        fc.close();
+//// Now try reading again:
+//        fc = new FileInputStream("data2.txt").getChannel();
+//        buff.clear();
+//        fc.read(buff);
+//        buff.flip();
+//        System.out.println(buff.asCharBuffer());
+//// Use a CharBuffer to write through:
+//        fc = new FileOutputStream("data2.txt").getChannel();
+//        buff = ByteBuffer.allocate(24); // More than needed
+//        buff.asCharBuffer().put("Some text");
+//        fc.write(buff);
+//        fc.close();
+//// Read and display:
+//        fc = new FileInputStream("data2.txt").getChannel();
+//        buff.clear();
+//        fc.read(buff);
+//        buff.flip();
+//        System.out.println(buff.asCharBuffer());
+//    }
+//}
