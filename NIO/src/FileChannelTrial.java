@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
@@ -13,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileChannelTrial {
 
@@ -26,6 +29,7 @@ public class FileChannelTrial {
 //        fileChannel.createChannelFromOutputStream();
 //        fileChannel.createChannelFromRandomAccessFile();
 
+        fileChannel.write();
         fileChannel.read();
 
 
@@ -34,6 +38,28 @@ public class FileChannelTrial {
 //        fileChannel.transfer();//位传送
 
 
+    }
+
+    private void write() {
+        try {
+
+            RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
+            FileChannel fileChannel = file.getChannel();
+            System.out.println("position is " + fileChannel.position());
+
+            ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+//            byteBuffer.putChar('a').putChar('v').flip();
+            byteBuffer.put(UTF_8.encode("吃饭")).flip();
+            fileChannel.write(byteBuffer);
+
+            System.out.println("position is " + fileChannel.position());
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void read() {
@@ -45,14 +71,14 @@ public class FileChannelTrial {
             System.out.println("position is " + fileChannel.position());
 
 
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(6);
             fileChannel.read(byteBuffer, 3);
-            byteBuffer.rewind();
-            while (byteBuffer.hasRemaining()) {
-                System.out.println(byteBuffer.get());
-            }
+            byteBuffer.flip();
+            CharBuffer charBuffer = UTF_8.decode(byteBuffer);
+            System.out.println(charBuffer);
 
 
+            //绝对位置读写不会改变position
             System.out.println("position is " + fileChannel.position());
 
 
