@@ -3,17 +3,21 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.Arrays;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BufferTrial {
     public static void main(String[] args) {
         BufferTrial trialBuffer = new BufferTrial();
 
 
-
+        trialBuffer.convert();
 //        trialBuffer.rewind();
-        trialBuffer.flip();
+//        trialBuffer.flip();
 //        trialBuffer.getBuffer();
 //        trialBuffer.getAbsoluteBuffer();
 //        trialBuffer.getBulkBuffer();
@@ -26,11 +30,35 @@ public class BufferTrial {
 //        trialBuffer.duplicate();
 
 
-
-
-
     }
 
+    private void convert() {
+
+//        String k = "张s实;例11大。";
+//        ByteBuffer byteBuffer = ByteBuffer.wrap(k.getBytes(), 0, 4);
+//        Charset charset = UTF_8;
+//        CharBuffer charBuffer = charset.decode(byteBuffer);
+//        System.out.println(charBuffer);
+//
+//        byteBuffer = ByteBuffer.wrap(k.getBytes(), 0, 5);
+//        System.out.println(UTF_8.decode(byteBuffer));
+
+
+
+        String k = new String({'吃'}, UTF_8);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(k.getBytes(), 0, 4);
+
+        System.out.println(byteBuffer.asCharBuffer());
+
+
+//        char c[] = {'吃', '饭'};
+//        System.out.println(c);
+//        CharBuffer charBuffer = CharBuffer.allocate(3);
+//        charBuffer.put(c);
+//        charBuffer.flip();
+//        System.out.println(charBuffer.get());
+
+    }
 
 
     private void duplicate() {
@@ -97,7 +125,6 @@ public class BufferTrial {
     }
 
 
-
     private void chain() {
 
     }
@@ -139,10 +166,9 @@ public class BufferTrial {
         System.out.println("capacity is at " + buf.capacity());
 
 
-
     }
 
-    private void getBuffer(){
+    private void getBuffer() {
 
         ByteBuffer buf = ByteBuffer.allocate(48);
         System.out.println("--------------");
