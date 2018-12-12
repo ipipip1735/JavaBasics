@@ -32,6 +32,8 @@ public class FileChannelTrial {
         fileChannel.write();
         fileChannel.read();
 
+        fileChannel.scatter();
+        fileChannel.gather();
 
 //        fileChannel.force(); //强制同步
 //        fileChannel.mapped();//内存映射
@@ -39,6 +41,48 @@ public class FileChannelTrial {
 
 
     }
+
+
+
+
+    private void gather() {
+
+        try {
+
+            ByteBuffer header = ByteBuffer.allocate(128);
+            ByteBuffer body = ByteBuffer.allocate(1024);
+            ByteBuffer[] bufferArray = {header, body};
+
+            RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
+            FileChannel fileChannel = file.getChannel();
+            fileChannel.write(bufferArray);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void scatter() {
+
+        try {
+
+            ByteBuffer header = ByteBuffer.allocate(128);
+            ByteBuffer body = ByteBuffer.allocate(1024);
+            ByteBuffer[] bufferArray = {header, body};
+
+            RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
+            FileChannel fileChannel = file.getChannel();
+            fileChannel.read(bufferArray);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void write() {
         try {
