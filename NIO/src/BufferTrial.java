@@ -16,7 +16,6 @@ public class BufferTrial {
         BufferTrial trialBuffer = new BufferTrial();
 
 
-        trialBuffer.as();
 //        trialBuffer.rewind();
 //        trialBuffer.flip();
 //        trialBuffer.getBuffer();
@@ -27,8 +26,78 @@ public class BufferTrial {
 //        trialBuffer.baseUse();
 
 
-//        trialBuffer.writeToRead();
+        //        trialBuffer.wrap();
+//        trialBuffer.slice();
 //        trialBuffer.duplicate();
+        trialBuffer.as();
+
+
+
+//        trialBuffer.writeToRead();
+
+
+
+
+    }
+
+    private void slice() {
+
+        ByteBuffer buffer = ByteBuffer.allocate(30);
+        buffer.put((byte) 97);
+        buffer.put((byte) 98);
+        buffer.put((byte) 99);
+        buffer.flip();
+        System.out.println("position is at " + buffer.position());
+        System.out.println("limit is at " + buffer.limit());
+        System.out.println("capacity is at " + buffer.capacity());
+
+        //共享存储
+        ByteBuffer byteBuffer = buffer.slice();//byteBuffer共享buffer中的内容，一个修改另外一个也会变
+        System.out.println("new|position is at " + byteBuffer.position());
+        System.out.println("new|limit is at " + byteBuffer.limit());
+        System.out.println("new|capacity is at " + byteBuffer.capacity());
+
+        while (byteBuffer.hasRemaining()) {
+            System.out.println(byteBuffer.get());
+        }
+
+    }
+
+    private void wrap() {
+//        ByteBuffer byteBuffer = UTF_8.encode("ok");
+//
+//        System.out.println("BB|position is " + byteBuffer.position());
+//        System.out.println("BB|limit is " + byteBuffer.limit());
+//        System.out.println("BB|capacity is " + byteBuffer.capacity());
+//
+//        ByteBuffer byteBuffer1 = ByteBuffer.wrap(byteBuffer.array());
+//        System.out.println("position is " + byteBuffer1.position());
+//        System.out.println("limit is " + byteBuffer1.limit());
+//        System.out.println("capacity is " + byteBuffer1.capacity());
+//
+//
+//        byteBuffer.putChar('d'); //对原Buffer的修改不影响新Buffer，它们是独立的
+//        System.out.println("BB|position is " + byteBuffer.position());
+//        System.out.println("BB|limit is " + byteBuffer.limit());
+//        System.out.println("BB|capacity is " + byteBuffer.capacity());
+//        System.out.println("position is " + byteBuffer1.position());
+//        System.out.println("limit is " + byteBuffer1.limit());
+//        System.out.println("capacity is " + byteBuffer1.capacity());
+//
+//        while (byteBuffer1.hasRemaining()) {
+//            System.out.println(byteBuffer1.get());
+//        }
+
+
+
+        //类别测试
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(15);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(15);
+        byteBuffer.putChar('o');
+//
+        ByteBuffer byteBuffer1 = ByteBuffer.wrap(byteBuffer.array());
+//        System.out.println("buffer1 is " + byteBuffer1.isDirect());
+
 
 
     }
@@ -45,14 +114,14 @@ public class BufferTrial {
 
 
         //ByteBuffer 转换为 CharBuffer
-        CharBuffer charBuffer = CharBuffer.allocate(2);
-        charBuffer.put("吃饭");
-        charBuffer.flip();
-
-        ByteBuffer byteBuffer = UTF_8.encode(charBuffer);
-        while (byteBuffer.hasRemaining()) {
-            System.out.println(byteBuffer.get());
-        }
+//        CharBuffer charBuffer = CharBuffer.allocate(2);
+//        charBuffer.put("吃饭");
+//        charBuffer.flip();
+//
+//        ByteBuffer byteBuffer = UTF_8.encode(charBuffer);
+//        while (byteBuffer.hasRemaining()) {
+//            System.out.println(byteBuffer.get());
+//        }
 
 
         //CharBuffer 转换为 ByteBuffer
@@ -66,22 +135,40 @@ public class BufferTrial {
 
 
         //导出剩余视图
-//        ByteBuffer byteBuffer = ByteBuffer.allocate(502);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(20);
+        System.out.println("BB|position is " + byteBuffer.position());
+        System.out.println("BB|limit is " + byteBuffer.limit());
+        System.out.println("BB|capacity is " + byteBuffer.capacity());
+        byteBuffer.put((byte) 97);
+        byteBuffer.put((byte) 98);
+        byteBuffer.put((byte) 99);
+        byteBuffer.put((byte) 100);
+        System.out.println("BB|position is " + byteBuffer.position());
+        System.out.println("BB|limit is " + byteBuffer.limit());
+        System.out.println("BB|capacity is " + byteBuffer.capacity());
+
+//        byteBuffer.flip();
+        byteBuffer.position(1);
+        byteBuffer.limit(7);
+
 //        System.out.println("BB|position is " + byteBuffer.position());
 //        System.out.println("BB|limit is " + byteBuffer.limit());
 //        System.out.println("BB|capacity is " + byteBuffer.capacity());
-//        byteBuffer.put((byte) 97);
-//        byteBuffer.put((byte) 98);
-//        byteBuffer.put((byte) 99);
-//        byteBuffer.put((byte) 99);
-//        System.out.println("BB|position is " + byteBuffer.position());
-//        System.out.println("BB|limit is " + byteBuffer.limit());
-//        System.out.println("BB|capacity is " + byteBuffer.capacity());
-//
-//        CharBuffer charBuffer = byteBuffer.asCharBuffer();
-//        System.out.println("CB|position is " + charBuffer.position());
-//        System.out.println("CB|limit is " + charBuffer.limit());
-//        System.out.println("CB|capacity is " + charBuffer.capacity());
+
+        CharBuffer charBuffer = byteBuffer.asCharBuffer();
+        System.out.println("CB|position is " + charBuffer.position());
+        System.out.println("CB|limit is " + charBuffer.limit());
+        System.out.println("CB|capacity is " + charBuffer.capacity());
+
+        charBuffer.put('x');
+        charBuffer.put('y');
+
+
+
+        byteBuffer.rewind();
+        while (byteBuffer.hasRemaining()) {
+            System.out.println(byteBuffer.get());
+        }
 
     }
 
@@ -147,16 +234,17 @@ public class BufferTrial {
 
     private void duplicate() {
 
-        byte[] bytes = new byte[255];
+        byte[] bytes = new byte[10];
         Arrays.fill(bytes, (byte) 97);//填充字节数组
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(bytes.length + 20);
         buffer.put(bytes);
+        buffer.flip();
 
         //共享存储
         ByteBuffer byteBuffer = buffer.duplicate();//byteBuffer共享buffer中的内容，一个修改另外一个也会变
-        System.out.println(byteBuffer.position());
-        System.out.println(byteBuffer.limit());
-        System.out.println(byteBuffer.capacity());
+        System.out.println("position is at " + byteBuffer.position());
+        System.out.println("limit is at " + byteBuffer.limit());
+        System.out.println("capacity is at " + byteBuffer.capacity());
 
         byteBuffer.flip(); //转换为读模式
         while (byteBuffer.hasRemaining()) {  //遍历读取
