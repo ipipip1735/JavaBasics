@@ -29,7 +29,9 @@ public class BufferTrial {
         //        trialBuffer.wrap();
 //        trialBuffer.slice();
 //        trialBuffer.duplicate();
-        trialBuffer.as();
+//        trialBuffer.as();
+
+        trialBuffer.bufferToBuffer();
 
 
 
@@ -37,6 +39,29 @@ public class BufferTrial {
 
 
 
+
+    }
+
+    private void bufferToBuffer() {
+
+        ByteBuffer byteBuffer1 = ByteBuffer.allocate(5);
+        byteBuffer1.put((byte) 12);
+        byteBuffer1.put((byte) 13);
+        byteBuffer1.put((byte) 14);
+        byteBuffer1.put((byte) 15);
+        System.out.println("b1 has " + byteBuffer1.remaining());
+
+        ByteBuffer byteBuffer2 = ByteBuffer.allocate(2 * byteBuffer1.capacity());
+        byteBuffer2.put((byte) 99);
+
+        byteBuffer1.flip();
+        byteBuffer2.put(byteBuffer1);
+
+
+        byteBuffer2.flip();
+        while (byteBuffer2.hasRemaining()) {
+            System.out.println(byteBuffer2.get());
+        }
 
     }
 
