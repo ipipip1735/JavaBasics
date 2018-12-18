@@ -41,7 +41,7 @@ public class CookieManagerTrial {
             System.out.println("------first request------");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             url.getContent();
-            System.out.println("-----Cookie------");
+            System.out.println("~~Cookie~~");
             for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
                 System.out.println(cookie);
             }
@@ -49,7 +49,8 @@ public class CookieManagerTrial {
 //            urlConnection.disconnect();
 
 
-            System.out.println("------second request------");
+            //读取服务端回应
+            System.out.println("------response------");
             InputStream inputStream = (InputStream) url.getContent();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -63,8 +64,6 @@ public class CookieManagerTrial {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
     }
 
