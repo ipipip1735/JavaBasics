@@ -12,8 +12,8 @@ public class LambdaTrial {
 
 
     public static void main(String[] args) {
-        forFunction();
-//        forFun();
+//        forFunction();
+        forFun();
 
 
 
@@ -27,11 +27,11 @@ public class LambdaTrial {
 //        System.out.println(o);
 
         //引用实例方法
-//        XX x = new XX();
-//        Fun fun = x::look;
-//        fun.show("ttt");
-//        Object o = fun.show("ttt");
-//        System.out.println(o);
+        XX x = new XX(25);
+        Fun fun = x::look;
+        fun.show("ttt");
+        Object o = fun.show("ttt");
+        System.out.println(o);
 
 
         //引用构造函数
@@ -80,12 +80,11 @@ class XX {
 
     public XX() {
         System.out.println("construct ");
-        ;
     }
 
-    public XX(String s) {
-        System.out.println("construct " + s);
-        ;
+    public XX(int age) {
+        System.out.println("construct " + age);
+        this.age = age;
     }
 
     public int getAge() {
@@ -99,6 +98,7 @@ class XX {
 
     public long look(String s) {
         System.out.println("look " + s);
+        System.out.println("age is " + age);
         return 123;
     }
 

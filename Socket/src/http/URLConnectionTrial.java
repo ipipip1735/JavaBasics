@@ -16,18 +16,40 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class URLConnectionTrial {
     public static void main(String[] args) {
         URLConnectionTrial urlConnectionTrial = new URLConnectionTrial();
+
+        urlConnectionTrial.url();
+
 //        urlConnectionTrial.basic();
 //        urlConnectionTrial.httpPOST();
 //        urlConnectionTrial.httpUpload();
 //        urlConnectionTrial.httpUploadTwoFile();
-        urlConnectionTrial.httpUploadMultipleFile();
+//        urlConnectionTrial.httpUploadMultipleFile();
 //        urlConnectionTrial.httpUploadWithMixed(); //测试失败了，应该用于邮件附件
-
 
 
 //        urlConnectionTrial.httpRedirect();
 //        urlConnectionTrial.disconnect();
 //        urlConnectionTrial.keepAlive();
+    }
+
+    private void url() {
+
+        try {
+            String target = "http://192.168.0.126/abc/mn.php?st=55#ff";
+            URL url = new URL(target);
+
+            System.out.println("Protocol is " + url.getProtocol());
+            System.out.println("Host is " + url.getHost());
+            System.out.println("Port is " + url.getPort());
+            System.out.println("DefaultPort is " + url.getDefaultPort());
+            System.out.println("File is " + url.getFile());
+            System.out.println("Ref is " + url.getRef());
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void httpUploadWithMixed() {
@@ -40,8 +62,8 @@ public class URLConnectionTrial {
             httpURLConnection.setRequestMethod("POST");
 
             //设置请求头信息
-            String boundaryString = UUID.randomUUID().toString().substring(0,6);
-            String subBoundaryString = UUID.randomUUID().toString().substring(0,6);
+            String boundaryString = UUID.randomUUID().toString().substring(0, 6);
+            String subBoundaryString = UUID.randomUUID().toString().substring(0, 6);
             httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
 
             //发送请求
@@ -69,8 +91,8 @@ public class URLConnectionTrial {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
             int bytesRead;
             byte[] dataBuffer = new byte[1024];
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
@@ -83,8 +105,8 @@ public class URLConnectionTrial {
             //发送w2.jpg
             fileInputStream = new FileInputStream(new File("Socket/res/w2.jpg"));
             bufferedOutputStream = new BufferedOutputStream(outputStream);
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
@@ -129,7 +151,7 @@ public class URLConnectionTrial {
             httpURLConnection.setRequestMethod("POST");
 
             //设置请求头信息
-            String boundaryString = UUID.randomUUID().toString().substring(0,6);
+            String boundaryString = UUID.randomUUID().toString().substring(0, 6);
             httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
 
             //发送请求
@@ -152,8 +174,8 @@ public class URLConnectionTrial {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
             int bytesRead;
             byte[] dataBuffer = new byte[1024];
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
@@ -166,8 +188,8 @@ public class URLConnectionTrial {
             //发送w2.jpg
             fileInputStream = new FileInputStream(new File("Socket/res/w2.jpg"));
             bufferedOutputStream = new BufferedOutputStream(outputStream);
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
@@ -207,7 +229,7 @@ public class URLConnectionTrial {
             httpURLConnection.setRequestMethod("POST");
 
             //设置请求头信息
-            String boundaryString = UUID.randomUUID().toString().substring(0,6);
+            String boundaryString = UUID.randomUUID().toString().substring(0, 6);
             httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
 
             //发送请求
@@ -230,12 +252,10 @@ public class URLConnectionTrial {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
             int bytesRead;
             byte[] dataBuffer = new byte[1024];
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
-
-
 
 
             //字段3
@@ -250,8 +270,8 @@ public class URLConnectionTrial {
             //发送w2.jpg
             fileInputStream = new FileInputStream(new File("Socket/res/w2.jpg"));
             bufferedOutputStream = new BufferedOutputStream(outputStream);
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
@@ -295,7 +315,7 @@ public class URLConnectionTrial {
             httpURLConnection.setRequestMethod("POST");
 
             //设置请求头信息
-            String boundaryString = UUID.randomUUID().toString().substring(0,6);
+            String boundaryString = UUID.randomUUID().toString().substring(0, 6);
             httpURLConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
 
             //发送请求
@@ -322,8 +342,8 @@ public class URLConnectionTrial {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
             int bytesRead;
             byte[] dataBuffer = new byte[1024];
-            while((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
-                bufferedOutputStream.write(dataBuffer,0, bytesRead);
+            while ((bytesRead = fileInputStream.read(dataBuffer)) != -1) {
+                bufferedOutputStream.write(dataBuffer, 0, bytesRead);
             }
             bufferedOutputStream.flush();
 
