@@ -17,11 +17,11 @@ public class URLConnectionTrial {
     public static void main(String[] args) {
         URLConnectionTrial urlConnectionTrial = new URLConnectionTrial();
 
-        urlConnectionTrial.url();
+//        urlConnectionTrial.url();
 
 //        urlConnectionTrial.basic();
 //        urlConnectionTrial.httpPOST();
-//        urlConnectionTrial.httpUpload();
+        urlConnectionTrial.httpUpload();
 //        urlConnectionTrial.httpUploadTwoFile();
 //        urlConnectionTrial.httpUploadMultipleFile();
 //        urlConnectionTrial.httpUploadWithMixed(); //测试失败了，应该用于邮件附件
@@ -307,12 +307,15 @@ public class URLConnectionTrial {
 
     private void httpUpload() {
         try {
-            URL url = new URL("http://192.168.0.126/upload.php");
+//            URL url = new URL("http://192.168.0.127/post.php");
+            URL url = new URL("http://192.168.0.126:8008/post.php");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
             httpURLConnection.setUseCaches(false);
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setChunkedStreamingMode(1024); //使用分块传送
+//            httpURLConnection.setFixedLengthStreamingMode(5923); //使用固定尺寸
 
             //设置请求头信息
             String boundaryString = UUID.randomUUID().toString().substring(0, 6);
