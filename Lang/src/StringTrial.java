@@ -5,10 +5,10 @@ public class StringTrial {
         StringTrial stringTrial = new StringTrial();
 //        stringTrial.appendBool();
 //        stringTrial.appendChars();
-        stringTrial.join();
+//        stringTrial.join();
 //        stringTrial.split();
 //        stringTrial.compare();
-//        stringTrial.equal();
+        stringTrial.equal();
 //        stringTrial.base();
 
 
@@ -28,34 +28,29 @@ public class StringTrial {
 
     private void equal() {
 
+
         boolean b;
-        b= ("sss" == "sss");
-//        System.out.println("sss".hashCode());
-//        System.out.println("stt".hashCode());
-
-//        String s = "sss";
-//        b = (s == "sss");
-//
-//        String sk = "oo";
-//        String st = "oo";
-//        System.out.println(sk.hashCode());
-//        System.out.println(st.hashCode());
-//        b = (sk == st);
 
 
-//        String k = "sdf";
-//        String t = "sdf";
-//        System.out.println(t.hashCode());
-//        System.out.println(k.hashCode());
-//        b=k.equals(t);
+        //相等的情况
+        b= ("sss" == "sss"); //基本类型是比较值
+        System.out.println(b);
 
-        String k = new String("sdf");
-        String t = new String("sdf");
-
+        String s = "sss";
+        String k = "sss";
         System.out.println(b);
 
 
 
+
+
+        //不等的情况
+//        String k = new String("sdf");
+//        String t = new String("sdf");
+//        b = (t == k);
+//        System.out.println(b);
+//        b = k.equals(t);
+//        System.out.println(b);
 
     }
 
