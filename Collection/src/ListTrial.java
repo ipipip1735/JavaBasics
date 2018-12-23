@@ -1,11 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ListTrial {
 
 
     public static void main(String[] args) {
+        ListTrial listTrial = new ListTrial();
+        listTrial.basic();
+    }
+
+    private void basic() {
         List<String> list = new ArrayList<String>();
         list.add("aa");
         list.add("b");
@@ -26,14 +30,11 @@ public class ListTrial {
             public void accept(String s) {
                 System.out.println("s is " + s);
             }
-        }.andThen(s -> System.out.println("t is " + s));;
-
+        }.andThen(s -> System.out.println("t is " + s));
+        ;
 
 
         list.forEach(consumer);
-
-//
-
     }
 
 
