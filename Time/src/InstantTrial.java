@@ -18,8 +18,21 @@ public class InstantTrial {
 //        instantTrial.minus();
 //        instantTrial.range();
 //        instantTrial.util();
-        instantTrial.query();
+//        instantTrial.query();
 
+        interval();
+    }
+
+    private static void interval() {
+        System.out.println(Instant.now().toEpochMilli());
+        System.out.println(System.currentTimeMillis());
+
+        long startTime = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            System.out.println(i);
+        }
+        long endTime = System.nanoTime();
+        System.out.println("elapse is " + (endTime - startTime) + "ns");
     }
 
     private void query() {
