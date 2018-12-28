@@ -9,7 +9,7 @@ import java.time.temporal.*;
 public class InstantTrial {
     public static void main(String[] args) {
         InstantTrial instantTrial = new InstantTrial();
-//        instantTrial.constructor();
+        instantTrial.constructor();
 //        instantTrial.compare();
 //        instantTrial.zone();
 //        instantTrial.offset();
@@ -20,7 +20,7 @@ public class InstantTrial {
 //        instantTrial.util();
 //        instantTrial.query();
 
-        interval();
+//        interval();
     }
 
     private static void interval() {
@@ -207,7 +207,7 @@ public class InstantTrial {
 //        System.out.println(zonedDateTime);
 
         //解析字符串
-//        Instant instant = Instant.parse("2007-12-03T10:15:30.00Z");
+//        Instant instant = Instant.parse("2007-12-03T10:15:03Z");
 //        System.out.println(instant);
 
 
@@ -231,11 +231,11 @@ public class InstantTrial {
 
 
         //类型转换
-        OffsetDateTime offsetDateTime = OffsetDateTime.now();
-        System.out.println(offsetDateTime);
-
-        Instant instant = Instant.from(offsetDateTime);
-        System.out.println(instant);
+//        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+//        System.out.println(offsetDateTime);
+//
+//        Instant instant = Instant.from(offsetDateTime);
+//        System.out.println(instant);
 
 
 

@@ -1,6 +1,8 @@
 import java.time.Duration;
 import java.time.Instant;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 /**
  * Created by Administrator on 2018/10/6.
@@ -10,8 +12,20 @@ public class DurationTrial {
     public static void main(String[] args) {
         DurationTrial durationTrial = new DurationTrial();
 //        durationTrial.constructor();
+        durationTrial.of();
 //        durationTrial.from();
-        durationTrial.to();
+//        durationTrial.to();
+    }
+
+    private void of() {
+
+
+        Duration duration = Duration.ofNanos(938902109000000l);
+        System.out.println(duration);
+
+
+//        Period period = Period.;
+//        System.out.println(period);
     }
 
     private void to() {
@@ -22,7 +36,20 @@ public class DurationTrial {
 
     private void from() {
 
-//        Duration duration = Duration.from(Instant.now());
+//        Period period = Period.of(1, 1, 2);
+//        for (TemporalUnit unit : period.getUnits()) {
+//            System.out.println("unit is " + unit);
+//        }
+
+//        Duration duration = Duration.of(24 * 3600, ChronoUnit.SECONDS);
+//        for (TemporalUnit unit : duration.getUnits()) {
+//            System.out.println("unit is " + unit);
+//        }
+//        System.out.println(duration);
+
+        Duration day = Duration.ofDays(1);
+        Duration duration = Duration.from(day);
+        System.out.println(duration);
 
     }
 
