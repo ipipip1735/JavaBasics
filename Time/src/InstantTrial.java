@@ -221,7 +221,7 @@ public class InstantTrial {
 //        System.out.println(instant);
 //        instant = Instant.ofEpochSecond(1234567890,987654321);
 //        System.out.println(instant);
-//
+
 //        //创建毫秒级时间截
 //        instant = Instant.ofEpochMilli(987654321);
 //        System.out.println(instant);
@@ -236,12 +236,6 @@ public class InstantTrial {
 //
 //        Instant instant = Instant.from(offsetDateTime);
 //        System.out.println(instant);
-
-
-
-
-
-
 
     }
 

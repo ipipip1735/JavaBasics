@@ -13,16 +13,26 @@ public class DurationTrial {
         DurationTrial durationTrial = new DurationTrial();
 //        durationTrial.constructor();
         durationTrial.of();
+//        durationTrial.between();
 //        durationTrial.from();
 //        durationTrial.to();
     }
 
+    private void between() {
+        Instant start = Instant.EPOCH;
+        Instant end = Instant.now();
+
+
+        long ns = Duration.between(start, end).toNanos();
+        System.out.println(ns);
+    }
+
     private void of() {
 
-
         Duration duration = Duration.ofNanos(938902109000000l);
+        System.out.println(duration.toDays());
+        System.out.println(duration.toMinutes());
         System.out.println(duration);
-
 
 //        Period period = Period.;
 //        System.out.println(period);
