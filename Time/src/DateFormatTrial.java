@@ -1,5 +1,6 @@
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -15,12 +16,14 @@ public class DateFormatTrial {
 //        dateFormatTrial.parse();
     }
 
+
+
     private void format() {
         TimeZone timeZone = TimeZone.getTimeZone("GMT+07:00");
         Date date = new Date(System.currentTimeMillis());
 
-//        DateFormat dataFormat = DateFormat.getInstance();
-        DateFormat dataFormat = DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.LONG, Locale.ENGLISH);
+        DateFormat dataFormat = DateFormat.getInstance();
+//        DateFormat dataFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.LONG, Locale.ENGLISH);
         dataFormat.setTimeZone(timeZone);
         String r = dataFormat.format(date);
         System.out.println(r);
@@ -38,7 +41,6 @@ public class DateFormatTrial {
             String source = "2018年12月29日星期六 中国标准时间 上午6:25:16";
             Date date = dataFormat.parse(source);
             System.out.println(date);
-
 
 
         } catch (ParseException e) {
