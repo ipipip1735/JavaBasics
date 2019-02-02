@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
@@ -8,14 +9,36 @@ import java.io.IOException;
 public class FileTrial {
     public static void main(String[] args) {
         FileTrial fileTrial = new FileTrial();
-        fileTrial.base();
+//        fileTrial.base();
 //        fileTrial.dir();
 //        fileTrial.scanSpace();
+        FileTrial.list();
 
 
 //        fileTrial.PrintFileName();
 //        fileTrial.modifyFileName();
 //        fileTrial.changeFileName();
+    }
+
+    private static void list() {
+        File file = new File("File/res/");
+
+        //列出文件名
+//        for (String path : file.list()) {
+//            System.out.println(path);
+//        }
+
+        //过滤不匹配的文件
+        for (String path : file.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                if(name.contains(".log")) return true;
+                return false;
+            }
+        })) {
+            System.out.println(path);
+        }
+
     }
 
     private void base() {
@@ -48,11 +71,10 @@ public class FileTrial {
         File file = new File("File/res/");
         long size;
         size = file.getFreeSpace();
-        System.out.println("Free size is " + size/1024/1024 + "MB");
+        System.out.println("Free size is " + size / 1024 / 1024 + "MB");
         size = file.getTotalSpace();
-        System.out.println("Total size is " + size/1024/1024 + "MB");
+        System.out.println("Total size is " + size / 1024 / 1024 + "MB");
     }
-
 
 
     public void modifyFileName() {
@@ -99,8 +121,6 @@ public class FileTrial {
             f.renameTo(new File(newFile));
 
         }
-
-
 
 
     }
