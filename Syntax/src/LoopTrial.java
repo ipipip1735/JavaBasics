@@ -1,3 +1,5 @@
+import innerClass.OuterClass;
+
 /**
  * Created by Administrator on 2018/10/13.
  */
