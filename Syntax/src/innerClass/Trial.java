@@ -3,7 +3,7 @@ package innerClass;
 /**
  * Created by Administrator on 2017/4/24.
  */
-public class TT {
+public class Trial {
     public static void main(String[] args) {
 
         OuterClass outerClass = new OuterClass();
@@ -12,8 +12,5 @@ public class TT {
 //        outerClass.innerClass.accessPrivate();
 
         outerClass.getInner();
-
-        outerClass.innerClass
-
     }
 }
