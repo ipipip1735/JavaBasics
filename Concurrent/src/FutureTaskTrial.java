@@ -20,6 +20,7 @@ public class FutureTaskTrial {
                 System.out.println("~~call~~");
 
                 Thread.sleep(15000);
+                System.out.println("--");
 
                 return "ok";
             }
@@ -40,7 +41,8 @@ public class FutureTaskTrial {
             e.printStackTrace();
         }
 
-        futureTask.cancel(false);
+        futureTask.cancel(false); //仅修改状态，让线程睡到自然醒，自己终止
+//        futureTask.cancel(true); //修改状态，并强制唤醒
 
 
     }
