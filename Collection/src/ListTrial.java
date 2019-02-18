@@ -7,6 +7,8 @@ public class ListTrial {
     public static void main(String[] args) {
         ListTrial listTrial = new ListTrial();
         listTrial.basic();
+
+
     }
 
     private void basic() {
@@ -35,6 +37,15 @@ public class ListTrial {
 
 
         list.forEach(consumer);
+
+
+        //search
+        System.out.println("id is " + list.indexOf("b"));
+        System.out.println("id is " + list.indexOf("b"));
+
+        //toArray
+        String[]strings = list.toArray(new String[0]);
+        System.out.println("length is " + strings.length);
     }
 
 
