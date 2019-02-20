@@ -1,11 +1,58 @@
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ThreadTrial {
 
     public static void main(String[] args) {
         ThreadTrial threadTrial = new ThreadTrial();
 //        threadTrial.sync();
-        threadTrial.atomic();
+//        threadTrial.waits();
+        threadTrial.notifies();
+//        threadTrial.atomic();
+
+    }
+
+    private void notifies() {
+
+        final AtomicBoolean isEnd = new AtomicBoolean(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    try {
+                        synchronized (isEnd) {
+                            isEnd.wait(); //让线程睡眠
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("waiting...");
+                    if (isEnd.get()) break;
+                }
+
+            }
+        }).start();
+
+        for (int i = 0; i < 3; i++) {
+            try {
+                Thread.sleep(1000L);
+                synchronized (isEnd) {
+                    isEnd.notify(); //唤醒线程
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        isEnd.set(true);
+
 
     }
 
@@ -18,7 +65,7 @@ public class ThreadTrial {
             public void run() {
                 while (true) {
 
-                    atomicInteger.compareAndExchange(1,3);
+                    atomicInteger.compareAndExchange(1, 3);//是1就换成3
 
                     System.out.println(atomicInteger.get());
                     try {
