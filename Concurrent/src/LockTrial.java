@@ -18,8 +18,7 @@ public class LockTrial {
         Condition main = reentrantLock.newCondition();
         Condition sub = reentrantLock.newCondition();
 
-
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 System.out.println("sub lock");
@@ -43,8 +42,14 @@ public class LockTrial {
                 System.out.println("sub unlock");
                 reentrantLock.unlock();//解锁
             }
-        }).start();
+        });
 
+
+
+
+
+
+        thread.start();
 
         System.out.println("main Lock");
         reentrantLock.lock(); //加锁
