@@ -7,11 +7,31 @@ public class StringTrial {
 //        stringTrial.appendChars();
 //        stringTrial.join();
 //        stringTrial.split();
+//        stringTrial.match();
+//        stringTrial.prefix();
 //        stringTrial.compare();
-        stringTrial.equal();
+//        stringTrial.equal();
 //        stringTrial.base();
 
 
+
+    }
+
+    private void prefix() {
+
+        String s = "abcd11111";
+        String t = "bcd";
+        boolean b = s.startsWith(t, 1);
+        System.out.println(b);
+    }
+
+    private void match() {
+
+        String s = "111bc111";
+        String t = "abcd";
+
+        boolean b = s.regionMatches(3, t, 1, 2);
+        System.out.println(b);
 
     }
 
