@@ -50,7 +50,7 @@ public class OuterClass {
 
             this.name = "nested";
             System.out.println("NestedClass.name is " + this.name);
-//            System.out.println("OuterClass.a is " + OuterClass.this.a);
+//            System.out.println("OuterClass.a is " + OuterClass.this.a);//实例化化才能访问外部类的非静态成员
         }
     }
 }
