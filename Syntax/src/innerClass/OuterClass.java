@@ -5,29 +5,14 @@ package innerClass;
  */
 public class OuterClass {
 
-    InnerClass innerClass;
+    public InnerClass innerClass;
+    private int a = 58;
 
     public OuterClass() {
         System.out.println("*********  " + getClass().getSimpleName() + ".Constructor  *********");
         this.innerClass = new InnerClass();
         System.out.println("innerClass.name is " + innerClass.name);
     }
-
-    public static void main(String[] args) {
-        OuterClass outerClass = new OuterClass();
-
-        //实例化内部类
-//        OuterClass.InnerClass innerClass = outerClass.new InnerClass();
-//        System.out.println(innerClass.name);
-
-
-        //实例化静态内部类
-//        OuterClass.NestedClass nestedClass = new OuterClass.NestedClass();
-//        System.out.println(nestedClass.name);
-
-
-    }
-
 
     public void getInner() {
         innerClass.accessPrivate();
@@ -53,6 +38,7 @@ public class OuterClass {
 
         private void accessPrivate() {
             OuterClass.this.show();
+            System.out.println("OuterClass.this.a is " + OuterClass.this.a);
         }
     }
 
@@ -63,6 +49,8 @@ public class OuterClass {
             System.out.println("*********  " + getClass().getSimpleName() + ".Constructor  *********");
 
             this.name = "nested";
+            System.out.println("NestedClass.name is " + this.name);
+//            System.out.println("OuterClass.a is " + OuterClass.this.a);
         }
     }
 }
