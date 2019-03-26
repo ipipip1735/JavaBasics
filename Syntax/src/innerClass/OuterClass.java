@@ -10,6 +10,7 @@ public class OuterClass {
     public OuterClass() {
         System.out.println("*********  " + getClass().getSimpleName() + ".Constructor  *********");
         this.innerClass = new InnerClass();
+        System.out.println("innerClass.name is " + innerClass.name);
     }
 
     public static void main(String[] args) {
@@ -38,7 +39,7 @@ public class OuterClass {
 
 
     class InnerClass{
-        public String name = "invalid";
+        private String name = "invalid";
 
         public InnerClass() {
             System.out.println("*********  " + getClass().getSimpleName() + ".Constructor  *********");
