@@ -3,6 +3,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Administrator on 2018/9/15.
@@ -17,7 +18,26 @@ public class MapTrial {
 //        mapTrial.navigableMap();
 
 //        mapTrial.LinkedHashMap();
-        mapTrial.LinkedHashMapStale();
+//        mapTrial.LinkedHashMapStale();
+
+        mapTrial.concurrentHashMap(); //线程安全，支持并行写入
+    }
+
+    private void concurrentHashMap() {
+        Map<String, Integer> map = new HashMap<>(); //非线程安全，遍历时写操作将抛异常
+//        Map<String, Integer> map = new ConcurrentHashMap<>();
+
+        for (int i = 0; i < 5; i++) {
+            map.put("id"+i, Integer.valueOf(i));
+        }
+
+        for (String s : map.keySet()) {
+            if(s.equals("id1"))map.put(s, Integer.valueOf(99));//可以put，但不能remove()
+            if(s.equals("id1"))map.remove(s); //抛异常
+        }
+
+        System.out.println(map);
+
     }
 
     private void LinkedHashMapStale() {
