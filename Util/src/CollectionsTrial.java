@@ -11,7 +11,31 @@ public class CollectionsTrial {
 //        collectionsTrial.swap();
 //        collectionsTrial.reverse();
 //        collectionsTrial.rotate();
-        collectionsTrial.disjoint();
+//        collectionsTrial.disjoint();
+//        collectionsTrial.max();
+        collectionsTrial.copy();
+    }
+
+    private void copy() {
+
+        //填充复制
+//        List<String> list = Collections.nCopies(2, "-");
+//        System.out.println(list.size() + "|" + list);
+
+    }
+
+    private void max() {
+        //版本一
+//        List<String> list = Arrays.asList("aa", "bb", "dd", "cc");
+//        System.out.println(Collections.max(list));
+
+        //版本二
+//        List<String> list = Arrays.asList("aa", "bb", "dd", "cc");
+//        System.out.println(Collections.max(list, Collections.reverseOrder()));
+
+        //版本三：和版本二等价，Comparator.reverseOrder()是间接调用Collections.reverseOrder()
+        List<String> list = Arrays.asList("aa", "bb", "dd", "cc");
+        System.out.println(Collections.max(list, Comparator.reverseOrder()));
     }
 
     private void disjoint() {
