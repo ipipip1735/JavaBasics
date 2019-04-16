@@ -19,8 +19,8 @@ public class CollectorsTrial {
         CollectorsTrial collectorTrial = new CollectorsTrial();
 //        collectorTrial.join();
 //        collectorTrial.maxBy();
-//        collectorTrial.minBy();
-        collectorTrial.reducing();
+        collectorTrial.minBy();
+//        collectorTrial.reducing();
 //        collectorTrial.summingInt();
 //        collectorTrial.summarizingInt();
 //        collectorTrial.averagingInt();

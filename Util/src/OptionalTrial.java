@@ -5,28 +5,17 @@ public class OptionalTrial {
     public static void main(String[] args) {
         OptionalTrial optionalTrial = new OptionalTrial();
 
+        optionalTrial.get();
+
     }
 
 
     void get(){
 
-        Optional<String> optionalS = Optional.of("abcd");
-        String r = optionalS.get();
-        System.out.println(r);
-
-
-        Optional<String> optionalE = Optional.empty();
-
-
-//        return empty ? Optional.empty() : Optional.of(state);
-
-
-
+        Optional<Object> optionalS = Optional.ofNullable(null);
+        Object o1 = optionalS.get();//为null则抛异常
+        Object o2 = optionalS.orElse(new Object());//为null则返回默认值
 
     }
 
-//    Optional<String> reduce() {
-//
-//        return ;
-//    }
 }

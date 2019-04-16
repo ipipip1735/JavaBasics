@@ -28,7 +28,7 @@ public class StreamTrial {
         //中间操作（Stateless）
 //        streamDemo.filter();
 //        streamDemo.unordered();
-        streamDemo.map();
+//        streamDemo.map();
 //        streamDemo.flatMap();
 //        streamDemo.peek();
 
@@ -40,7 +40,7 @@ public class StreamTrial {
 
         //结果操作
 //        streamDemo.reduce();
-//        streamDemo.aggregation();
+        streamDemo.aggregation();
 //        streamDemo.reduceParallel();
 //        streamDemo.collect();
 //        streamDemo.joining();
@@ -169,7 +169,8 @@ public class StreamTrial {
         double totalIncome = Employee.persons()
                 .stream()
                 .mapToDouble(Employee::getIncome)
-                .sum();
+//                .sum();//求和
+                .min().getAsDouble();//获取最小值
         System.out.println("Total Income:  " + totalIncome);
     }
 
