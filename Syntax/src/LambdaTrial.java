@@ -12,8 +12,8 @@ public class LambdaTrial {
 
 
     public static void main(String[] args) {
-//        forFunction();
-        forFun();
+        forFunction();
+//        forFun();
 
 
 

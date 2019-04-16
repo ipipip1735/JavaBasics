@@ -29,15 +29,27 @@ public class FileTrial {
 //        }
 
         //过滤不匹配的文件
-        for (String path : file.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                if(name.contains(".log")) return true;
-                return false;
+//        for (String path : file.list(new FilenameFilter() {
+//            @Override
+//            public boolean accept(File dir, String name) {
+//                if(name.contains(".log")) return true;
+//                return false;
+//            }
+//        })) {
+//            System.out.println(path);
+//        }
+
+        //列出所有目录和文件
+        File dir = new File("./");
+        for (File f : dir.listFiles()) {
+            if(f.isDirectory()) {
+                System.out.println("dir|" + f);
+            }else {
+                System.out.println("file|" + f);
             }
-        })) {
-            System.out.println(path);
+
         }
+
 
     }
 
@@ -63,7 +75,7 @@ public class FileTrial {
 
 
         File file = new File("D:/ki/gg/");
-        boolean b = file.mkdirs();
+        boolean b = file.mkdir();
         System.out.println("b is " + b);
     }
 
