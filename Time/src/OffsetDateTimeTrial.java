@@ -12,9 +12,9 @@ public class OffsetDateTimeTrial {
 //        OffsetDateTimeTrial.constructor();
 //        offsetDateTimeTrial.to();
 //        offsetDateTimeTrial.with();
-//        offsetDateTimeTrial.get();
+        offsetDateTimeTrial.get();
 //        offsetDateTimeTrial.compare();
-        offsetDateTimeTrial.query();
+//        offsetDateTimeTrial.query();
     }
 
     private void compare() {
@@ -34,39 +34,60 @@ public class OffsetDateTimeTrial {
         System.out.println("span is " + end.compareTo(start) / 1000 / 1000);
 
 
-
-
     }
 
     private void get() {
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
         System.out.println(offsetDateTime);
 
-        System.out.println("getOffset     is " + offsetDateTime.getLong(ChronoField.YEAR));
-//        System.out.println(offsetDateTime.get(ChronoField.YEAR));
-//        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_WEEK));
-//        System.out.println(offsetDateTime.get(ChronoField.DAY_OF_YEAR));
+        //get系列方法
+        System.out.println("get|YEAR is " + offsetDateTime.get(ChronoField.YEAR));
+        System.out.println("get|YEAR_OF_ERA is " + offsetDateTime.get(ChronoField.YEAR_OF_ERA));//公元多少年
+        System.out.println("get|MONTH_OF_YEAR is " + offsetDateTime.get(ChronoField.MONTH_OF_YEAR));
+        System.out.println("---------------");
+        System.out.println("get|ALIGNED_WEEK_OF_YEAR is " + offsetDateTime.get(ChronoField.ALIGNED_WEEK_OF_YEAR));//一个年的第几周
+        System.out.println("get|ALIGNED_WEEK_OF_MONTH is " + offsetDateTime.get(ChronoField.ALIGNED_WEEK_OF_MONTH));//一个月的第几周
+        System.out.println("---------------");
+        System.out.println("get|DAY_OF_YEAR is " + offsetDateTime.get(ChronoField.DAY_OF_YEAR));//一年的第几天
+        System.out.println("get|DAY_OF_WEEK is " + offsetDateTime.get(ChronoField.DAY_OF_WEEK));//一周的第几天
+        System.out.println("---------------");
+        System.out.println("get|DAY_OF_MONTH is " + offsetDateTime.get(ChronoField.DAY_OF_MONTH));//一个月的第几天
+        System.out.println("get|OFFSET_SECONDS is " + offsetDateTime.get(ChronoField.OFFSET_SECONDS));//时区偏移量，单位秒，比如+8就是3600*8=28800
+
+        //getLong系列方法，精度更高，功能与get一样
+        System.out.println("getLong|YEAR is " + offsetDateTime.getLong(ChronoField.YEAR));
+        System.out.println("getLong|YEAR_OF_ERA is " + offsetDateTime.getLong(ChronoField.YEAR_OF_ERA));//公元多少年
+        System.out.println("getLong|MONTH_OF_YEAR is " + offsetDateTime.getLong(ChronoField.MONTH_OF_YEAR));
+        System.out.println("getLong|DAY_OF_YEAR is " + offsetDateTime.getLong(ChronoField.DAY_OF_YEAR));//一年的第几天
+        System.out.println("getLong|DAY_OF_WEEK is " + offsetDateTime.getLong(ChronoField.DAY_OF_WEEK));//一周的第几天
+        System.out.println("getLong|DAY_OF_MONTH is " + offsetDateTime.getLong(ChronoField.DAY_OF_MONTH));//一个月的第几天
+        System.out.println("---------------");
+        System.out.println("getLong|ALIGNED_WEEK_OF_YEAR is " + offsetDateTime.get(ChronoField.ALIGNED_WEEK_OF_YEAR));//一个年的第几周
+        System.out.println("getLong|ALIGNED_WEEK_OF_MONTH is " + offsetDateTime.get(ChronoField.ALIGNED_WEEK_OF_MONTH));//一个月的第几周
+        System.out.println("---------------");
+        System.out.println("getLong|INSTANT_SECONDS is " + offsetDateTime.getLong(ChronoField.INSTANT_SECONDS));//本地化后的时间戳，单位秒(不能使用get，因为精度不够，必须使用getLong)
+        System.out.println("getLong|OFFSET_SECONDS is " + offsetDateTime.getLong(ChronoField.OFFSET_SECONDS));//时区偏移量，单位秒，比如+8就是3600*8=28800
 
 
-
-        System.out.println("getOffset     is " + offsetDateTime.getOffset());
-        System.out.println("getHour       is " + offsetDateTime.getHour());
-        System.out.println("getMinute     is " + offsetDateTime.getMinute());
-        System.out.println("getSecond     is " + offsetDateTime.getSecond());
-        System.out.println("getNano       is " + offsetDateTime.getNano());
-        System.out.println("getYear       is " + offsetDateTime.getYear());
-        System.out.println("getMonth      is " + offsetDateTime.getMonth());
-        System.out.println("getMonthValue is " + offsetDateTime.getMonthValue());
-        System.out.println("getDayOfMonth is " + offsetDateTime.getDayOfMonth());
-        System.out.println("getDayOfWeek  is " + offsetDateTime.getDayOfWeek());
-        System.out.println("getDayOfYear  is " + offsetDateTime.getDayOfYear());
+        //工具方法
+//        System.out.println("getOffset     is " + offsetDateTime.getOffset());
+//        System.out.println("getHour       is " + offsetDateTime.getHour());
+//        System.out.println("getMinute     is " + offsetDateTime.getMinute());
+//        System.out.println("getSecond     is " + offsetDateTime.getSecond());
+//        System.out.println("getNano       is " + offsetDateTime.getNano());
+//        System.out.println("getYear       is " + offsetDateTime.getYear());
+//        System.out.println("getMonth      is " + offsetDateTime.getMonth());
+//        System.out.println("getMonthValue is " + offsetDateTime.getMonthValue());
+//        System.out.println("getDayOfMonth is " + offsetDateTime.getDayOfMonth());
+//        System.out.println("getDayOfWeek  is " + offsetDateTime.getDayOfWeek());
+//        System.out.println("getDayOfYear  is " + offsetDateTime.getDayOfYear());
 
     }
 
     private void with() {
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
         System.out.println(offsetDateTime);
-        System.out.println(offsetDateTime.withHour(0));
+        System.out.println(offsetDateTime.withHour(1).withMinute(25).withSecond(55));
     }
 
     private void to() {
@@ -106,7 +127,6 @@ public class OffsetDateTimeTrial {
         System.out.println("zoneId is " + zoneId);
 
 
-
         //实现TemporalQuery接口
 //        Instant instant = Instant.now();
 //        TemporalQuery<String> temporalQuery = new TemporalQuery<>(){
@@ -120,7 +140,6 @@ public class OffsetDateTimeTrial {
 //
 //        String result = instant.query(temporalQuery);
 //        System.out.println(result);
-
 
 
     }
