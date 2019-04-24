@@ -8,12 +8,53 @@ import java.util.concurrent.*;
 public class ThreadPoolExecutorTrial {
     public static void main(String[] args) {
         ThreadPoolExecutorTrial threadPoolExecutorTrial = new ThreadPoolExecutorTrial();
+
+
+        threadPoolExecutorTrial.usingExecutor();//测试Executor
+
 //        threadPoolExecutorTrial.singletonPool();
 //        threadPoolExecutorTrial.customPool();
-        threadPoolExecutorTrial.cachePool();
+//        threadPoolExecutorTrial.cachePool();
 //        threadPoolExecutorTrial.fixPool();
 
 
+    }
+
+    private void usingExecutor() {
+        Executor executor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                System.out.println("~~execute~~");
+                System.out.println(command);
+                System.out.println(Thread.currentThread());
+
+                //方式一：不使用子线程
+//                command.run();
+
+
+                //方式二：使用子线程
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        command.run();
+                    }
+                }, "mThread").start();
+
+            }
+        };
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("~~run~~");
+                System.out.println(Thread.currentThread());
+            }
+        });
     }
 
     private void fixPool() {
@@ -44,7 +85,7 @@ public class ThreadPoolExecutorTrial {
                 }
             });
 
-            if (i > 2 && i<5) {
+            if (i > 2 && i < 5) {
                 try {
                     Thread.sleep(2500l);
                 } catch (InterruptedException e) {

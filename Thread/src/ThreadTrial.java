@@ -11,8 +11,40 @@ public class ThreadTrial {
         ThreadTrial threadTrial = new ThreadTrial();
 //        threadTrial.sync();
 //        threadTrial.waits();
-        threadTrial.notifies();
+//        threadTrial.notifies();
 //        threadTrial.atomic();
+
+        threadTrial.nest();
+    }
+
+    private void nest() {
+
+        ThreadGroup threadGroup = new ThreadGroup("mGroup");//线程组
+
+        Thread thread1 = new Thread(threadGroup, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("~~run1~~");
+                System.out.println(Thread.currentThread());
+            }
+        },"thread1");
+
+
+        Thread thread2 = new Thread(threadGroup, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("~~run2~~");
+                System.out.println(Thread.currentThread());
+                thread1.start(); //内嵌子线程
+            }
+        },"thread2");
+
+
+        thread2.start();
+
+
+
+
 
     }
 
