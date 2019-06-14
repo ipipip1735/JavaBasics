@@ -18,9 +18,9 @@ public class MapTrial {
 //        mapTrial.navigableMap();
 
 //        mapTrial.LinkedHashMap();
-//        mapTrial.LinkedHashMapStale();
+        mapTrial.LinkedHashMapStale();
 
-        mapTrial.concurrentHashMap(); //线程安全，支持并行写入
+//        mapTrial.concurrentHashMap(); //线程安全，支持并行写入
     }
 
     private void concurrentHashMap() {
@@ -58,12 +58,12 @@ public class MapTrial {
         linkedHashMap.put("zero", 0);
         linkedHashMap.put("one", 1);
         linkedHashMap.put("two", 2);
-        linkedHashMap.put("three", 3);
-        linkedHashMap.put("four", 4);
-        linkedHashMap.put("one1", 11);
-        linkedHashMap.put("two1", 12);
-        linkedHashMap.put("three1", 13);
-        linkedHashMap.put("four1", 14);
+//        linkedHashMap.put("three", 3);
+//        linkedHashMap.put("four", 4);
+//        linkedHashMap.put("one1", 11);
+//        linkedHashMap.put("two1", 12);
+//        linkedHashMap.put("three1", 13);
+//        linkedHashMap.put("four1", 14);
         System.out.println(linkedHashMap);
 
 //        linkedHashMap.put("zero", 0);
