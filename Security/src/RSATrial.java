@@ -75,9 +75,8 @@ public class RSATrial {
 
     private void verify() {
 
-        KeyFactory keyFactory = null;
         try {
-            keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             String publicKey = Files.lines(Paths.get("Security/res/rsa.pub.pem"))
                     .filter(s -> !s.contains("-"))
                     .collect(Collectors.joining());

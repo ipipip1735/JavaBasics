@@ -20,9 +20,9 @@ public class DSATrial {
 
 
 //        rsaTrial.publicKeyX509();
-//        rsaTrial.privateKeyPKCS8();
-        rsaTrial.sign();
-        rsaTrial.verify();
+        rsaTrial.privateKeyPKCS8();
+//        rsaTrial.sign();
+//        rsaTrial.verify();
 
 
     }
@@ -62,6 +62,12 @@ public class DSATrial {
             KeyFactory keyFactory = KeyFactory.getInstance("DSA");
             PrivateKey privateKey = keyFactory.generatePrivate(priPKCS8);
             System.out.println(privateKey);
+
+
+            byte[] base64 = Base64.getEncoder().encode(privateKey.getEncoded());
+            Files.write(Paths.get("Security/res/dsa.key"), base64);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
@@ -75,16 +81,14 @@ public class DSATrial {
 
     private void verify() {
 
-        KeyFactory keyFactory = null;
         try {
-            keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance("DSA");
             String publicKey = Files.lines(Paths.get("Security/res/dsa.pub.pem"))
                     .filter(s -> !s.contains("-"))
                     .collect(Collectors.joining());
             X509EncodedKeySpec pubPKCS8 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
             PublicKey pubKey = keyFactory.generatePublic(pubPKCS8);
             System.out.println(pubKey);
-
 
 
             Signature signature = Signature.getInstance("SHA256withDSA");
@@ -104,7 +108,7 @@ public class DSATrial {
             inputStream.close();
 
 
-            byte[] signData = Files.readAllBytes(Paths.get("Security/des/signData"));
+            byte[] signData = Files.readAllBytes(Paths.get("Security/res/signData"));
             boolean verifies = signature.verify(signData);
             System.out.println("signature verifies: " + verifies);
 
@@ -115,9 +119,9 @@ public class DSATrial {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
         } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
 
