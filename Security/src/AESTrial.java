@@ -12,41 +12,85 @@ import java.util.Base64;
  */
 
 public class AESTrial {
+
+    String cipherText;
+    String plainText = "ABCD";
+    String passwd = "chris";
+
     public static void main(String[] args) {
 
         AESTrial aesTrial = new AESTrial();
+
+//        for (int i = 0; i < 20; i++) {
+//
+//            aesTrial.passwd += aesTrial.passwd;
+//        }
+//        System.out.println(aesTrial.passwd);
+
+
+        aesTrial.pbekey();
+//        aesTrial.genKey();
         aesTrial.encrypt();
-        aesTrial.decrypt();
+//        aesTrial.decrypt();
+
+
+    }
+
+    private void pbekey() {
+
+
+
+    }
+
+    private void genKey() {
+        //创建AES密钥(Key类型)
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256, new SecureRandom(passwd.getBytes()));
+            SecretKey secretKey = keyGenerator.generateKey();
+
+            System.out.println(secretKey.getAlgorithm());
+            System.out.println(secretKey.getFormat());
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+
+        //创建AES密钥(KeySpec类型)
+//        String passwd = "chris";
+//        SecretKeySpec secretKeySpec = new SecretKeySpec(passwd.getBytes(), "AES");
+//        secretKeySpec.getAlgorithm();
 
 
     }
 
     private void decrypt() {
 
+
         try {
             //创建AES密钥(Key)
-//            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-//            keyGenerator.init(256);
-//            SecretKey secretKey = keyGenerator.generateKey();
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256);
+            SecretKey secretKey = keyGenerator.generateKey();
 
             //创建AES密钥(KeySpec)
-            String pass = "chris";
-            SecretKeySpec secretKeySpec = new SecretKeySpec(pass.getBytes(), "AES");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(passwd.getBytes(), "AES");
             secretKeySpec.getAlgorithm();
 
 
-            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
             IvParameterSpec ivspec = new IvParameterSpec(iv);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
+//            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec, new SecureRandom());
 
 
-            String strToEncrypt = "asdflkjxcovjlds";
-            byte[]data = cipher.doFinal(strToEncrypt.getBytes());
+            byte[] data = Base64.getDecoder().decode(cipherText);
+            cipher.doFinal(data);
 
-            String  strEnc = Base64.getEncoder().encodeToString(data);
-            System.out.println(strEnc);
+//            plainText = new String(data);
+//            System.out.println(plainText);
 
 
         } catch (NoSuchAlgorithmException e) {
@@ -62,6 +106,28 @@ public class AESTrial {
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+//        byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//        IvParameterSpec ivspec = new IvParameterSpec(iv);
+//
+//        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+//        KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
+//        SecretKey tmp = factory.generateSecret(spec);
+//        SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+//
+//        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+//        return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+
+
+
 
 
     }
@@ -71,28 +137,28 @@ public class AESTrial {
 
         try {
             //创建AES密钥(Key)
-//            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-//            keyGenerator.init(256);
-//            SecretKey secretKey = keyGenerator.generateKey();
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256);
+            SecretKey secretKey = keyGenerator.generateKey();
 
             //创建AES密钥(KeySpec)
-            String pass = "chris";
-            SecretKeySpec secretKeySpec = new SecretKeySpec(pass.getBytes(), "AES");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(passwd.getBytes(), "AES");
             secretKeySpec.getAlgorithm();
 
 
-            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
             IvParameterSpec ivspec = new IvParameterSpec(iv);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec, new SecureRandom());
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
+//            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec, new SecureRandom());
+
+            System.out.println("getAlgorithm is "+  cipher.getAlgorithm());
 
 
-            String strToEncrypt = "asdflkjxcovjlds";
-            byte[]data = cipher.doFinal(strToEncrypt.getBytes());
+            byte[] data = cipher.doFinal(plainText.getBytes());
 
-            String  strEnc = Base64.getEncoder().encodeToString(data);
-            System.out.println(strEnc);
+            cipherText = Base64.getEncoder().encodeToString(data);
+            System.out.println(cipherText);
 
 
         } catch (NoSuchAlgorithmException e) {
@@ -108,6 +174,23 @@ public class AESTrial {
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         }
+
+
+
+
+//        byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//        IvParameterSpec ivspec = new IvParameterSpec(iv);
+//
+//        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+//        KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
+//        SecretKey tmp = factory.generateSecret(spec);
+//        SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+//
+//        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+//        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+//        return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+
+
 
 
 

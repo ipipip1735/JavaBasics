@@ -40,6 +40,7 @@ public class DSATrial {
             KeyFactory keyFactory = KeyFactory.getInstance("DSA");
             PublicKey publicKey = keyFactory.generatePublic(pubX509);
             System.out.println(publicKey);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
