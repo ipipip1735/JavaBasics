@@ -23,28 +23,39 @@ public class DESTrial {
 
         DESTrial desTrial = new DESTrial();
 
-        desTrial.genKey();
+
+//        desTrial.genKey();
+        desTrial.secretkey();
 
         desTrial.encrypt();
         desTrial.decrypt();
 
 
     }
+    private void secretkey() {
 
-    private void genKey() {
 
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
-            keyGenerator.init(56);
-//            keyGenerator.init(256, new SecureRandom(passwd.getBytes()));
-            secretKey = keyGenerator.generateKey();
+        //方式一
+//        try {
+//            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+//            keyGenerator.init(56, new SecureRandom(passwd.getBytes()));
+//
+//            secretKey = keyGenerator.generateKey();
+//
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+
+        //方式二
+        byte[] key = new byte[24];
+        Arrays.fill(key, (byte) 0);
+        secretKey = new SecretKeySpec(key, "DESede");
+
 
 
     }
+
 
     private void encrypt() {
 
@@ -52,7 +63,7 @@ public class DESTrial {
             byte[] iv = new byte[8];
             Arrays.fill(iv, (byte) 0);
             IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
 
             byte[] data = cipher.doFinal(plainText.getBytes());
@@ -84,7 +95,7 @@ public class DESTrial {
             byte[] iv = new byte[8];
             Arrays.fill(iv, (byte) 0);
             IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
 
 

@@ -20,24 +20,25 @@ public class AESTrial {
     String plainText;
     String passwd;
     SecretKey secretKey;
+    byte[] salt;
 
 
     public AESTrial() {
         plainText = "ABCD";
         passwd = "chris";
+        salt = new byte[8];
+        new SecureRandom().nextBytes(salt);
     }
 
     public static void main(String[] args) {
 
         AESTrial aesTrial = new AESTrial();
 
-//        aesTrial.pbekey();
-//        aesTrial.genKey();
         aesTrial.secretkey();
+
 
         aesTrial.encrypt();
         aesTrial.decrypt();
-
 
     }
 
@@ -45,14 +46,14 @@ public class AESTrial {
 
         //方式一
 //        try {
-//            byte[] salt = new byte[64];
-//            new SecureRandom().nextBytes(salt);
+//
 //            PBEKeySpec pbeKeySpec = new PBEKeySpec(passwd.toCharArray(), salt, 1, 256);
 //
-//            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256And");
+//            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 //            SecretKey secretKey = factory.generateSecret(pbeKeySpec);
 //
 //            this.secretKey = new SecretKeySpec(secretKey.getEncoded(), "AES");
+//
 //
 //        } catch (NoSuchAlgorithmException e) {
 //            e.printStackTrace();
@@ -61,19 +62,15 @@ public class AESTrial {
 //        }
 
 
-
         //方式二
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        try {
+//            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 //            keyGenerator.init(256);
-            keyGenerator.init(256, new SecureRandom(passwd.getBytes()));
-           secretKey = keyGenerator.generateKey();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-
+//            secretKey = keyGenerator.generateKey();
+//
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
 
 
         //方式三
@@ -82,10 +79,8 @@ public class AESTrial {
 //            digester.update(passwd.getBytes());
 //            byte[] key = digester.digest();
 //
-////            key = new byte[16];
-////            Arrays.fill(key, (byte) 56);
 //
-//            secretKeySpec = new SecretKeySpec(key, "AES");
+//            secretKey = new SecretKeySpec(key, "AES");
 //
 //
 //        } catch (NoSuchAlgorithmException e) {
@@ -93,13 +88,23 @@ public class AESTrial {
 //        }
 
 
+        //方式四
+        byte[] key = new byte[16];
+//        byte[] key = new byte[24];
+//        byte[] key = new byte[32];
+        Arrays.fill(key, (byte) 0);
+
+        secretKey = new SecretKeySpec(key, "AES");
+
     }
 
 
     private void encrypt() {
 
         try {
-            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            byte[] iv = new byte[16];
+            Arrays.fill(iv, (byte) 0);
+
             IvParameterSpec ivspec = new IvParameterSpec(iv);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
@@ -128,8 +133,9 @@ public class AESTrial {
     private void decrypt() {
 
         try {
+            byte[] iv = new byte[16];
+            Arrays.fill(iv, (byte) 0);
 
-            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
             IvParameterSpec ivspec = new IvParameterSpec(iv);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
