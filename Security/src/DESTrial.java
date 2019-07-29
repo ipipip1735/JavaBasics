@@ -37,7 +37,7 @@ public class DESTrial {
 
         //方式一
 //        try {
-//            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+//            KeyGenerator keyGenerator = KeyGenerator.getInstance("DESede");
 //            keyGenerator.init(56, new SecureRandom(passwd.getBytes()));
 //
 //            secretKey = keyGenerator.generateKey();
