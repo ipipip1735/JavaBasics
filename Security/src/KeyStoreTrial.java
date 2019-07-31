@@ -1,13 +1,16 @@
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.*;
-import java.security.cert.CertificateException;
-import java.util.Base64;
+import java.security.cert.*;
+import java.security.cert.Certificate;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by Administrator on 2019/7/23 13:40.
@@ -17,8 +20,10 @@ public class KeyStoreTrial {
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
-    String stoPasswd = "sp";
-    String priPasswd = "pp";
+    private String stoPasswd = "sp";
+    private String priPasswd = "pp";
+    private KeyStore ks;
+    private Path path = Path.of("Security\\res\\keys");
 
     public static void main(String[] args) {
 
@@ -26,71 +31,34 @@ public class KeyStoreTrial {
 //        keyStoreTrial.key();
 //        keyStoreTrial.pair();
 
-        keyStoreTrial.store();
 
+        keyStoreTrial.load();//加载Key容器
+
+//        keyStoreTrial.setPrivateKeyEntry();
+//        keyStoreTrial.getPrivateKeyEntry();
+
+
+        keyStoreTrial.setSecretKeyEntry();
+//        keyStoreTrial.getSecretKeyEntry();
     }
 
-
-    private void store() {
+    private void setSecretKeyEntry() {
 
         try {
-//            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            KeyStore ks = KeyStore.getInstance("JKS");
-//            KeyStore ks = KeyStore.getInstance("PKCS12");
 
-            //读取Key容器
-            Path path = Path.of("Security\\res\\keys");
-            char[] password = stoPasswd.toCharArray();
-            if (Files.exists(path)) {
-                try (InputStream inputStream = Files.newInputStream(path)) {
-                    ks.load(inputStream, password);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (CertificateException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                ks.load(null, password);
-            }
-
-
-            password = priPasswd.toCharArray();
+            //设置保护密码
+            char[] password = priPasswd.toCharArray();
             KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password);
 
 
-
-
-            //保存私钥
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PrivateKey privateKey = keyPair.getPrivate();
-            PublicKey publicKey = keyPair.getPublic();
-
-//            KeyStore.PrivateKeyEntry keyEntry =
-//            KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) ks.setEntry("prikey");
-//            PrivateKey privateKey = pkEntry.getPrivateKey();
-//            System.out.println(privateKey);
-
-
-            // 获取私钥
-//            KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("prikey", protParam);
-//            PrivateKey privateKey = pkEntry.getPrivateKey();
-//            System.out.println(privateKey);
+            //生成对称密钥
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+            SecretKey mySecretKey = keyGenerator.generateKey();
 
 
             // 保存对称密钥
-//            javax.crypto.SecretKey mySecretKey;
-//            KeyStore.SecretKeyEntry skEntry =
-//                    new KeyStore.SecretKeyEntry(mySecretKey);
-//            ks.setEntry("secretKeyAlias", skEntry, protParam);
-
-//
-//            // store away the keystore
-//            try (FileOutputStream fos = new FileOutputStream("newKeyStoreName")) {
-//                ks.store(fos, password);
-//            }
+            KeyStore.SecretKeyEntry skEntry = new KeyStore.SecretKeyEntry(mySecretKey);
+            ks.setEntry("secretKeyAlias", skEntry, protParam);
 
 
             //保存Key容器
@@ -107,6 +75,143 @@ public class KeyStoreTrial {
         } catch (CertificateException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getSecretKeyEntry() {
+
+        try {
+
+            //设置保护密码
+            char[] password = priPasswd.toCharArray();
+            KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password);
+
+            //获取对称密钥
+            KeyStore.SecretKeyEntry secretKeyEntry = (KeyStore.SecretKeyEntry) ks.getEntry("secretKeyAlias", protParam);
+            SecretKey mySecretKey = secretKeyEntry.getSecretKey();
+            System.out.println(mySecretKey);
+
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void load() {
+
+        try {
+//            ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            ks = KeyStore.getInstance("JKS");
+//            ks = KeyStore.getInstance("PKCS12");
+
+            //加载Key容器
+            Path path = Path.of("Security\\res\\keys");
+            char[] password = stoPasswd.toCharArray();
+            if (Files.exists(path)) {
+                try (InputStream inputStream = Files.newInputStream(path)) {
+                    ks.load(inputStream, password);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (CertificateException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ks.load(null, password);
+            }
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void setPrivateKeyEntry() {
+
+
+        try {
+
+            //设置保护密码
+            char[] password = priPasswd.toCharArray();
+            KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password);
+
+
+            //生成私钥
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            PrivateKey privateKey = keyPair.getPrivate();
+
+            //生成信任链
+            Certificate[] certificates = null;
+            try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.pem"))) {
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                Collection collection = cf.generateCertificates(inStream);
+
+                certificates = Stream.of(collection.toArray()).toArray(n -> new Certificate[n]);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CertificateEncodingException e) {
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            }
+
+            // 存储私钥
+            KeyStore.PrivateKeyEntry keyEntry = new KeyStore.PrivateKeyEntry(privateKey, certificates);
+            ks.setEntry("prikey", keyEntry, protParam);
+
+
+            //保存Key容器
+            password = stoPasswd.toCharArray();
+            try (OutputStream outputStream = Files.newOutputStream(path)) {
+                ks.store(outputStream, password);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            }
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void getPrivateKeyEntry() {
+
+        try {
+
+            char[] password = priPasswd.toCharArray();
+            KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password);
+
+            // 获取私钥
+            KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("prikey", protParam);
+            privateKey = pkEntry.getPrivateKey();
+            System.out.println(privateKey);
+
+
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
             e.printStackTrace();
         }
     }
