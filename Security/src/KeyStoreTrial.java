@@ -38,8 +38,79 @@ public class KeyStoreTrial {
 //        keyStoreTrial.getPrivateKeyEntry();
 
 
-        keyStoreTrial.setSecretKeyEntry();
+//        keyStoreTrial.setSecretKeyEntry();
 //        keyStoreTrial.getSecretKeyEntry();
+
+//        keyStoreTrial.setTrustedCertificateEntry();
+        keyStoreTrial.getTrustedCertificateEntry();
+
+
+    }
+
+    private void getTrustedCertificateEntry() {
+
+        try {
+            Certificate certificate;
+
+            //获取证书（方式一）
+            KeyStore.TrustedCertificateEntry trustedCertificateEntry = (KeyStore.TrustedCertificateEntry) ks.getEntry("ca", null);
+            certificate = trustedCertificateEntry.getTrustedCertificate();
+            System.out.println(certificate);
+
+            //获取证书（方式二）
+            certificate = ks.getCertificate("ca");
+            System.out.println(certificate);
+            System.out.println(ks.getCertificateAlias(certificate));
+//            ks.getCertificateChain()
+
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setTrustedCertificateEntry() {
+
+
+        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\ca\\ca.crt"))) {
+
+            //生成证书
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            Certificate certificate = cf.generateCertificate(inStream);
+
+            //保存信任证书(方式一)
+//            ks.setCertificateEntry("ca", certificate);
+
+
+            //保存信任证书(方式二)
+            KeyStore.TrustedCertificateEntry trustedCertificateEntry = new KeyStore.TrustedCertificateEntry(certificate);
+            ks.setEntry("ca", trustedCertificateEntry, null);
+
+
+
+            //保存Key容器
+            char[] password = stoPasswd.toCharArray();
+            try (OutputStream outputStream = Files.newOutputStream(path)) {
+                ks.store(outputStream, password);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void setSecretKeyEntry() {
@@ -91,7 +162,8 @@ public class KeyStoreTrial {
             //获取对称密钥
             KeyStore.SecretKeyEntry secretKeyEntry = (KeyStore.SecretKeyEntry) ks.getEntry("secretKeyAlias", protParam);
             SecretKey mySecretKey = secretKeyEntry.getSecretKey();
-            System.out.println(mySecretKey);
+            System.out.println(mySecretKey.getFormat());
+            System.out.println(mySecretKey.getAlgorithm());
 
 
         } catch (KeyStoreException e) {
@@ -108,7 +180,8 @@ public class KeyStoreTrial {
 
         try {
 //            ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            ks = KeyStore.getInstance("JKS");
+//            ks = KeyStore.getInstance("JKS");
+            ks = KeyStore.getInstance("JCEKS");
 //            ks = KeyStore.getInstance("PKCS12");
 
             //加载Key容器
