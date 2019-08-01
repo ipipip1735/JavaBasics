@@ -28,12 +28,15 @@ public class CertificateTrial {
 
     private void certPath() {
 
-        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.pem"))) {
+        //方式一
+        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.crt"))) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            Collection certificates = cf.generateCertificates(inStream);
+            Collection collection = cf.generateCertificates(inStream);
 
-            List list = Arrays.asList(certificates.toArray());
-            CertPath certPath = cf.generateCertPath(list);
+            ArrayList<Certificate> crts = new ArrayList();
+            crts.addAll(collection);
+
+            CertPath certPath = cf.generateCertPath(crts);
 
 
         } catch (IOException e) {
@@ -45,9 +48,10 @@ public class CertificateTrial {
         }
 
 
-//        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.pem"))) {
+        //方式二：Java API不支持解析信任链文件创建CertPath
+//        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.crt"))) {
 //            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-//            CertPath certPath = cf.generateCertPath(inStream, "PKCS7");
+//            CertPath certPath = cf.generateCertPath(inStream);
 //
 //            List list = certPath.getCertificates();
 ////            System.out.println(list.size());

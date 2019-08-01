@@ -29,10 +29,10 @@ public class KeyStoreTrial {
 
         KeyStoreTrial keyStoreTrial = new KeyStoreTrial();
 //        keyStoreTrial.key();
-//        keyStoreTrial.pair();
+        keyStoreTrial.pair();
 
 
-        keyStoreTrial.load();//加载Key容器
+//        keyStoreTrial.load();//加载Key容器
 
 //        keyStoreTrial.setPrivateKeyEntry();
 //        keyStoreTrial.getPrivateKeyEntry();
@@ -42,7 +42,7 @@ public class KeyStoreTrial {
 //        keyStoreTrial.getSecretKeyEntry();
 
 //        keyStoreTrial.setTrustedCertificateEntry();
-        keyStoreTrial.getTrustedCertificateEntry();
+//        keyStoreTrial.getTrustedCertificateEntry();
 
 
     }
@@ -179,10 +179,11 @@ public class KeyStoreTrial {
     private void load() {
 
         try {
-//            ks = KeyStore.getInstance(KeyStore.getDefaultType());
-//            ks = KeyStore.getInstance("JKS");
-            ks = KeyStore.getInstance("JCEKS");
+//            ks = KeyStore.getInstance(KeyStore.getDefaultType()); //默认是PKCS12
 //            ks = KeyStore.getInstance("PKCS12");
+
+//            ks = KeyStore.getInstance("JKS");//无法存储对称加密密钥
+            ks = KeyStore.getInstance("JCEKS");
 
             //加载Key容器
             Path path = Path.of("Security\\res\\keys");
