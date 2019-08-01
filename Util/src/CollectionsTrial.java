@@ -19,8 +19,8 @@ public class CollectionsTrial {
     private void copy() {
 
         //填充复制
-//        List<String> list = Collections.nCopies(2, "-");
-//        System.out.println(list.size() + "|" + list);
+        List<String> list = Collections.nCopies(2, "-");
+        System.out.println(list.size() + "|" + list);
 
     }
 
@@ -39,10 +39,10 @@ public class CollectionsTrial {
     }
 
     private void disjoint() {
-//        List<String> list1 = Arrays.asList("aa", "bb", "cc", "dd");
-//        List<String> list2 = Arrays.asList("bb", "gg");
+        List<String> list1 = Arrays.asList("aa", "bb", "cc", "dd");
+        List<String> list2 = Arrays.asList("bb", "gg");
 //        List<String> list2 = Arrays.asList("ee", "gg");
-//        System.out.println(Collections.disjoint(list1, list2));
+        System.out.println(Collections.disjoint(list1, list2));
 
     }
 
@@ -50,13 +50,13 @@ public class CollectionsTrial {
         List<String> list = Arrays.asList("aa", "bb", "cc", "dd");
         System.out.println(list);
 
-        Collections.rotate(list, 1);
-        System.out.println(list);
+//        Collections.rotate(list, 1);
+//        System.out.println(list);
 
 //        Collections.rotate(list, 2);
 //        System.out.println(list);
-//        Collections.rotate(list, 3);
-//        System.out.println(list);
+        Collections.rotate(list, 3);
+        System.out.println(list);
 //        Collections.rotate(list, 0);
 //        System.out.println(list);
     }
