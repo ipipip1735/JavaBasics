@@ -20,23 +20,23 @@ public class CertificateTrial {
     public static void main(String[] args) {
         CertificateTrial certificateTrial = new CertificateTrial();
 
-//        certificateTrial.certificate();
-//        certificateTrial.verify();
+//        certificateTrial.certificate();//创建证书对象
+//        certificateTrial.verify();//验证证书
 
-        certificateTrial.certPath();
+        certificateTrial.certPath();//创建信任链对象
     }
 
     private void certPath() {
 
         //方式一
         try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.crt"))) {
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            Collection collection = cf.generateCertificates(inStream);
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");//创建工厂对象
+            Collection collection = cf.generateCertificates(inStream);//获取证书对象集
 
-            ArrayList<Certificate> crts = new ArrayList();
-            crts.addAll(collection);
+            ArrayList crts = new ArrayList();
+            crts.addAll(collection);//转为List容器
 
-            CertPath certPath = cf.generateCertPath(crts);
+            CertPath certPath = cf.generateCertPath(crts); //创建信任链对象
 
 
         } catch (IOException e) {
