@@ -19,8 +19,8 @@ public class RSATrial {
 
 
 
-        rsaTrial.publicKeyX509();
-//        rsaTrial.privateKeyPKCS8();
+//        rsaTrial.publicKeyX509();
+        rsaTrial.privateKeyPKCS8();
 //        rsaTrial.sign();
 //        rsaTrial.verify();
 
