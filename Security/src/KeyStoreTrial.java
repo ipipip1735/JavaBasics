@@ -43,8 +43,6 @@ public class KeyStoreTrial {
 //        keyStoreTrial.setTrustedCertificateEntry();
 //        keyStoreTrial.getTrustedCertificateEntry();
 
-
-
     }
 
     private void getTrustedCertificateEntry() {

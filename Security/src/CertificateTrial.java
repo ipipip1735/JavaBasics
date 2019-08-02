@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidKeyException;
@@ -8,8 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.cert.*;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Administrator on 2019/7/29.
@@ -24,6 +23,11 @@ public class CertificateTrial {
 //        certificateTrial.verify();//验证证书
 
         certificateTrial.certPath();//创建信任链对象
+
+
+
+
+
     }
 
     private void certPath() {

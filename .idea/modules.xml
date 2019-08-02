@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AAATemp/AAATemp.iml" filepath="$PROJECT_DIR$/AAATemp/AAATemp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Annotation/Annotation.iml" filepath="$PROJECT_DIR$/Annotation/Annotation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AppTemp/AppTemp.iml" filepath="$PROJECT_DIR$/AppTemp/AppTemp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Collection/Collection.iml" filepath="$PROJECT_DIR$/Collection/Collection.iml" />
       <module fileurl="file://$PROJECT_DIR$/Concurrent/Concurrent.iml" filepath="$PROJECT_DIR$/Concurrent/Concurrent.iml" />
       <module fileurl="file://$PROJECT_DIR$/File/File.iml" filepath="$PROJECT_DIR$/File/File.iml" />
@@ -18,6 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/Swing/Swing.iml" filepath="$PROJECT_DIR$/Swing/Swing.iml" />
       <module fileurl="file://$PROJECT_DIR$/Syntax/Syntax.iml" filepath="$PROJECT_DIR$/Syntax/Syntax.iml" />
       <module fileurl="file://$PROJECT_DIR$/Thread/Thread.iml" filepath="$PROJECT_DIR$/Thread/Thread.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Throwable/Throwable.iml" filepath="$PROJECT_DIR$/Throwable/Throwable.iml" />
       <module fileurl="file://$PROJECT_DIR$/Throwable/Throwable.iml" filepath="$PROJECT_DIR$/Throwable/Throwable.iml" />
       <module fileurl="file://$PROJECT_DIR$/Time/Time.iml" filepath="$PROJECT_DIR$/Time/Time.iml" />
       <module fileurl="file://$PROJECT_DIR$/Util/Util.iml" filepath="$PROJECT_DIR$/Util/Util.iml" />
