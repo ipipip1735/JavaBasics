@@ -17,10 +17,37 @@ public class MapTrial {
 //        mapTrial.sortMap();
 //        mapTrial.navigableMap();
 
+        mapTrial.hashMap();
 //        mapTrial.LinkedHashMap();
-        mapTrial.LinkedHashMapStale();
+//        mapTrial.LinkedHashMapStale();
 
 //        mapTrial.concurrentHashMap(); //线程安全，支持并行写入
+    }
+
+    private void hashMap() {
+
+        Map<String, String> hashMap = new HashMap<String, String>();
+
+        //不是字母排序
+        hashMap.put("app_id", "001");
+        hashMap.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"0.01\",\"subject\":\"1\",\"body\":\"我是测试数据\",\"out_trade_no\":\"001\"}");
+        hashMap.put("charset", "utf-8");
+        hashMap.put("method", "alipay.trade.app.pay");
+        hashMap.put("sign_type", "RSA2");
+        hashMap.put("timestamp", "2016-07-29 16:55:53");
+        hashMap.put("version", "1.0");
+
+
+        //不能保存顺序存储
+//                hashMap.put("one", "111");
+//                hashMap.put("two", "222");
+//                hashMap.put("three", "333");
+//                hashMap.put("four", "444");
+
+
+        for (String k : hashMap.keySet()) System.out.println("key is " + k);
+
+
     }
 
     private void concurrentHashMap() {
