@@ -66,10 +66,6 @@ public class KeyStoreTrial {
             System.out.println(certificate);
 
 
-
-
-
-
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnrecoverableEntryException e) {
@@ -188,17 +184,16 @@ public class KeyStoreTrial {
     private void load() {
 
         try {
-            ks = KeyStore.getInstance("PKCS12");
-//            ks = KeyStore.getInstance(KeyStore.getDefaultType()); //默认是PKCS12
-
+            String type = KeyStore.getDefaultType();//默认是PKCS12
+            ks = KeyStore.getInstance(type); //等价于KeyStore.getInstance("PKCS12")
 //            ks = KeyStore.getInstance("JKS");//无法存储对称加密密钥
 //            ks = KeyStore.getInstance("JCEKS");
 
             //加载Key容器
-            char[] password = storePasswd.toCharArray();
+            char[] password = storePasswd.toCharArray();//容器密码
             if (Files.exists(path)) {
                 try (InputStream inputStream = Files.newInputStream(path)) {
-                    ks.load(inputStream, password);
+                    ks.load(inputStream, password);//加载容器
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (CertificateException e) {
@@ -207,7 +202,7 @@ public class KeyStoreTrial {
                     e.printStackTrace();
                 }
             } else {
-                ks.load(null, password);
+                ks.load(null, password);//加载空容器
             }
 
         } catch (KeyStoreException e) {
@@ -306,6 +301,7 @@ public class KeyStoreTrial {
                 return;
             }
 
+            //设置保护密码
             char[] password = privateKeyPasswd.toCharArray();
             KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password);
 
@@ -322,7 +318,6 @@ public class KeyStoreTrial {
             //获取服务器证书
             Certificate certificate = ks.getCertificate("priKey");
             System.out.println(certificate);
-
 
 
         } catch (KeyStoreException e) {

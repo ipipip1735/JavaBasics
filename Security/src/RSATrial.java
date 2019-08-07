@@ -30,15 +30,16 @@ public class RSATrial {
     private void publicKeyX509() {
 
         try {
-            String publicKeyX509 = Files.lines(Paths.get("Security/res/rsa.pub.pem"))
-                    .filter(s -> !s.contains("-"))
-                    .collect(Collectors.joining());
+            String publicKeyX509 = Files.lines(Paths.get("Security/res/rsa.pub.pem")) //读取公钥文件
+                    .filter(s -> !s.contains("-")) //去掉头尾标记行
+                    .collect(Collectors.joining());//拼接成一行字符串
 
-            X509EncodedKeySpec pubX509 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyX509));
+            byte[] key = Base64.getDecoder().decode(publicKeyX509);//Base64解码
+            X509EncodedKeySpec pubX509 = new X509EncodedKeySpec(key);//创建KeySpec对象
 
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PublicKey publicKey = keyFactory.generatePublic(pubX509);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");//实例化工厂
+            PublicKey publicKey = keyFactory.generatePublic(pubX509);//转换KeySpec为key对象
             System.out.println(publicKey);
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,14 +54,15 @@ public class RSATrial {
     private void privateKeyPKCS8() {
 
         try {
-            String privateKeyPKCS8 = Files.lines(Paths.get("Security/res/rsa.pri.pkcs8"))
-                    .filter(s -> !s.contains("-"))
-                    .collect(Collectors.joining());
+            String privateKeyPKCS8 = Files.lines(Paths.get("Security/res/rsa.pri.pkcs8"))//读取私钥文件
+                    .filter(s -> !s.contains("-")) //去掉头尾标记行
+                    .collect(Collectors.joining());//拼接成一行字符串
 
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyPKCS8));
+            byte[] key = Base64.getDecoder().decode(privateKeyPKCS8);//Base64解码
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(key);//创建KeySpec对象
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PrivateKey privateKey = keyFactory.generatePrivate(priPKCS8);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");//实例化工厂
+            PrivateKey privateKey = keyFactory.generatePrivate(priPKCS8);//转换KeySpec为key对象
             System.out.println(privateKey);
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,25 +78,27 @@ public class RSATrial {
     private void verify() {
 
         try {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            String publicKey = Files.lines(Paths.get("Security/res/rsa.pub.pem"))
-                    .filter(s -> !s.contains("-"))
-                    .collect(Collectors.joining());
-            X509EncodedKeySpec pubPKCS8 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
-            PublicKey pubKey = keyFactory.generatePublic(pubPKCS8);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");//实例化工厂
+            String publicKey = Files.lines(Paths.get("Security/res/rsa.pub.pem"))//读取公钥文件
+                    .filter(s -> !s.contains("-"))//去掉头尾标记行
+                    .collect(Collectors.joining());//拼接成一行字符串
+
+            byte[] key = Base64.getDecoder().decode(publicKey);//Base64解码
+            X509EncodedKeySpec pubPKCS8 = new X509EncodedKeySpec(key);//创建KeySpec对象
+            PublicKey pubKey = keyFactory.generatePublic(pubPKCS8);//转换KeySpec为key对象
             System.out.println(pubKey);
 
 
 
-            Signature signature = Signature.getInstance("SHA256withRSA");
-            signature.initVerify(pubKey);
+            Signature signature = Signature.getInstance("SHA256withRSA");//实例化签名对象
+            signature.initVerify(pubKey);//初始化签名对象
 
-            InputStream inputStream = Files.newInputStream(Paths.get("Security/res/message"));
+            InputStream inputStream = Files.newInputStream(Paths.get("Security/res/message"));//读取信息
             byte[] buffer = new byte[1024];
             int len;
             while (inputStream.available() != 0) {
                 len = inputStream.read(buffer);
-                signature.update(buffer, 0, len);
+                signature.update(buffer, 0, len);//逐K更新摘要
                 for (int i = 0; i < len; i++) {
                     System.out.print(buffer[i] + ", ");
                 }
@@ -103,8 +107,8 @@ public class RSATrial {
             inputStream.close();
 
 
-            byte[] signData = Files.readAllBytes(Paths.get("Security/res/signData"));
-            boolean verifies = signature.verify(signData);
+            byte[] signData = Files.readAllBytes(Paths.get("Security/res/signData"));//读取签名
+            boolean verifies = signature.verify(signData);//验证签名
             System.out.println("signature verifies: " + verifies);
 
 
@@ -126,27 +130,28 @@ public class RSATrial {
 
         try {
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");//实例化工厂
 
-            String privateKey = Files.lines(Paths.get("Security/res/rsa.pri.pkcs8"))
-                    .filter(s -> !s.contains("-"))
-                    .collect(Collectors.joining());
+            String privateKey = Files.lines(Paths.get("Security/res/rsa.pri.pkcs8"))//读取私钥文件
+                    .filter(s -> !s.contains("-"))//去掉头尾标记行
+                    .collect(Collectors.joining());//拼接成一行字符串
 
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
-            PrivateKey priKey = keyFactory.generatePrivate(priPKCS8);
+            byte[] key = Base64.getDecoder().decode(privateKey);//Base64解码
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(key);//创建KeySpec对象
+            PrivateKey priKey = keyFactory.generatePrivate(priPKCS8);//转换KeySpec为key对象
             System.out.println(priKey);
 
 
-            Signature signature = Signature.getInstance("SHA256withRSA");
-            signature.initSign(priKey);
+            Signature signature = Signature.getInstance("SHA256withRSA");//实例化签名对象
+            signature.initSign(priKey);//初始化签名对象
 
 
-            InputStream inputStream = Files.newInputStream(Paths.get("Security/res/message"));
+            InputStream inputStream = Files.newInputStream(Paths.get("Security/res/message"));//读取信息
             byte[] buffer = new byte[1024];
             int len;
             while (inputStream.available() != 0) {
                 len = inputStream.read(buffer);
-                signature.update(buffer, 0, len);
+                signature.update(buffer, 0, len);//逐K更新摘要
                 for (int i = 0; i < len; i++) {
                     System.out.print(buffer[i] + ", ");
                 }
@@ -155,9 +160,9 @@ public class RSATrial {
             inputStream.close();
 
 
-            byte[] signData = signature.sign();
-            Files.write(Paths.get("Security/res/signData"), signData);
-            System.out.println(Base64.getEncoder().encodeToString(signData));
+            byte[] signData = signature.sign();//签名
+            Files.write(Paths.get("Security/res/signData"), signData);//保存签名二进制数据到文件
+            System.out.println(Base64.getEncoder().encodeToString(signData));//也打印到控制台
 
 
         } catch (IOException e) {

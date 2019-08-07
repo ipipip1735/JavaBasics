@@ -62,7 +62,7 @@ public class DESTrial {
         try {
             byte[] iv = new byte[8];
             Arrays.fill(iv, (byte) 0);
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
             Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
 
@@ -94,7 +94,7 @@ public class DESTrial {
 
             byte[] iv = new byte[8];
             Arrays.fill(iv, (byte) 0);
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
             Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
 

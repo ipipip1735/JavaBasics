@@ -38,21 +38,21 @@ public class CipherIOTrial {
 
             byte[] AESkey = new byte[32]; //AES算法密钥长度
             Arrays.fill(AESkey, (byte) 0);
-            SecretKey secretKey = new SecretKeySpec(AESkey, "AES");
+            SecretKey secretKey = new SecretKeySpec(AESkey, "AES");//创建密钥对象
 
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//实例化Cihper
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher(解密操作)
 
             try (InputStream inputStream = Files.newInputStream(Paths.get("Security\\res\\message.enc"));
                  OutputStream outputStream = Files.newOutputStream(Paths.get("Security\\res\\message.dnc"));
-                 CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, cipher)) {
+                 CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, cipher)) {//再套一层Stream
 
                 byte[] buffer = new byte[1024];
                 int length = 0;
                 while ((length = inputStream.read(buffer)) != -1) {
                     System.out.println("length is " + length);
-                    cipherOutputStream.write(buffer, 0, length);
+                    cipherOutputStream.write(buffer, 0, length);//读取解密后再write
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,17 +84,17 @@ public class CipherIOTrial {
             SecretKey secretKey = new SecretKeySpec(AESkey, "AES");
 
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//实例化Cihper
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher(加密操作)
 
             try (InputStream inputStream = Files.newInputStream(Paths.get("Security\\res\\message"));
                  CipherInputStream cipherInputStream = new CipherInputStream(inputStream, cipher);
-                 OutputStream outputStream = Files.newOutputStream(Paths.get("Security\\res\\message.enc"))) {
+                 OutputStream outputStream = Files.newOutputStream(Paths.get("Security\\res\\message.enc"))) {//再套一层Stream
                 byte[] buffer = new byte[1024];
                 int length = 0;
                 while ((length = cipherInputStream.read(buffer)) != -1) {
                     System.out.println("length is " + length);
-                    outputStream.write(buffer, 0, length);
+                    outputStream.write(buffer, 0, length);//读取加密后再write
                 }
             } catch (IOException e) {
                 e.printStackTrace();

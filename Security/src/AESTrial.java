@@ -21,9 +21,9 @@ public class AESTrial {
 
     String cipherText;
     String plainText;
-    String passwd;
+    String passwd;//密钥访问密码
     SecretKey secretKey;
-    byte[] salt;
+    byte[] salt;//盐
 
 
     public AESTrial() {
@@ -40,11 +40,11 @@ public class AESTrial {
         aesTrial.secretkey();
 
 
-//        aesTrial.encryptOnce();
-//        aesTrial.decryptOnce();
+        aesTrial.encryptOnce();
+        aesTrial.decryptOnce();
 
-        aesTrial.encrypt();
-        aesTrial.decrypt();
+//        aesTrial.encrypt();
+//        aesTrial.decrypt();
 
     }
 
@@ -111,14 +111,14 @@ public class AESTrial {
             byte[] iv = new byte[16];
             Arrays.fill(iv, (byte) 0);
 
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//实例化Cipher
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher
 
-            byte[] data = cipher.doFinal(plainText.getBytes());
+            byte[] data = cipher.doFinal(plainText.getBytes());//因为数据很小，直接使用foFinal()方法一步完成
             System.out.println("data length is " + data.length);
 
-            cipherText = new String(Base64.getEncoder().encode(data));
+            cipherText = new String(Base64.getEncoder().encode(data));//保存密文（Base64编码后的字符串）
             System.out.println(cipherText);
 
 
@@ -143,13 +143,13 @@ public class AESTrial {
             byte[] iv = new byte[16];
             Arrays.fill(iv, (byte) 0);
 
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//实例化Cipher
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher（解密操作）
 
 
-            byte[] data = Base64.getDecoder().decode(cipherText);
-            data = cipher.doFinal(data);
+            byte[] data = Base64.getDecoder().decode(cipherText);//Base64解码
+            data = cipher.doFinal(data);//计算明文（数据很小，使用doFinal()一步完成）
             plainText = new String(data);
             System.out.println(plainText);
 
@@ -176,9 +176,9 @@ public class AESTrial {
             byte[] iv = new byte[16];
             Arrays.fill(iv, (byte) 0);
 
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//初始化Cipher
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher（加密操作）
 
             try (InputStream inputStream = Files.newInputStream(Paths.get("Security\\res\\message"))) {
                 int size =  inputStream.available() / 16 * 16 + 16;
@@ -189,10 +189,10 @@ public class AESTrial {
                 byte[] data;
 
                 while ((length = inputStream.read(buffer)) != -1) {
-                    data = cipher.update(buffer, 0, length);
+                    data = cipher.update(buffer, 0, length);//逐K计算
                     byteBuffer.put(data);
                 }
-                data = cipher.doFinal();
+                data = cipher.doFinal();//完成计算
                 byteBuffer.put(data);
 
                 data = byteBuffer.rewind().array();
@@ -203,10 +203,6 @@ public class AESTrial {
                 e.printStackTrace();
             }
 
-//            byte[] data = cipher.doFinal();
-
-
-//            cipherText = new String(Base64.getEncoder().encode(data));
             System.out.println(cipherText);
 
 
@@ -231,12 +227,12 @@ public class AESTrial {
             byte[] iv = new byte[16];
             Arrays.fill(iv, (byte) 0);
 
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());
+            IvParameterSpec ivspec = new IvParameterSpec(iv);//初始化向量（加/解密必须相同）
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//初始化Cipher
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec, new SecureRandom());//初始化Cipher（解密操作）
 
 
-            byte[] data = Base64.getDecoder().decode(cipherText);
+            byte[] data = Base64.getDecoder().decode(cipherText); //Base64解码
 
             //方式一
 //            System.out.println(data.length);
@@ -254,7 +250,9 @@ public class AESTrial {
                 byteBuffer.put(temp);
 
             }
-            data = byteBuffer.put(cipher.doFinal()).array();
+            data = byteBuffer
+                    .put(cipher.doFinal()) //完成计算
+                    .array();
 
 
             plainText = new String(data);

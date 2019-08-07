@@ -21,8 +21,8 @@ public class DegestTrial {
 
     public static void main(String[] args) {
         DegestTrial degestTrial = new DegestTrial();
-//        degestTrial.dgstOnce();
-        degestTrial.dgst();
+        degestTrial.dgstOnce();//一次性计算出摘要
+//        degestTrial.dgst();//逐次计算摘要
     }
 
 
@@ -34,8 +34,8 @@ public class DegestTrial {
             System.out.println("getDigestLength is " + messageDigest.getDigestLength());
 
 
-            byte[] data = messageDigest.digest(plainText.getBytes());
-            messageDidgst = Base64.getEncoder().encodeToString(data);
+            byte[] data = messageDigest.digest(plainText.getBytes());//一次性计算出摘要
+            messageDidgst = Base64.getEncoder().encodeToString(data);//Base64编码后保存
             System.out.println(messageDigest.getAlgorithm() + "(" + messageDigest.getDigestLength() * 8 + ")|" + messageDidgst);
 
         } catch (NoSuchAlgorithmException e) {
@@ -57,15 +57,15 @@ public class DegestTrial {
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = inputStream.read(buffer)) != -1) {
-                    messageDigest.update(buffer, 0, length);
+                    messageDigest.update(buffer, 0, length);//逐K计算摘要
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            byte[] data = messageDigest.digest();
-            messageDidgst = Base64.getEncoder().encodeToString(data);
+            byte[] data = messageDigest.digest();//完成计算
+            messageDidgst = Base64.getEncoder().encodeToString(data);//Base64编码后保存
             System.out.println(messageDigest.getAlgorithm() + "(" + messageDigest.getDigestLength() * 8 + ")|" + messageDidgst);
 
 
