@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.Map;
+import java.util.Random;
 
 import static java.lang.Class.forName;
 
@@ -11,36 +13,193 @@ public class SQLTrail {
         SQLTrail sqlTrail = new SQLTrail();
 
         Connection conn = sqlTrail.getConnection();
-//        sqlTrail.query(conn);
-//        sqlTrail.update(conn);
-        sqlTrail.batchUpdate(conn);
+//        sqlTrail.query(conn);//查询
+//        sqlTrail.queryupdate(conn);//查询时更新
+//        sqlTrail.queryInsert(conn);//查询时插入
+
+//        sqlTrail.batchDDL(conn);//批量更新
+
+
+        sqlTrail.preparedDDL(conn);//使用预处理声明对象
+//        sqlTrail.batchPrepareDDL(conn);//批量预处理操作
+
     }
 
-    private void batchUpdate(Connection conn) {
+    private void preparedDDL(Connection conn) {
+
+
+        PreparedStatement pstmt = null;
+        try {
+            conn.setAutoCommit(false);
+            String sql = "UPDATE mine.mine_person SET person_name = ?, person_age = person_age+? WHERE person_id = ?;";
+            System.out.println(sql);
+            pstmt = conn.prepareStatement(sql);
+
+            Random random = new Random();
+            pstmt.setString(1, "mary" + random.nextInt(120));
+            pstmt.setInt(2, random.nextInt(10));
+            pstmt.setInt(3, 5);
+            int r = pstmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+//            JDBCTutorialUtilities.printSQLException(e);
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void queryInsert(Connection conn) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+            ResultSet uprs = stmt.executeQuery("SELECT * FROM mine.mine_person");
+
+
+            Random random = new Random();
+            String name = "bob" + random.nextInt(120);
+            int age = random.nextInt(120);
+
+            uprs.moveToInsertRow();
+            System.out.println(uprs.getString("person_name"));
+
+
+            uprs.updateString("person_name", "tom" + random.nextInt(120));
+            uprs.updateInt("person_age", random.nextInt(120));
+            uprs.updateBoolean("person_sex", true);
+            uprs.insertRow();
+            System.out.println(uprs.getString("person_name"));
+
+            uprs.updateString("person_name", "tom" + random.nextInt(120));
+            uprs.updateInt("person_age", random.nextInt(120));
+            uprs.updateBoolean("person_sex", true);
+            uprs.insertRow();
+
+            uprs.beforeFirst();
+            uprs.next();
+            System.out.println(uprs.getString("person_name"));
+
+
+        } catch (SQLException e) {
+//            JDBCTutorialUtilities.printSQLException(e);
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private void batchPrepareDDL(Connection conn) {
+        PreparedStatement pstmt = null;
+        try {
+            conn.setAutoCommit(false);
+
+            String sql = "INSERT INTO mine.mine_person(person_name, person_age, person_sex) VALUES(?, ?, ?);";
+            pstmt = conn.prepareStatement(sql);
+
+            Random random = new Random();
+            String name = "bob" + random.nextInt(120);
+            int age = random.nextInt(120);
+
+            pstmt.setString(1, name);
+            pstmt.setInt(2, age);
+            pstmt.setBoolean(3, true);
+            pstmt.addBatch();
+
+            pstmt.setString(1, name);
+            pstmt.setInt(2, age);
+            pstmt.setBoolean(3, true);
+            pstmt.addBatch();
+
+
+            int[] updateCounts = pstmt.executeBatch();
+            conn.commit();
+
+            for (int i = 0; i < updateCounts.length; i++) {
+                System.out.print(updateCounts[i] + ", ");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void batchDDL(Connection conn) {
 
         Statement stmt = null;
         try {
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
 
-            stmt.addBatch("INSERT INTO mine.mine_person（person_name, person_age, person_sex）VALUES ('bob', 32, true);");
+            Random random = new Random();
+            String name = "bob" + random.nextInt(120);
+            int age = random.nextInt(120);
+
+            String sql = "INSERT INTO mine.mine_person(person_name, person_age, person_sex) VALUES('" + name + "', " + age + ", true);";
+            System.out.println(sql);
+            stmt.addBatch(sql);
+
+            sql = "UPDATE mine.mine_person SET person_age= person_age +1 WHERE person_id > 10;";
+            System.out.println(sql);
+            stmt.addBatch(sql);
 
 
-            int [] updateCounts = stmt.executeBatch();
+            int[] updateCounts = stmt.executeBatch();
             conn.commit();
 
             for (int i = 0; i < updateCounts.length; i++) {
-                System.out.println(updateCounts[i] + ", ");
-
+                System.out.print(updateCounts[i] + ", ");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
-    public void update(Connection conn) {
+    public void queryupdate(Connection conn) {
 
         String dbName = "mine";
         String table = "mine_person";
