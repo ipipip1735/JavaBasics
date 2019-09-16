@@ -14,4 +14,5 @@ import java.lang.annotation.*;
 
 public @interface MyAnnotation {
     int value() default 33;
+    int one() default 11;
 }

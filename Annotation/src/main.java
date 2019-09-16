@@ -7,7 +7,12 @@ public class main {
         int k;
 
         try {
-            k = Class.forName("MyAnnotationTest").getField("kk").getAnnotation(MyAnnotation.class).value();
+//            k = Class.forName("MyAnnotationTest").getField("kk").getAnnotation(MyAnnotation.class).value();
+            k = Class.forName("MyAnnotationTest")
+                    .getField("kk")
+                    .getAnnotation(MyAnnotation.class)
+                    .one();
+
         System.out.println(k);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();

@@ -3,7 +3,7 @@
  */
 public class MyAnnotationTest {
 
-    @ MyAnnotation(3)
+    @ MyAnnotation(one = 999)
     public int kk;
 
 }
