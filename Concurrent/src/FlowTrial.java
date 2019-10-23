@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Flow;
 import java.util.concurrent.SubmissionPublisher;
-import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
  * Created by Administrator on 2019/10/22 14:10.
@@ -11,15 +11,15 @@ import java.util.stream.LongStream;
 public class FlowTrial {
     public static void main(String[] args) {
 
+        FlowTrial flowTrial = new FlowTrial();
 
-//        custom();
-
-        SubmissionPublisherTrial();
+//        flowTrial.custom();//自定义发布者
+        flowTrial.SubmissionPublisherTrial();//使用JDK自带的默认发布者
 
 
     }
 
-    private static void SubmissionPublisherTrial() {
+    private void SubmissionPublisherTrial() {
 
         SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
 
@@ -31,7 +31,6 @@ public class FlowTrial {
             @Override
             public void onSubscribe(Flow.Subscription subscription) {
                 System.out.println("~~" + getClass().getSimpleName() + ".onSubscribe~~");
-
                 System.out.println("subscription is " + subscription);
 
                 this.subscription = subscription;
@@ -42,12 +41,13 @@ public class FlowTrial {
             @Override
             public void onNext(String item) {
                 System.out.println("~~" + getClass().getSimpleName() + ".onNext~~");
-                System.out.println("get " + n);
 
-                if (n-- == 1) {
+                System.out.println("item is " + item);
+                n--;
+
+                if (n == 1) {
                     n = 5;
                     subscription.request(n);
-                    System.out.println("request " + n);
                 }
 
             }
@@ -66,10 +66,10 @@ public class FlowTrial {
         };
 
         publisher.subscribe(stringSubscriber);
+        Stream.of("aa", "bb", "cc").forEach(publisher::submit);
 
-        for (int i = 0; i < 15; i++) {
-            publisher.submit("ok");
-        }
+        System.out.println("ok");
+
 
 
         try {
@@ -78,78 +78,91 @@ public class FlowTrial {
             e.printStackTrace();
         }
 
+    }
+
+    private void custom() {
+
+        Subscriber Subscriber1 = new Subscriber("one");
+        Subscriber Subscriber2 = new Subscriber("two");
+
+        Publish publish = new Publish();
+        publish.subscribe(Subscriber1);
+        publish.subscribe(Subscriber2);
+
+        Stream.of("aa", "bb", "cc").forEach(publish::dispatch);
 
     }
 
-    private static void custom() {
-        Flow.Subscriber<String> stringSubscriber = new Flow.Subscriber<>() {
 
-            @Override
-            public void onSubscribe(Flow.Subscription subscription) {
-                System.out.println("~~" + getClass().getSimpleName() + ".onSubscribe~~");
-                System.out.println("subscription is " + subscription);
+    public class Subscriber implements Flow.Subscriber<String> {
+        String tag;
 
-                subscription.request(5);
-            }
+        public Subscriber(String tag) {
+            this.tag = tag;
+        }
 
-            @Override
-            public void onNext(String item) {
-                System.out.println("~~" + getClass().getSimpleName() + ".onNext~~");
+        @Override
+        public void onSubscribe(java.util.concurrent.Flow.Subscription subscription) {
+            System.out.println("~~" + getClass().getSimpleName() + ".onSubscribe~~");
+            System.out.println("subscription is " + subscription);
+        }
 
-            }
+        @Override
+        public void onNext(String item) {
+            System.out.println("~~" + getClass().getSimpleName() + tag + ".onNext~~");
+        }
 
-            @Override
-            public void onError(Throwable throwable) {
-                System.out.println("~~" + getClass().getSimpleName() + ".onError~~");
+        @Override
+        public void onError(Throwable throwable) {
+            System.out.println("~~" + getClass().getSimpleName() + tag + ".onError~~");
+        }
 
-            }
-
-            @Override
-            public void onComplete() {
-                System.out.println("~~" + getClass().getSimpleName() + ".onComplete~~");
-
-            }
-        };
-
-
-        Flow.Publisher<String> publisher = new Flow.Publisher<String>() {
-
-            List list = new ArrayList<>();
-
-            @Override
-            public void subscribe(Flow.Subscriber<? super String> subscriber) {
-                System.out.println("~~" + getClass().getSimpleName() + ".subscribe~~");
-                System.out.println("subscriber is " + subscriber);
+        @Override
+        public void onComplete() {
+            System.out.println("~~" + getClass().getSimpleName() + tag + ".onComplete~~");
+        }
+    };
 
 
-                if (list.contains(subscriber))
-                    subscriber.onError(new IllegalStateException());
-                else {
 
-                    list.add(subscriber);
-                    Flow.Subscription subscription = new Flow.Subscription() {
-                        @Override
-                        public void request(long n) {
-                            System.out.println("~~" + getClass().getSimpleName() + ".request~~");
-                            System.out.println("n is " + n);
-                        }
+    public class Publish implements Flow.Publisher<String>{
+        List<Flow.Subscriber> list = new ArrayList<>();
 
-                        @Override
-                        public void cancel() {
-                            System.out.println("~~" + getClass().getSimpleName() + ".cancel~~");
+        @Override
+        public void subscribe(Flow.Subscriber<? super String> subscriber) {
+            System.out.println("~~" + getClass().getSimpleName() + ".subscribe~~");
+            System.out.println("subscriber is " + subscriber);
 
-                        }
-                    };
+            if (list.contains(subscriber))
+                subscriber.onError(new IllegalStateException());
+            else {
 
-                    subscriber.onSubscribe(subscription);
+                list.add(subscriber);
+                Flow.Subscription subscription = new Flow.Subscription() {
+                    @Override
+                    public void request(long n) {
+                        System.out.println("~~" + getClass().getSimpleName() + ".request~~");
+                        System.out.println("n is " + n);
+                    }
 
-                }
-
+                    @Override
+                    public void cancel() {
+                        System.out.println("~~" + getClass().getSimpleName() + ".cancel~~");
+                    }
+                };
+                subscriber.onSubscribe(subscription);
 
             }
-        };
+        }
 
 
-        publisher.subscribe(stringSubscriber);
+        public void dispatch(String item) {
+
+            for (Flow.Subscriber subscriber : list) subscriber.onNext(item);
+        }
+
     }
+
+
+
 }
