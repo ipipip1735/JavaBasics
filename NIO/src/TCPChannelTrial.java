@@ -28,12 +28,9 @@ public class TCPChannelTrial {
 
             Selector selector = Selector.open();
 
-            InetAddress inetAddress = InetAddress.getLoopbackAddress();
+//            InetAddress inetAddress = InetAddress.getLoopbackAddress();//回环地址
+            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
             ServerSocketChannel serverSocket = ServerSocketChannel.open();
-
-
-//            ServerSocketChannel serverSocket = ServerSocketChannel.open();
-
 
 
             serverSocket.bind(new InetSocketAddress(inetAddress, 5454));
@@ -111,9 +108,19 @@ public class TCPChannelTrial {
                         }
 
 
-                        byteBuffer.clear();
-                        byteBuffer.put(bytes);
-                        byteBuffer.rewind();
+                        //回复1K
+//                        byteBuffer.clear();
+//                        byteBuffer.put(bytes);
+//                        byteBuffer.rewind();
+
+
+                        //回复ok
+//                        byteBuffer.clear();
+//                        byteBuffer.put("ok".getBytes());
+//                        byteBuffer.rewind();
+//                        byteBuffer.limit("ok".getBytes().length);
+
+
                         socket.write(byteBuffer); //发送数据到客户端
 
                     }
