@@ -4,9 +4,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
-import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static java.nio.charset.StandardCharsets.*;
@@ -23,15 +21,14 @@ public class BufferTrial {
 //        trialBuffer.getBulkBuffer();
 //        trialBuffer.getChar();
 //        trialBuffer.order();
-//        trialBuffer.baseUse();
+//        trialBuffer.allocate();
 
-
-        //        trialBuffer.wrap();
+         trialBuffer.wrap();
 //        trialBuffer.slice();
 //        trialBuffer.duplicate();
 //        trialBuffer.as();
 
-        trialBuffer.bufferToBuffer();
+//        trialBuffer.bufferToBuffer();
 
 
 
@@ -89,6 +86,14 @@ public class BufferTrial {
     }
 
     private void wrap() {
+
+
+        //方式一
+        ByteBuffer byteBuffer = ByteBuffer.wrap("ok".getBytes());
+
+
+
+        //方式二
 //        ByteBuffer byteBuffer = UTF_8.encode("ok");
 //
 //        System.out.println("BB|position is " + byteBuffer.position());
@@ -116,12 +121,12 @@ public class BufferTrial {
 
 
         //类别测试
-//        ByteBuffer byteBuffer = ByteBuffer.allocate(15);
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(15);
-        byteBuffer.putChar('o');
+////        ByteBuffer byteBuffer = ByteBuffer.allocate(15);
+//        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(15);
+//        byteBuffer.putChar('o');
 //
-        ByteBuffer byteBuffer1 = ByteBuffer.wrap(byteBuffer.array());
-//        System.out.println("buffer1 is " + byteBuffer1.isDirect());
+//        ByteBuffer byteBuffer1 = ByteBuffer.wrap(byteBuffer.array());
+////        System.out.println("buffer1 is " + byteBuffer1.isDirect());
 
 
 
@@ -279,7 +284,7 @@ public class BufferTrial {
 
     }
 
-    private void baseUse() {
+    private void allocate() {
         ByteBuffer buffer = ByteBuffer.allocate(30);
 
         buffer.put((byte) 12);//插入

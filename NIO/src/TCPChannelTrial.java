@@ -2,27 +2,120 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class TCPChannelTrial {
     public static void main(String[] args) {
         TCPChannelTrial tcpChannelTrial = new TCPChannelTrial();
 
 
-        tcpChannelTrial.selector();
+//        tcpChannelTrial.selectorRead();
+        tcpChannelTrial.selectorRW();
 
 
     }
 
-    private void selector() {
+    private void selectorRW() {
+
+
+        try {
+
+            Selector selector = Selector.open();
+            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
+            ServerSocketChannel serverSocket = ServerSocketChannel.open();
+
+
+            serverSocket.bind(new InetSocketAddress(inetAddress, 5454));
+            serverSocket.configureBlocking(false);
+            SelectionKey selectionKey = serverSocket.register(selector, 0);
+            selectionKey.interestOps(SelectionKey.OP_ACCEPT);
+
+            String request = null;
+
+            while (true) {
+                System.out.println("-----start------");
+
+                selector.select();//调用selecot方法，查询底层操作系统，看内核buffer是否有数据
+
+                for (SelectionKey key : selector.selectedKeys()) {
+
+                    System.out.println("threadID is " + Thread.currentThread());
+
+
+                    //处理accept事件
+                    if (key.isAcceptable()) {
+                        System.out.println("*******isAcceptable()********");
+
+                        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+                        SocketChannel socketChannel = serverSocketChannel.accept();//获取客户端socket
+                        System.out.println(socketChannel);
+                        System.out.println(socketChannel.getRemoteAddress());
+                        socketChannel.configureBlocking(false);
+                        socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+
+
+
+                    }
+
+                    //处理write事件
+                    if (key.isWritable()) {
+                        System.out.println("*******isWritable()********");
+                        System.out.println("interestOps is " + key.interestOps());
+                        System.out.println("readyOps is " + key.readyOps());
+
+                        if (request != null) {
+                            System.out.println("------------" + request);
+                            SocketChannel socketChannel = (SocketChannel) key.channel();
+                            ByteBuffer byteBuffer = ByteBuffer.wrap(request.getBytes());
+
+                            socketChannel.write(byteBuffer);
+                            System.out.println("writed!");
+                            request = null;
+                        }
+
+                    }
+
+                    //处理read事件
+                    if (key.isReadable()) {
+                        System.out.println("*******isReadable()********");
+                        System.out.println("interestOps is " + key.interestOps());
+                        System.out.println("readyOps is " + key.readyOps());
+
+
+                        int n = 1;
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(1024 * n);
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
+                        socketChannel.read(byteBuffer);
+
+                        byteBuffer.flip();
+                        while (byteBuffer.hasRemaining()) {
+                            System.out.println(byteBuffer.get()); //读取客户端数据
+                        }
+
+                        byteBuffer.rewind();
+                        byte[] bytes = new byte[byteBuffer.limit()];
+                        byteBuffer.put(bytes);
+                        request = new String(bytes);
+                    }
+
+                    selector.selectedKeys().remove(key);
+                }
+
+                System.out.println("-----end------");
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void selectorRead() {
 
         try {
 
@@ -41,7 +134,6 @@ public class TCPChannelTrial {
 
             List<String> list = Arrays.asList("aa", "aa", "aa");
             selectionKey.attach(list);
-
 
 
             while (true) {
@@ -64,10 +156,9 @@ public class TCPChannelTrial {
                         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
                         SocketChannel socketChannel = serverSocketChannel.accept();//获取客户端socket
                         System.out.println(socketChannel);
-                        socketChannel.configureBlocking(false);
                         System.out.println(socketChannel.getRemoteAddress());
-                        socketChannel.register(selector, SelectionKey.OP_READ);
-
+                        socketChannel.configureBlocking(false);//临时修改通道属性，其实没有这样必要
+                        socketChannel.register(selector, SelectionKey.OP_READ);//临时修改通道属性，把感兴趣的事件设置为READ
 
 
                     }
@@ -75,14 +166,17 @@ public class TCPChannelTrial {
                     //处理write事件
                     if (key.isWritable()) {
                         System.out.println("*******isWritable()********");
+                        System.out.println("interestOps is " + key.interestOps());
+                        System.out.println("readyOps is " + key.readyOps());
+
 
                     }
 
                     //处理read事件
                     if (key.isReadable()) {
                         System.out.println("*******isReadable()********");
-                        System.out.println("Readable'interest is " + key.interestOps());
-                        System.out.println("Readable'ready is " + key.readyOps());
+                        System.out.println("interestOps is " + key.interestOps());
+                        System.out.println("readyOps is " + key.readyOps());
 
 
                         int n = 16;
@@ -98,9 +192,9 @@ public class TCPChannelTrial {
 
                         bytes[bytes.length - 1] = 98;
 
-                        SocketChannel socket = (SocketChannel) key.channel();
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
                         ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
-                        socket.read(byteBuffer);
+                        socketChannel.read(byteBuffer);
 
                         byteBuffer.flip();
                         while (byteBuffer.hasRemaining()) {
@@ -121,7 +215,7 @@ public class TCPChannelTrial {
 //                        byteBuffer.limit("ok".getBytes().length);
 
 
-                        socket.write(byteBuffer); //发送数据到客户端
+                        socketChannel.write(byteBuffer); //发送数据到客户端
 
                     }
 
