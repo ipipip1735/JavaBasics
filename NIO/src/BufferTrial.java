@@ -4,6 +4,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
+import java.nio.channels.Channel;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
@@ -90,8 +92,6 @@ public class BufferTrial {
 
         //方式一
         ByteBuffer byteBuffer = ByteBuffer.wrap("ok".getBytes());
-
-
 
         //方式二
 //        ByteBuffer byteBuffer = UTF_8.encode("ok");
