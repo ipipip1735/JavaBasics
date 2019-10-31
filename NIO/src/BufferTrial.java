@@ -25,9 +25,10 @@ public class BufferTrial {
 //        trialBuffer.order();
 //        trialBuffer.allocate();
 
-         trialBuffer.wrap();
+//         trialBuffer.wrap();
 //        trialBuffer.slice();
 //        trialBuffer.duplicate();
+        trialBuffer.compact();
 //        trialBuffer.as();
 
 //        trialBuffer.bufferToBuffer();
@@ -35,6 +36,41 @@ public class BufferTrial {
 
 
 //        trialBuffer.writeToRead();
+
+
+
+
+    }
+
+    private void compact() {
+
+        byte[] bytes = new byte[10];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) i;
+
+        }
+
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        while (byteBuffer.hasRemaining()) System.out.println(byteBuffer.get());
+        System.out.println(byteBuffer);
+        byteBuffer.flip();
+        byteBuffer.position(3);
+        byteBuffer.put((byte) 12);
+        byteBuffer.put((byte) 13);
+        byteBuffer.put((byte) 14);
+        byteBuffer.put((byte) 15);
+
+        System.out.println(byteBuffer);
+        byteBuffer.position(3);
+
+        byteBuffer.compact();
+        System.out.println(byteBuffer);
+
+
+        byteBuffer.flip();
+
+        while (byteBuffer.hasRemaining()) System.out.println(byteBuffer.get());
+
 
 
 

@@ -5,11 +5,17 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ServerSocketChannelTrial {
-    String request = null;
-
+    Map<SocketChannel, String> map = new HashMap<>();
+    ByteBuffer byteBuffer = ByteBuffer.allocate(1024 * 1);
+    String ip = "192.168.0.127";
+    int port = 5454;
 
     public static void main(String[] args) {
         ServerSocketChannelTrial tcpChannelTrial = new ServerSocketChannelTrial();
@@ -24,40 +30,37 @@ public class ServerSocketChannelTrial {
     private void block() {
 
         try {
-            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
+            InetAddress inetAddress = InetAddress.getByName(ip);
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();//打开通道
-            serverSocketChannel.bind(new InetSocketAddress(inetAddress, 5454));
+            serverSocketChannel.bind(new InetSocketAddress(inetAddress, port));
             System.out.println(serverSocketChannel);
             SocketChannel socketChannel = serverSocketChannel.accept();
             System.out.println(socketChannel);
 
 
             //方式一：基于Buffer的读写
-//            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
-//            while (socketChannel.read(buffer) != -1) {
-//                buffer.flip();
-//                socketChannel.write(buffer);
-//                if (buffer.hasRemaining()) {
-//                    buffer.compact();
-//                } else {
-//                    buffer.clear();
-//                }
-//            }
-//            socketChannel.close();
+            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+            while (socketChannel.read(buffer) != -1) {
+                System.out.println("reading");
+                String request = UTF_8.decode(buffer.flip()).toString();
+                System.out.println(request);
+                buffer.clear();
+            }
+            socketChannel.write(UTF_8.encode("OK"));
 
 
             //方式二：基于Stream的读写
-            try (InputStream in = socketChannel.socket().getInputStream();
-                 OutputStream out = socketChannel.socket().getOutputStream()) {
-                byte[] bytes = new byte[1024];
-                while (in.read(bytes) != -1) {
-                    System.out.println(new String(bytes));
-                    out.write("ok".getBytes());
-                }
-                socketChannel.close();
-            }
+//            try (InputStream in = socketChannel.socket().getInputStream();
+//                 OutputStream out = socketChannel.socket().getOutputStream()) {
+//                byte[] bytes = new byte[1024];
+//                while (in.read(bytes) != -1) System.out.println(new String(bytes));
+//                out.write("ok".getBytes());
+//                out.flush();
+//            }
 
 
+            socketChannel.shutdownOutput();
+            socketChannel.close();
             serverSocketChannel.close();
 
         } catch (UnknownHostException e) {
@@ -70,20 +73,20 @@ public class ServerSocketChannelTrial {
     }
 
     private void noBlock() {
-//        selectorRead();
-        selectorRW();
+        selectorSingleEvent();
+//        selectorMultypleEvent();
     }
 
-    private void selectorRW() {
+    private void selectorMultypleEvent() {
 
 
         try {
             Selector selector = Selector.open();//获取选择器
-            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
+            InetAddress inetAddress = InetAddress.getByName(ip);
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();//打开服务端通道
 
 
-            serverSocketChannel.bind(new InetSocketAddress(inetAddress, 5454));//绑定Socket
+            serverSocketChannel.bind(new InetSocketAddress(inetAddress, port));//绑定Socket
             serverSocketChannel.configureBlocking(false);//设置服务端通道模式
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);//注册服务端通道，并设置感兴趣的事件
 
@@ -97,6 +100,9 @@ public class ServerSocketChannelTrial {
 
                     System.out.println("threadID is " + Thread.currentThread());
 
+                    selector.selectedKeys().remove(key);//当前key已经处理完毕，从key集中删除它
+
+                    if (!key.isValid()) continue;
 
                     //处理accept事件
                     if (key.isAcceptable()) {
@@ -107,7 +113,7 @@ public class ServerSocketChannelTrial {
                         System.out.println(socketChannel);
                         System.out.println(socketChannel.getRemoteAddress());
                         socketChannel.configureBlocking(false);//设置客户端通道模式
-                        socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);//设置感兴趣的事件
+                        socketChannel.register(selector, SelectionKey.OP_READ);//设置感兴趣的事件
 
                     }
 
@@ -117,18 +123,13 @@ public class ServerSocketChannelTrial {
                         System.out.println("interestOps is " + key.interestOps());
                         System.out.println("readyOps is " + key.readyOps());
 
-                        if (request != null) {
-                            System.out.println("writing!");
-                            SocketChannel socketChannel = (SocketChannel) key.channel();
-                            request = "[servser]" + request;
-                            ByteBuffer byteBuffer = ByteBuffer.wrap(request.getBytes());
 
-                            socketChannel.write(byteBuffer);//写数据到客户端
-                            socketChannel.shutdownOutput();
-                            request = null;
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
 
-                        }
+                        socketChannel.write(UTF_8.encode("[server]" + map.get(socketChannel)));
+                        map.remove(socketChannel);
 
+                        key.interestOps(SelectionKey.OP_READ);
                     }
 
                     //处理read事件
@@ -138,24 +139,21 @@ public class ServerSocketChannelTrial {
                         System.out.println("readyOps is " + key.readyOps());
 
 
-                        int n = 1;
-                        ByteBuffer byteBuffer = ByteBuffer.allocate(1024 * n);
                         SocketChannel socketChannel = (SocketChannel) key.channel();
-                        socketChannel.read(byteBuffer);
 
-                        byteBuffer.flip();
-                        while (byteBuffer.hasRemaining()) {
-                            System.out.println(byteBuffer.get()); //读取客户端数据
+                        if (socketChannel.read(byteBuffer) == -1) {
+                            key.cancel();
+                            socketChannel.shutdownOutput();
+                            socketChannel.close();
+                            continue;
                         }
 
-                        byteBuffer.rewind();
-                        System.out.println(byteBuffer.limit());
-                        byte[] bytes = new byte[byteBuffer.limit()];
-                        byteBuffer.get(bytes);
-                        request = new String(bytes);
-                    }
 
-                    selector.selectedKeys().remove(key);//删除key集
+                        map.put(socketChannel, UTF_8.decode(byteBuffer.flip()).toString());
+                        byteBuffer.clear();
+                        key.interestOps(SelectionKey.OP_WRITE);
+
+                    }
                 }
 
                 System.out.println("-----end------");
@@ -170,19 +168,18 @@ public class ServerSocketChannelTrial {
     }
 
 
-    private void selectorRead() {
+    private void selectorSingleEvent() {
 
         try {
 
-            Selector selector = Selector.open();
+            Selector selector = Selector.open();//创建选择器
 
 //            InetAddress inetAddress = InetAddress.getLoopbackAddress();//回环地址
-            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
             ServerSocketChannel serverSocket = ServerSocketChannel.open();//打开服务端通道
-
-
-            serverSocket.bind(new InetSocketAddress(inetAddress, 5454));
             serverSocket.configureBlocking(false);//使用非阻塞模式
+            InetAddress inetAddress = InetAddress.getByName(ip);
+            serverSocket.bind(new InetSocketAddress(inetAddress, port));
+
 
             //方式一：注册时设置感兴趣的事件
             SelectionKey selectionKey = serverSocket.register(selector, SelectionKey.OP_ACCEPT);

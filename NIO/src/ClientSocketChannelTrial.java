@@ -15,14 +15,14 @@ public class ClientSocketChannelTrial {
 
     public static void main(String[] args) {
         ClientSocketChannelTrial client = new ClientSocketChannelTrial();
-        client.noBlock();
+        client.block();
     }
 
-    private void noBlock() {
+    private void block() {
 
 
         try {
-            InetAddress inetAddress = InetAddress.getByName("192.168.0.126");
+            InetAddress inetAddress = InetAddress.getByName("192.168.0.127");
 
             SocketChannel socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
@@ -33,6 +33,7 @@ public class ClientSocketChannelTrial {
 
 
             socketChannel.write(ByteBuffer.wrap("request".getBytes()));
+            socketChannel.shutdownOutput();
 
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             while (socketChannel.read(buffer) != -1) {
