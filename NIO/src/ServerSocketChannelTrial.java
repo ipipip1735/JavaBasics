@@ -18,10 +18,10 @@ public class ServerSocketChannelTrial {
 
 
 //        serverSocketChannelTrial.tcpBlock();//阻塞I/O
-//        serverSocketChannelTrial.tcpNoBlock();//非阻塞I/O
+        serverSocketChannelTrial.tcpNoBlock();//非阻塞I/O
 
 
-        serverSocketChannelTrial.udpBlock();
+//        serverSocketChannelTrial.udpBlock();
 
     }
 
@@ -114,9 +114,9 @@ public class ServerSocketChannelTrial {
     }
 
     private void tcpNoBlock() {
-//        selectorSimpleOne(); //简单使用例一
+        selectorSimpleOne(); //简单使用例一
 //        selectorSimpleTwo(); //简单使用例二
-        selectorSingleEvent();
+//        selectorSingleEvent();
 //        selectorMultypleEvent();
     }
 
@@ -144,7 +144,7 @@ public class ServerSocketChannelTrial {
 
                     System.out.println("threadID is " + Thread.currentThread());
 
-                    selector.selectedKeys().remove(key);//当前key已经处理完毕，从key集中删除它
+                    selector.selectedKeys().remove(key);//删除key，以免下次selector.select()生成的key中又包含此key
 
                     if (!key.isValid()) continue;
 
@@ -158,6 +158,8 @@ public class ServerSocketChannelTrial {
                         System.out.println(socketChannel.getRemoteAddress());
                         socketChannel.configureBlocking(false);//设置客户端通道模式
                         socketChannel.register(selector, SelectionKey.OP_READ);//设置感兴趣的事件
+
+
 
                     }
 
@@ -194,7 +196,7 @@ public class ServerSocketChannelTrial {
 
 
                         System.out.println(UTF_8.decode(byteBuffer.flip()).toString());
-                        map.put(socketChannel, UTF_8.decode(byteBuffer.flip()).toString());
+                        map.put(socketChannel, UTF_8.decode(byteBuffer.flip()).toString());//将读取的内容保存到容器
                         byteBuffer.clear();
                         key.interestOps(SelectionKey.OP_WRITE);
 
@@ -300,7 +302,7 @@ public class ServerSocketChannelTrial {
                         request = new String(bytes);
                     }
 
-                    selector.selectedKeys().remove(key);//删除key集
+                    selector.selectedKeys().remove(key);//删除key，以免下次selector.select()生成的key中又包含此key
                 }
 
                 System.out.println("-----end------");
@@ -335,8 +337,8 @@ public class ServerSocketChannelTrial {
             //方式一：注册时设置啥都不感兴趣，然后再指定感兴趣的事件
 //            SelectionKey selectionKey = serverSocket.register(selector, 0);
 //            selectionKey.interestOps(SelectionKey.OP_ACCEPT);//设置感兴趣的事件
-//            List<String> list = Arrays.asList("aa", "aa", "aa");//附加对象
-//            selectionKey.attach(list);
+//            List<String> acceptList = Arrays.asList("aa", "aa", "aa");//附加对象
+//            selectionKey.attach(acceptList);
 
 
             while (true) {
@@ -353,6 +355,9 @@ public class ServerSocketChannelTrial {
                     //处理accept事件
                     if (key.isAcceptable()) {
                         System.out.println("*******isAcceptable()********");
+                        System.out.println("key is " + key);
+                        System.out.println("interestOps is " + key.interestOps());
+                        System.out.println("readyOps is " + key.readyOps());
                         list = (List<String>) key.attachment();
                         System.out.println(list);
 
@@ -361,7 +366,8 @@ public class ServerSocketChannelTrial {
                         SocketChannel socketChannel = serverSocketChannel.accept();//获取客户端通道
                         System.out.println(socketChannel);
                         socketChannel.configureBlocking(false);//修改通道属性，客户端通道使用非阻塞模式
-                        socketChannel.register(selector, SelectionKey.OP_READ);//修改通道属性，把感兴趣的事件设置为READ
+                        socketChannel.register(selector, SelectionKey.OP_READ)//修改通道属性，把感兴趣的事件设置为READ
+                        .attach(Arrays.asList("oneRead", "twoRead", "threeRead"));
 
 
                     }
@@ -369,16 +375,26 @@ public class ServerSocketChannelTrial {
                     //处理write事件
                     if (key.isWritable()) {
                         System.out.println("*******isWritable()********");
+                        System.out.println("key is " + key);
                         System.out.println("interestOps is " + key.interestOps());
                         System.out.println("readyOps is " + key.readyOps());
+                        System.out.println(key.attachment());
 
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
+                        ByteBuffer data = (ByteBuffer) key.attachment();
+                        socketChannel.write(data); //发送数据到客户端
+                        data.clear();
+
+                        socketChannel.register(selector, SelectionKey.OP_READ);//修改通道属性，把感兴趣的事件设置为READ
                     }
 
                     //处理read事件
                     if (key.isReadable()) {
                         System.out.println("*******isReadable()********");
+                        System.out.println("key is " + key);
                         System.out.println("interestOps is " + key.interestOps());
                         System.out.println("readyOps is " + key.readyOps());
+                        System.out.println(key.attachment());
 
 
                         int n = 16;
@@ -418,11 +434,12 @@ public class ServerSocketChannelTrial {
 //                        byteBuffer.limit("ok".getBytes().length);
 
 
-                        socketChannel.write(byteBuffer); //发送数据到客户端
+                        socketChannel.register(selector, SelectionKey.OP_WRITE)//修改通道属性，把感兴趣的事件设置为WRITE
+                                .attach(byteBuffer);
 
                     }
 
-                    selector.selectedKeys().remove(key);
+                    selector.selectedKeys().remove(key);//删除key，以免下次selector.select()生成的key中又包含此key
 
                 }
 
