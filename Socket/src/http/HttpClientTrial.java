@@ -17,6 +17,23 @@ public class HttpClientTrial {
     public static void main(String[] args) {
         HttpClientTrial httpClientTrial = new HttpClientTrial();
         httpClientTrial.create();
+        httpClientTrial.bodyHandler();
+    }
+
+    private void bodyHandler() {
+
+        try {
+
+            HttpClient.newHttpClient()
+                    .send(HttpRequest.newBuilder().build(), HttpResponse.BodyHandlers.ofString())
+                    .body();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void create() {
@@ -48,7 +65,6 @@ public class HttpClientTrial {
             System.out.println("statusCode is " + httpResponse.statusCode());
             System.out.println("uri is " + httpResponse.uri());
             System.out.println("version is " + httpResponse.version());
-
 
 
         } catch (URISyntaxException e) {
