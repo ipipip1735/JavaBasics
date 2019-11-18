@@ -23,9 +23,9 @@ public class ClientSocketChannelTrial {
         ClientSocketChannelTrial client = new ClientSocketChannelTrial();
 
 //        client.tcpBlock();
-//        client.tcpNoBlock();
+        client.tcpNoBlock();
 
-        client.updBlock();
+//        client.updBlock();
 
     }
 
