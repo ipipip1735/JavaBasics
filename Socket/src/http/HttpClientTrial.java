@@ -1,5 +1,7 @@
 package http;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,6 +9,10 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.Flow;
+import java.util.stream.Stream;
 
 /**
  * Created by Administrator on 2019/11/18 10:06.
@@ -62,17 +68,32 @@ public class HttpClientTrial {
 //        }
 
 
-        //方式三：获取字符串
-        try {
 
-            InputStream inputStream = HttpClient.newHttpClient()
+        //方式三：获取一行字符串，返回Stream<String>
+//        try {
+//            Stream<String> body = HttpClient.newHttpClient()
+//                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+//                            HttpResponse.BodyHandlers.ofLines())
+//                    .body();
+//            body.forEach(System.out::println);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+
+
+        //方式四：获取buffer
+        try {
+            Flow.Publisher<List<ByteBuffer>> body = HttpClient.newHttpClient()
                     .send(HttpRequest.newBuilder(new URI(uri)).build(),
-                            HttpResponse.BodyHandlers.ofInputStream())
+                            HttpResponse.BodyHandlers.ofPublisher())
                     .body();
 
-            byte[] bytes = new byte[1024 * 1];
-            System.out.println();
-            System.out.println(inputStream.available());
+            body.subscribe();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,6 +102,33 @@ public class HttpClientTrial {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+
+
+
+
+
+        //方式三：获取输入流
+//        try {
+//
+//            InputStream inputStream = HttpClient.newHttpClient()
+//                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+//                            HttpResponse.BodyHandlers.ofInputStream())
+//                    .body();
+//
+//            byte[] bytes = new byte[1024 * 1];
+//            int n;
+//            while ((n = inputStream.read(bytes)) != -1) {
+//                System.out.println(n);
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
 
 
 
