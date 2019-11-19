@@ -1,6 +1,7 @@
 package http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -16,23 +17,80 @@ public class HttpClientTrial {
 
     public static void main(String[] args) {
         HttpClientTrial httpClientTrial = new HttpClientTrial();
-        httpClientTrial.create();
+//        httpClientTrial.create();
         httpClientTrial.bodyHandler();
     }
 
     private void bodyHandler() {
 
+
+        //方式一：获取字节数组
+//        try {
+//
+//            byte[] bytes = HttpClient.newHttpClient()
+//                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+//                            HttpResponse.BodyHandlers.ofByteArray())
+//                    .body();
+//            System.out.println(bytes.length);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+
+
+
+
+        //方式二：获取字符串
+//        try {
+//
+//            String body = HttpClient.newHttpClient()
+//                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+//                            HttpResponse.BodyHandlers.ofString())
+//                    .body();
+//            System.out.println(body);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+
+
+        //方式三：获取字符串
         try {
 
-            HttpClient.newHttpClient()
-                    .send(HttpRequest.newBuilder().build(), HttpResponse.BodyHandlers.ofString())
+            InputStream inputStream = HttpClient.newHttpClient()
+                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .body();
+
+            byte[] bytes = new byte[1024 * 1];
+            System.out.println();
+            System.out.println(inputStream.available());
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -46,6 +104,7 @@ public class HttpClientTrial {
                     .version(HttpClient.Version.HTTP_1_1)
                     .build();
 
+            //方式一：使用
             HttpResponse<byte[]> httpResponse = httpClient.send(httpRequest, responseInfo -> {
                 System.out.println("~~BodyHandler~~");
                 System.out.println("headers is " + responseInfo.headers());
@@ -54,6 +113,7 @@ public class HttpClientTrial {
 
                 return HttpResponse.BodySubscribers.ofByteArray();
             });
+
 
             System.out.println("-----------");
 
