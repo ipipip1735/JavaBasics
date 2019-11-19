@@ -9,11 +9,77 @@ public class CompletableFutureTrial {
     public static void main(String[] args) {
         CompletableFutureTrial completableFutureTrial = new CompletableFutureTrial();
 
-//        completableFutureTrial.factory();//工厂方法创建实例
-        completableFutureTrial.get();//获取结果
+        completableFutureTrial.factory();//工厂方法创建实例
+//        completableFutureTrial.get();//获取结果
 //        completableFutureTrial.cancel();//取消任务
 //        completableFutureTrial.then();//异步任务
 //        completableFutureTrial.handle();//错误处理
+//        completableFutureTrial.accept();//接收结果，无返回值
+        completableFutureTrial.apply();//接收结果，带返回值
+
+
+    }
+
+    private void apply() {
+
+
+        try {
+            Integer r = CompletableFuture.supplyAsync(() -> {
+
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return 10;
+            })
+                    .applyToEither(CompletableFuture.supplyAsync(() -> {
+
+                        try {
+                            Thread.sleep(500L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return 20;
+                    }), integer -> integer)
+                    .get();
+
+            System.out.println(r);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void accept() {
+
+        try {
+            CompletableFuture.supplyAsync(() -> {
+
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return 10;
+            })
+                    .acceptEither(CompletableFuture.supplyAsync(() -> {
+
+                        try {
+                            Thread.sleep(500L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return 20;
+                    }), System.out::println)
+                    .get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -250,6 +316,14 @@ public class CompletableFutureTrial {
 //        } catch (ExecutionException e) {
 //            e.printStackTrace();
 //        }
+
+
+        //例三：创建已经有结果的任务
+//        String r = CompletableFuture.completedFuture("ok")//创建已经有结果的任务
+//                .getNow("000");//非阻塞，立即获取结果
+//        System.out.println(r);
+
+
     }
 
     private void cancel() {
