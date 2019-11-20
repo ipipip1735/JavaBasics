@@ -9,14 +9,47 @@ public class CompletableFutureTrial {
     public static void main(String[] args) {
         CompletableFutureTrial completableFutureTrial = new CompletableFutureTrial();
 
-        completableFutureTrial.factory();//工厂方法创建实例
+//        completableFutureTrial.factory();//工厂方法创建实例
 //        completableFutureTrial.get();//获取结果
+        completableFutureTrial.join();//获取结果，和get()类似，就是抛异常不同
 //        completableFutureTrial.cancel();//取消任务
 //        completableFutureTrial.then();//异步任务
 //        completableFutureTrial.handle();//错误处理
 //        completableFutureTrial.accept();//接收结果，无返回值
-        completableFutureTrial.apply();//接收结果，带返回值
+//        completableFutureTrial.apply();//接收结果，带返回值
 
+
+    }
+
+    private void join() {
+
+
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("start");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                completableFuture.complete("ok");
+
+                System.out.println("end");
+            }
+        }).start();
+
+
+        System.out.println("--start--");
+
+        String r = completableFuture.join();//阻塞
+        System.out.println(r);
+
+        System.out.println("--end--");
 
     }
 
