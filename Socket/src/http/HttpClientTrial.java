@@ -12,6 +12,7 @@ import java.net.http.HttpResponse;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Flow;
 import java.util.stream.Stream;
 
@@ -31,39 +32,107 @@ public class HttpClientTrial {
     private void bodyHandler() {
 
 
-
+        //GET请求
 //        ofByteArray();//获取字节数组
 //        ofString();//获取字符串
 //        ofLines();//获取一行字符串，返回Stream<String>
 //        ofInputStream();//获取输入流
 //        ofPublisher();//获取订阅器
-
-        discarding();//丢弃响应
-
+//        discarding();//丢弃响应主体
+//        fromLineSubscriber();//自定义发布器
 
 //        ofFileDownload();//下载文件
 //        ofFile();//上传文件
+
+        async();//异步任务
+
+    }
+
+    private void async() {
+
+
+        String body = null;
+        try {
+            body = HttpClient.newHttpClient()
+                    .sendAsync(HttpRequest.newBuilder(new URI(uri)).build(),
+                            HttpResponse.BodyHandlers.ofString())
+                    .join()
+                    .body();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        System.out.println(body);
+
+
+
+
+
+
+    }
+
+    private void fromLineSubscriber() {
+
+        Flow.Subscriber<String> stringSubscriber = new Flow.Subscriber<String>() {
+            @Override
+            public void onSubscribe(Flow.Subscription subscription) {
+                System.out.println("~~onSubscribe~~");
+                System.out.println("subscription is " + subscription);
+
+                subscription.request(100);
+            }
+
+            @Override
+            public void onNext(String item) {
+                System.out.println("~~onNext~~");
+                System.out.println("item is " + item);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("~~onNext~~");
+                System.out.println("throwable is " + throwable);
+
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("~~onComplete~~");
+            }
+        };
+
+
+        try {
+            HttpClient.newHttpClient()
+                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+                            HttpResponse.BodyHandlers.fromLineSubscriber(stringSubscriber));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     private void discarding() {
 
-//        try {
-//            HttpClient.newHttpClient()
-//                    .send(HttpRequest.newBuilder(new URI(uri))
-//                            .POST()
-//                                    .build(),
-//                            HttpResponse.BodyHandlers.discarding()
-//                            .apply();
+        try {
+            HttpClient.newHttpClient()
+                    .send(HttpRequest.newBuilder(new URI(uri)).build(),
+                            HttpResponse.BodyHandlers.discarding());
 
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -215,7 +284,7 @@ public class HttpClientTrial {
     }
 
     private void ofByteArray() {
-                try {
+        try {
 
             byte[] bytes = HttpClient.newHttpClient()
                     .send(HttpRequest.newBuilder(new URI(uri)).build(),
