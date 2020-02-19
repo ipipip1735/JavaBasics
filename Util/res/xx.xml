@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>sss</comment>
+<entry key="one">aaaaaa</entry>
+<entry key="two">2222</entry>
+<entry key="three">ttt</entry>
+</properties>
