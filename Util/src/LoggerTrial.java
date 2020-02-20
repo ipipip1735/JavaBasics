@@ -18,8 +18,9 @@ public class LoggerTrial {
         LoggerTrial loggerTrial = new LoggerTrial();
 
 //        loggerTrial.level();//打印日志级别
-//        loggerTrial.info(Logger.getLogger("a"));////打印日志器属性
+//        loggerTrial.info(Logger.getLogger("a"));//打印日志器属性
         loggerTrial.logger();//日志器基本使用
+//        loggerTrial.inherit();//日志器继承
 //        loggerTrial.anonymousLogger();//匿名日志器
 //        loggerTrial.resourceBundle();//日志国际化
 //        loggerTrial.logpb();//日志国际化
@@ -27,6 +28,20 @@ public class LoggerTrial {
 //        loggerTrial.filter();//日志过滤器
 //        loggerTrial.handler();//日志处理器
 //        loggerTrial.config();//日志配置
+
+
+    }
+
+    private void inherit() {
+        Logger logger = Logger.getLogger("");
+        logger.setLevel(Level.ALL);
+        info(logger);
+
+        Logger loggerA = Logger.getLogger("a");
+        loggerA.addHandler(new ConsoleHandler());
+//        loggerA.setUseParentHandlers(false);//禁用父Logger处理器
+        info(loggerA);
+        loggerA.info("mmmmmm");
 
 
     }
