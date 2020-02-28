@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -9,11 +10,12 @@ public class CollectionsTrial {
         CollectionsTrial collectionsTrial = new CollectionsTrial();
 //        collectionsTrial.sync();
 //        collectionsTrial.swap();
+        collectionsTrial.sort();
 //        collectionsTrial.reverse();
 //        collectionsTrial.rotate();
 //        collectionsTrial.disjoint();
 //        collectionsTrial.max();
-        collectionsTrial.copy();
+//        collectionsTrial.copy();
     }
 
     private void copy() {
@@ -59,6 +61,18 @@ public class CollectionsTrial {
         System.out.println(list);
 //        Collections.rotate(list, 0);
 //        System.out.println(list);
+    }
+
+
+    private void sort() {
+
+        List<BigDecimal> list = Arrays.asList(BigDecimal.ZERO, BigDecimal.TEN, BigDecimal.ONE);
+        System.out.println(list);
+
+//        Collections.sort(list);
+        Collections.sort(list, BigDecimal::compareTo);
+        System.out.println(list);
+
     }
 
     private void reverse() {
