@@ -79,12 +79,10 @@ public class LockTrial {
 
         ReentrantLock reentrantLock = new ReentrantLock();
 
-        Object o;
-
         System.out.println("before");
         reentrantLock.lock();
 
-
+        System.out.println("-----start");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -95,10 +93,11 @@ public class LockTrial {
                 System.out.println("R-after");
             }
         }).start();
+        System.out.println("-----end");
 
 
         try {
-            Thread.sleep(2000L);
+            Thread.sleep(8000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
