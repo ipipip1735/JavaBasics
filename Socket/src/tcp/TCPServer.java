@@ -15,15 +15,15 @@ public class TCPServer {
     public static void main(String[] args) {
 
         TCPServer tcpServer = new TCPServer();
-//        tcpServer.communication();
+        tcpServer.communication();
 //        tcpServer.isBind();
-        tcpServer.listen();
+//        tcpServer.listen();
     }
 
     private void communication() {
 
         try {
-            InetAddress inetAddress = InetAddress.getByName("192.168.0.127");
+            InetAddress inetAddress = InetAddress.getByName("192.168.0.128");
 
             InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, 6666);
             ServerSocket serverSocket = new ServerSocket();
@@ -36,7 +36,6 @@ public class TCPServer {
 
             int r;
             while ((r = inputStream.read()) != -1) {
-                System.out.println(r);
                 System.out.println("r1 is " + r);
                 outputStream.write(r);
             }

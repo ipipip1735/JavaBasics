@@ -17,8 +17,8 @@ public class TCPClient {
     public TCPClient() {
 
         try {
-            this.ip = InetAddress.getByName("192.168.0.127");
-            this.serverIp = InetAddress.getByName("192.168.0.127");
+            this.ip = InetAddress.getByName("192.168.0.128");
+            this.serverIp = InetAddress.getByName("192.168.0.128");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
