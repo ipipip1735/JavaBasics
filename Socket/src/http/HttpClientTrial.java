@@ -25,8 +25,8 @@ public class HttpClientTrial {
 
     public static void main(String[] args) {
         HttpClientTrial httpClientTrial = new HttpClientTrial();
-//        httpClientTrial.create();
-        httpClientTrial.bodyHandler();
+        httpClientTrial.create();
+//        httpClientTrial.bodyHandler();
     }
 
     private void bodyHandler() {

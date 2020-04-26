@@ -483,7 +483,8 @@ public class URLConnectionTrial {
 
         try {
 
-            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+//            URL url = new URL("http://192.168.0.126:8008/cookies.php");
+            URL url = new URL("http://192.168.0.128:8080/one");
             URLConnection urlConnection = url.openConnection();
 
             //设置请求头信息
@@ -500,15 +501,15 @@ public class URLConnectionTrial {
 
 
             //获取回应主体
-//            InputStream inputStream = urlConnection.getInputStream();
-//            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
-//            BufferedReader bufferedReader = new BufferedReader(reader);
-//
-//            String s;
-//            while ((s = bufferedReader.readLine()) != null) {
-//                System.out.println(s);
-//            }
-//            bufferedReader.close();
+            InputStream inputStream = urlConnection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            String s;
+            while ((s = bufferedReader.readLine()) != null) {
+                System.out.println(s);
+            }
+            bufferedReader.close();
 
 
         } catch (IOException e) {
