@@ -11,7 +11,7 @@ public class StringTrial {
 //        stringTrial.prefix();
 //        stringTrial.compare();
 //        stringTrial.equal();
-//        stringTrial.base();
+        stringTrial.base();
 
 
 
@@ -41,7 +41,11 @@ public class StringTrial {
     }
 
     private void base() {
-        System.out.println(" ss ".trim());
+//        System.out.println(" ss ".trim());
+
+        String file = "a.jpg";
+        System.out.println(file.indexOf('.'));
+        System.out.println(file.substring(0, file.indexOf('.')));
 
     }
 
@@ -90,17 +94,17 @@ public class StringTrial {
 //            System.out.println(v);
 //        }
 
-        Arrays.stream("aa b1b       cc".split(" ")) //正则表达式没有+
-                .forEach(System.out::println);
+//        Arrays.stream("aa b1b       cc".split(" ")) //正则表达式没有+
+//                .forEach(System.out::println);
 
-        Arrays.stream("aa bb       cc".split(" +"))
-                .forEach(System.out::println);
-
-        Arrays.stream("a1b2c3".split("[1-9]"))
-                .forEach(System.out::println);
-
-        Arrays.stream("a[3".split("\\["))  //匹配元字符时需要转义，使用\\
-                .forEach(System.out::println);//输出 a 3
+//        Arrays.stream("aa bb       cc".split(" +"))
+//                .forEach(System.out::println);
+//
+//        Arrays.stream("a1b2c3".split("[1-9]"))
+//                .forEach(System.out::println);
+//
+//        Arrays.stream("a[3".split("\\["))  //匹配元字符时需要转义，使用\\
+//                .forEach(System.out::println);//输出 a 3
 
 
 
