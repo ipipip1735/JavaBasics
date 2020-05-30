@@ -38,7 +38,7 @@ public class FilesTrial {
 
 
 //        filesTrial.createDir();
-//        filesTrial.walk();
+        filesTrial.walk();
 //        filesTrial.tree();
 //        filesTrial.directoryStream();
 
@@ -50,7 +50,7 @@ public class FilesTrial {
 //        filesTrial.copyDir();
 
 
-        filesTrial.states();
+//        filesTrial.states();
 //        filesTrial.attrs();
 //        filesTrial.attrsPosix();
 

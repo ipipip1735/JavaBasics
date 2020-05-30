@@ -28,8 +28,8 @@ public class TCPClient {
     public static void main(String[] args) {
         TCPClient tcpClient = new TCPClient();
         try {
-            tcpClient.httpGET();
-//            tcpClient.communication();
+//            tcpClient.httpGET();
+            tcpClient.communication();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,6 +45,15 @@ public class TCPClient {
         Socket socket = new Socket();
         InetSocketAddress serverISA = new InetSocketAddress(serverIp, 6666);
         socket.connect(serverISA);
+
+//        System.out.println("getLocalAddress is " + socket.getLocalAddress());
+//        System.out.println("getLocalPort()() is " + socket.getLocalPort());
+//        System.out.println("getLocalSocketAddress() is " + socket.getLocalSocketAddress());
+//        System.out.println("getPort() is " + socket.getPort());
+//        System.out.println("getInetAddress() is " + socket.getInetAddress());
+//        System.out.println("getRemoteSocketAddress() is " + socket.getRemoteSocketAddress());
+
+
 
 
         new Thread(new Runnable() {
