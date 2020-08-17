@@ -23,7 +23,7 @@ public class CookieManagerTrial {
 
     private void requestAndCookieManager() {
         try {
-            String urlString = "http://192.168.0.126:8008/cookies.php";
+            String urlString = "http://192.168.0.126/cookie.php";
             URL url = new URL(urlString);
 
 
@@ -50,7 +50,7 @@ public class CookieManagerTrial {
 
 
             //读取服务端回应
-            System.out.println("------response------");
+            System.out.println("------second request------");
             InputStream inputStream = (InputStream) url.getContent();
             InputStreamReader reader = new InputStreamReader(inputStream, UTF_8);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -69,7 +69,7 @@ public class CookieManagerTrial {
 
     private void connectWithCookie() {
         try {
-            String urlString = "http://192.168.0.126:8008/cookies.php";
+            String urlString = "http://192.168.0.126/cookie.php";
             URL url = new URL(urlString);
 
 

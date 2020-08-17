@@ -19,9 +19,9 @@ public class URLConnectionTrial {
 
 //        urlConnectionTrial.url();
 
-//        urlConnectionTrial.basic();
+        urlConnectionTrial.basic();
 //        urlConnectionTrial.httpPOST();
-        urlConnectionTrial.httpUpload();
+//        urlConnectionTrial.httpUpload();
 //        urlConnectionTrial.httpUploadTwoFile();
 //        urlConnectionTrial.httpUploadMultipleFile();
 //        urlConnectionTrial.httpUploadWithMixed(); //测试失败了，应该用于邮件附件
@@ -308,7 +308,7 @@ public class URLConnectionTrial {
     private void httpUpload() {
         try {
 //            URL url = new URL("http://192.168.0.127/post.php");
-            URL url = new URL("http://192.168.0.126:8008/post.php");
+            URL url = new URL("http://192.168.0.126/post.php");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
             httpURLConnection.setUseCaches(false);
@@ -483,8 +483,8 @@ public class URLConnectionTrial {
 
         try {
 
-//            URL url = new URL("http://192.168.0.126:8008/cookies.php");
-            URL url = new URL("http://192.168.0.128:8080/one");
+            URL url = new URL("http://192.168.0.126/cookie.php");
+//            URL url = new URL("http://192.168.0.128:8080/one");
             URLConnection urlConnection = url.openConnection();
 
             //设置请求头信息
