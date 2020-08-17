@@ -12,26 +12,53 @@ public class HttpCookieTrial {
         HttpCookieTrial httpCookieTrial = new HttpCookieTrial();
 
 //        httpCookieTrial.parse();
-//        httpCookieTrial.check();
+        httpCookieTrial.check();
 
     }
 
     private void check() {
-//        String domain = ".a";
-//        String host = "n.a";
+//        String domain = ".b.c";//返回true
+//        String host = ".b.c";
 
-//        String domain = "pppp.local";
-//        String host = "pppp.local";
+//        String domain = "b.c";//返回true
+//        String host = "b.c";
 
-        String domain = "192.168.0.1";
-        String host = "192.168.0.1";
+//        String domain = ".b.c";//返回true
+//        String host = "a.b.c";
+
+//        String domain = "b.c";//返回false
+//        String host = "a.b.c";
+
+//        String domain = ".b.c";//返回false
+//        String host = "k.a.b.c";
+
+//        String domain = ".local";//返回true
+//        String host = "a.local";
+
+//        String domain = "local";//返回false
+//        String host = "a.local";
+
+//        String domain = "a.local";//返回true
+//        String host = "a";
+
+//        String domain = "a.b.local";//返回false
+//        String host = "a.b";
+
+        String domain = ".local";//返回false
+        String host = "a";
+
+
+
+//        String domain = "192.168.0.1";
+//        String host = "192.168.0.1";
         boolean b = HttpCookie.domainMatches(domain, host);
         System.out.println(b);
     }
 
     private void parse() {
 
-        String s = "set-cookie:one=11; max-age=3600; path=/one";
+        String s = "set-cookie:one=11; max-age=3600; path=/one";//使用set-cookie语法
+//        String s = "set-cookie2:one=11;path=/one, two=22;path=/two";//使用set-cookie2语法
         List<HttpCookie> httpCookies = HttpCookie.parse(s);
         int cookieIdx = 0;
         for (HttpCookie ck : httpCookies) {
