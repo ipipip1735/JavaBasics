@@ -29,15 +29,15 @@ public class FileChannelTrial {
 //        fileChannel.createChannelFromOutputStream();
 //        fileChannel.createChannelFromRandomAccessFile();
 
-        fileChannel.write();
-        fileChannel.read();
+//        fileChannel.write();
+//        fileChannel.read();
 
-        fileChannel.scatter();
-        fileChannel.gather();
+//        fileChannel.scatter();
+//        fileChannel.gather();
 
 //        fileChannel.force(); //强制同步
 //        fileChannel.mapped();//内存映射
-//        fileChannel.transfer();//位传送
+        fileChannel.transfer();//位传送
 
 
     }
@@ -55,7 +55,7 @@ public class FileChannelTrial {
 
             RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
             FileChannel fileChannel = file.getChannel();
-            fileChannel.write(bufferArray);
+            fileChannel.write(bufferArray);//逐个写入数组中每个ByteBuffer，一个写满写另外一个
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class FileChannelTrial {
 
             RandomAccessFile file = new RandomAccessFile("NIO/res/sql.log", "rw");
             FileChannel fileChannel = file.getChannel();
-            fileChannel.read(bufferArray);
+            fileChannel.read(bufferArray);//逐个读取数组中每个ByteBuffer，一个读取完读下一个
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -91,10 +91,19 @@ public class FileChannelTrial {
             FileChannel fileChannel = file.getChannel();
             System.out.println("position is " + fileChannel.position());
 
-            ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-//            byteBuffer.putChar('a').putChar('v').flip();
-            byteBuffer.put(UTF_8.encode("吃饭")).flip();
-            fileChannel.write(byteBuffer);
+
+            //方法一
+//            ByteBuffer byteBuffer = ByteBuffer.allocate(128);
+////            byteBuffer.putChar('a').putChar('v').flip();
+//            byteBuffer.put(UTF_8.encode("51吃饭a"))//必须保证ByteBuffer有足够的空间，否则put()方法将报错
+//                    .flip();
+//            int n = fileChannel.write(byteBuffer, 1);
+//            System.out.println("n is " + n);
+
+
+            //方法二
+            int n = fileChannel.write(UTF_8.encode("51吃饭a"),1);
+            System.out.println("n is " + n);
 
             System.out.println("position is " + fileChannel.position());
 
@@ -116,7 +125,9 @@ public class FileChannelTrial {
 
 
             ByteBuffer byteBuffer = ByteBuffer.allocate(6);
-            fileChannel.read(byteBuffer, 3);
+            int n = fileChannel.read(byteBuffer, 3);
+            System.out.println("n is " + n);
+
             byteBuffer.flip();
             CharBuffer charBuffer = UTF_8.decode(byteBuffer);
             System.out.println(charBuffer);
@@ -140,25 +151,27 @@ public class FileChannelTrial {
         try {
 
             //From
-//            RandomAccessFile file1 = new RandomAccessFile("res/a", "r");
-//            ReadableByteChannel readableByteChannel = file1.getChannel();
-//            ((FileChannel) readableByteChannel).position(1);
-//
-//            RandomAccessFile file2 = new RandomAccessFile("res/b", "rw");
-//            FileChannel fileChannel = file2.getChannel();
-//
-//            fileChannel.transferFrom(readableByteChannel, 2, 3);
+            RandomAccessFile file1 = new RandomAccessFile("res/a", "r");
+            ReadableByteChannel readableByteChannel = file1.getChannel();
+            ((FileChannel) readableByteChannel).position(1);//从索引1开始读取
+
+            RandomAccessFile file2 = new RandomAccessFile("res/b", "rw");
+            FileChannel fileChannel = file2.getChannel();
+
+            fileChannel.transferFrom(readableByteChannel, 2, 3);//从源通道索引1开始读取，从目标通道索引2开始写入，写入3字节
 
 
             //TO
-            RandomAccessFile file1 = new RandomAccessFile("res/b", "rw");
-            WritableByteChannel writableByteChannel = file1.getChannel();
-            ((FileChannel) writableByteChannel).position(1);
+//            RandomAccessFile file1 = new RandomAccessFile("res/b", "rw");
+//            WritableByteChannel writableByteChannel = file1.getChannel();
+//            ((FileChannel) writableByteChannel).position(1);//从索引1开始写入
+//
+//            RandomAccessFile file2 = new RandomAccessFile("res/a", "r");
+//            FileChannel fileChannel = file2.getChannel();
+//
+//            fileChannel.transferTo(2, 3, writableByteChannel);//从源通道索引2开始读取，读取3字节，从目标通道索引1开始写入
 
-            RandomAccessFile file2 = new RandomAccessFile("res/a", "r");
-            FileChannel fileChannel = file2.getChannel();
 
-            fileChannel.transferTo(2, 3, writableByteChannel);
 
 
         } catch (FileNotFoundException e) {
