@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.channels.SelectionKey.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ServerSocketChannelTrial {
-    String ip = "192.168.0.126";
+    String ip = "192.168.0.128";
     int port = 5454;
 
     public static void main(String[] args) {
@@ -132,7 +133,7 @@ public class ServerSocketChannelTrial {
 
             serverSocketChannel.bind(new InetSocketAddress(inetAddress, port));//绑定Socket
             serverSocketChannel.configureBlocking(false);//设置服务端通道模式
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);//注册服务端通道，并设置感兴趣的事件
+            serverSocketChannel.register(selector, OP_ACCEPT);//注册服务端通道，并设置感兴趣的事件
 
 
             while (true) {
@@ -157,7 +158,7 @@ public class ServerSocketChannelTrial {
                         System.out.println(socketChannel);
                         System.out.println(socketChannel.getRemoteAddress());
                         socketChannel.configureBlocking(false);//设置客户端通道模式
-                        socketChannel.register(selector, SelectionKey.OP_READ);//设置感兴趣的事件
+                        socketChannel.register(selector, OP_READ);//设置感兴趣的事件
 
 
 
@@ -166,22 +167,22 @@ public class ServerSocketChannelTrial {
                     //处理write事件
                     if (key.isWritable()) {
                         System.out.println("*******isWritable()********");
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
 
 
                         SocketChannel socketChannel = (SocketChannel) key.channel();
                         socketChannel.write(UTF_8.encode("[server]" + map.get(socketChannel)));
                         map.remove(socketChannel);
 
-                        key.interestOps(SelectionKey.OP_READ);
+                        key.interestOps(OP_READ);
                     }
 
                     //处理read事件
                     if (key.isReadable()) {
                         System.out.println("*******isReadable()********");
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
 
 
                         SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -198,7 +199,7 @@ public class ServerSocketChannelTrial {
                         System.out.println(UTF_8.decode(byteBuffer.flip()).toString());
                         map.put(socketChannel, UTF_8.decode(byteBuffer.flip()).toString());//将读取的内容保存到容器
                         byteBuffer.clear();
-                        key.interestOps(SelectionKey.OP_WRITE);
+                        key.interestOps(OP_WRITE);
 
                     }
                 }
@@ -234,7 +235,7 @@ public class ServerSocketChannelTrial {
             serverSocket.bind(new InetSocketAddress(inetAddress, 5454));//绑定Socket
             serverSocket.configureBlocking(false);//设置通道模式
             SelectionKey selectionKey = serverSocket.register(selector, 0);//注册选择器
-            selectionKey.interestOps(SelectionKey.OP_ACCEPT);//设置感兴趣的事件
+            selectionKey.interestOps(OP_ACCEPT);//设置感兴趣的事件
 
 
             while (true) {
@@ -258,15 +259,15 @@ public class ServerSocketChannelTrial {
                         System.out.println(socketChannel);
                         System.out.println(socketChannel.getRemoteAddress());
                         socketChannel.configureBlocking(false);//设置通道模式
-                        socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);//设置感兴趣的事件
+                        socketChannel.register(selector, OP_READ | OP_WRITE);//设置感兴趣的事件
 
                     }
 
                     //处理write事件
                     if (key.isWritable()) {
                         System.out.println("*******isWritable()********");
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
 
                         if (request != null) {
                             SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -281,8 +282,8 @@ public class ServerSocketChannelTrial {
                     //处理read事件
                     if (key.isReadable()) {
                         System.out.println("*******isReadable()********");
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
 
 
                         int n = 1;
@@ -330,7 +331,7 @@ public class ServerSocketChannelTrial {
 
 
             //方式一：注册时设置感兴趣的事件
-            SelectionKey selectionKey = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+            SelectionKey selectionKey = serverSocket.register(selector, OP_ACCEPT);
             List<String> list = Arrays.asList("aa", "aa", "aa");//附加对象
             selectionKey.attach(list);
 
@@ -356,86 +357,74 @@ public class ServerSocketChannelTrial {
                     if (key.isAcceptable()) {
                         System.out.println("*******isAcceptable()********");
                         System.out.println("key is " + key);
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
                         list = (List<String>) key.attachment();
-                        System.out.println(list);
+                        System.out.println("attachment is " + list);
 
 
                         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();//获取服务端通道
                         SocketChannel socketChannel = serverSocketChannel.accept();//获取客户端通道
                         System.out.println(socketChannel);
                         socketChannel.configureBlocking(false);//修改通道属性，客户端通道使用非阻塞模式
-                        socketChannel.register(selector, SelectionKey.OP_READ)//修改通道属性，把感兴趣的事件设置为READ
+                        socketChannel.register(selector, OP_READ)//修改通道属性，把感兴趣的事件设置为READ
                         .attach(Arrays.asList("oneRead", "twoRead", "threeRead"));
-
 
                     }
 
                     //处理write事件
                     if (key.isWritable()) {
                         System.out.println("*******isWritable()********");
+                        System.out.println("keys is " + selector.keys().size() + "|" + selector.keys());
                         System.out.println("key is " + key);
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
-                        System.out.println(key.attachment());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
+                        System.out.println("attachment is " + key.attachment());
 
                         SocketChannel socketChannel = (SocketChannel) key.channel();
-                        ByteBuffer data = (ByteBuffer) key.attachment();
-                        socketChannel.write(data); //发送数据到客户端
-                        data.clear();
+                        ByteBuffer byteBuffer = key.attachment() instanceof ByteBuffer ? (ByteBuffer) key.attachment() : ByteBuffer.allocate(1 * 1024);
 
-                        socketChannel.register(selector, SelectionKey.OP_READ);//修改通道属性，把感兴趣的事件设置为READ
+                        socketChannel.write(byteBuffer); //发送数据到客户端
+
+                        socketChannel.register(selector, OP_READ)//重新注册通道，修改通道属性，把感兴趣的事件设置为READ
+                                .attach(byteBuffer.clear());
                     }
 
                     //处理read事件
                     if (key.isReadable()) {
                         System.out.println("*******isReadable()********");
+                        System.out.println("keys is " + selector.keys().size() + "|" + selector.keys());
                         System.out.println("key is " + key);
-                        System.out.println("interestOps is " + key.interestOps());
-                        System.out.println("readyOps is " + key.readyOps());
-                        System.out.println(key.attachment());
+                        System.out.println("interestOps is " + showOps(key.interestOps()));
+                        System.out.println("readyOps is " + showOps(key.readyOps()));
+                        System.out.println("attachment is " + key.attachment());
 
 
-                        int n = 16;
-                        byte[] bytes = new byte[1024 * n];
-                        Arrays.fill(bytes, (byte) 97);
+                        ByteBuffer byteBuffer = key.attachment() instanceof ByteBuffer ? (ByteBuffer) key.attachment() : ByteBuffer.allocate(1 * 1024);
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
+                        socketChannel.read(byteBuffer);
 
 
-                        for (int i = 0; i < n; i++) {
+                        String body = UTF_8.decode(byteBuffer.flip()).toString();
+                        System.out.println("body is " + body);
 
-                            bytes[1024 * i] = (byte) (100 + i);
-
+                        if (body.equals("a\n")) {
+                            key.cancel();
+                            socketChannel.shutdownOutput();
+                            socketChannel.shutdownInput();
+                            socketChannel.close();
+                            System.out.println("close!");
+                            continue;
                         }
 
-                        bytes[bytes.length - 1] = 98;
-
-                        SocketChannel socketChannel = (SocketChannel) key.channel();
-                        ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
-                        socketChannel.read(byteBuffer);
 
                         byteBuffer.flip();
                         while (byteBuffer.hasRemaining()) {
                             System.out.println(byteBuffer.get()); //读取客户端数据
                         }
-                        byteBuffer.rewind();
 
-
-                        //回复1K
-//                        byteBuffer.clear();
-//                        byteBuffer.put(bytes);
-//                        byteBuffer.rewind();
-
-
-                        //回复ok
-//                        byteBuffer.clear();
-//                        byteBuffer.put("ok".getBytes());
-//                        byteBuffer.rewind();
-//                        byteBuffer.limit("ok".getBytes().length);
-
-
-                        socketChannel.register(selector, SelectionKey.OP_WRITE)//修改通道属性，把感兴趣的事件设置为WRITE
-                                .attach(byteBuffer);
+                        socketChannel.register(selector, OP_WRITE)//重新注册通道，修改通道属性，把感兴趣的事件设置为WRITE
+                                .attach(byteBuffer.clear());
 
                     }
 
@@ -453,6 +442,24 @@ public class ServerSocketChannelTrial {
             e.printStackTrace();
         }
 
+    }
+
+
+
+    private String showOps(int ops) {
+
+        switch (ops) {
+            case OP_READ:
+                return "OP_READ";
+            case OP_WRITE:
+                return "OP_WRITE";
+            case OP_ACCEPT:
+                return "OP_ACCEPT";
+            case OP_CONNECT:
+                return "OP_CONNECT";
+            default:
+                return "Default";
+        }
     }
 
 }
