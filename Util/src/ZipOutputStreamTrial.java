@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static java.util.zip.ZipOutputStream.DEFLATED;
+
 /**
  * Created by Administrator on 2021/1/20 17:05.
  */
@@ -19,7 +21,6 @@ public class ZipOutputStreamTrial {
 
     private void zip() {
 
-
         File[] files = new File("Util/res/").listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -31,21 +32,20 @@ public class ZipOutputStreamTrial {
 
 
         try (FileOutputStream fileOutputStream = new FileOutputStream("Util/res/a.zip");
-             ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(zipOutputStream);
-        ) {
+             ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream)) {
 
-
-            FileInputStream fileInputStream = new FileInputStream(files[0]);
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-            Buffer buffer
-            while (bufferedInputStream.read() != -1) {
-
+            zipOutputStream.setMethod(DEFLATED);
+            for (File file : Arrays.asList(files)) {
+                System.out.println("file = " + file);
+                zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+                FileInputStream fileInputStream = new FileInputStream(file);
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                byte[] bytes = new byte[1024];
+                while (bufferedInputStream.read(bytes) != -1) {
+                    zipOutputStream.write(bytes);
+                }
+                zipOutputStream.closeEntry();
             }
-
-            zipOutputStream.putNextEntry(new ZipEntry(files[0].getName()));
-
-            bufferedOutputStream.write();
 
 
         } catch (FileNotFoundException e) {
@@ -55,6 +55,6 @@ public class ZipOutputStreamTrial {
         }
 
 
-    }
+        }
 
-}
+    }
