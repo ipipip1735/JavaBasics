@@ -30,6 +30,7 @@ public class StreamTrial {
 //        streamDemo.unordered();
 //        streamDemo.map();
 //        streamDemo.flatMap();
+        streamDemo.concat();
 //        streamDemo.peek();
 
 
@@ -40,7 +41,7 @@ public class StreamTrial {
 
         //结果操作
 //        streamDemo.reduce();
-        streamDemo.aggregation();
+//        streamDemo.aggregation();
 //        streamDemo.reduceParallel();
 //        streamDemo.collect();
 //        streamDemo.joining();
@@ -453,6 +454,22 @@ public class StreamTrial {
                 .flatMap(string -> Stream.of(string.split(" +"))
                         .filter(s -> !s.equals("-")))
                 .forEach(r -> System.out.println(r));
+
+    }
+
+
+    public void concat() {
+
+        String[] strings1 = new String[]{"aa", "bb"};
+        String[] strings2 = new String[]{"cc", "dd"};
+
+        Stream<String> stringStream1 = Arrays.stream(new String[]{"aa", "bb"});
+        Stream<String> stringStream2 = Arrays.stream(new String[]{"cc", "dd"});
+
+        String[] strings = Stream.concat(stringStream1, stringStream2)
+                .toArray(String[]::new);
+
+        for (String s : strings) System.out.println(s);
 
     }
 

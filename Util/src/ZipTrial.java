@@ -16,11 +16,9 @@ public class ZipTrial {
 
         ZipTrial zipTrial = new ZipTrial();
 
-//        zipOutputStreamTrial.zip();//压缩
-//        zipOutputStreamTrial.unzip();//解压
+//        zipTrial.zip();//压缩
+//        zipTrial.unzip();//解压
         zipTrial.unzipWithZipFile();//使用ZipFile解压
-
-
     }
 
     private void unzipWithZipFile() {
@@ -37,10 +35,11 @@ public class ZipTrial {
                 byte[] bytes = new byte[1024];
                 int length;
                 try (InputStream inputStream = zipFile.getInputStream(zipEntry);//导出目标文件的输出流
+                     BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
                      FileOutputStream fileOutputStream = new FileOutputStream("Util/res/" + zipEntry);
                      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
 
-                    while ((length = inputStream.read(bytes)) != -1) {//读取解压数据
+                    while ((length = bufferedInputStream.read(bytes)) != -1) {//读取解压数据
                         bufferedOutputStream.write(bytes, 0, length);//保存解压数据
                     }
 
@@ -61,7 +60,8 @@ public class ZipTrial {
     private void unzip() {
 
         try (FileInputStream fileInputStream = new FileInputStream("Util/res/a.zip");
-             ZipInputStream zipInputStream = new ZipInputStream(fileInputStream)) {
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+             ZipInputStream zipInputStream = new ZipInputStream(bufferedInputStream)) {
 
             ZipEntry zipEntry = null;
 
@@ -103,13 +103,14 @@ public class ZipTrial {
 
 
         try (FileOutputStream fileOutputStream = new FileOutputStream("Util/res/a.zip");
-             ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream)) {
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+             ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream)) {
 
             zipOutputStream.setMethod(DEFLATED);//操作类型为压缩
             zipOutputStream.setLevel(9);//设置压缩级别，值越大压缩率越高，耗时越长
 
             //遍历压缩
-            for (File file : Arrays.asList(files)) {
+            for (File file : files) {
                 System.out.println("file = " + file);
                 zipOutputStream.putNextEntry(new ZipEntry(file.getName() + "xxx"));//创建目标
                 FileInputStream fileInputStream = new FileInputStream(file);
