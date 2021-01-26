@@ -2,6 +2,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
@@ -41,11 +42,11 @@ public class DeflaterInflaterTrail {
 //        deflaterInflaterTrail.inflater(output);
 
 
-//        deflaterInflaterTrail.def();
+        deflaterInflaterTrail.def();
 
 
-        deflaterInflaterTrail.deflaterFile();
-        deflaterInflaterTrail.inflaterFile();
+//        deflaterInflaterTrail.deflaterFile();
+//        deflaterInflaterTrail.inflaterFile();
 
     }
 
@@ -90,7 +91,6 @@ public class DeflaterInflaterTrail {
     }
 
 
-
     private void deflaterFile() {
 
         try (InputStream inputStream = Files.newInputStream(Path.of("Util/res/bigText.txt"));
@@ -126,42 +126,34 @@ public class DeflaterInflaterTrail {
 
     private void def() {
 
-        byte[] data = new byte[1024];
-//        data = "gggggg".getBytes(UTF_8);
-
-        Random random = new Random();
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) random.nextInt(256);
-
-//            if (i < (data.length / 2)) {
-//                data[i] = (byte) 97;
-//            } else {
-//                data[i] = (byte) random.nextInt(256);
-//            }
-
-
-        }
-
+        ArrayList<Byte> byteArrayList = new ArrayList<>();
 
         Deflater deflater = new Deflater();
         int count = 0, compressedDataLength = 0;
 
-        byte[] result = new byte[128];
-
-        deflater.setInput(data);
+        byte[] bytes = "abcdefghijklmnopqrstuvwxyz".getBytes(UTF_8);
+        System.out.println("byte[] size is " + bytes.length);
+        deflater.setInput(bytes);
         deflater.finish();
 
-        while (count > 0 || !deflater.needsInput()) {
+
+        bytes = new byte[10];
+        while (!deflater.finished()) {
             System.out.println("writing!");
-            count = deflater.deflate(result);
+            count = deflater.deflate(bytes);
 
             compressedDataLength += count;
             System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
-            for (byte b : result) {
+            for (byte b : bytes) {
                 System.out.print(b + ", ");
             }
+
+            for (int i = 0; i < count; i++) {
+                byteArrayList.add(bytes[i]);
+            }
+
             System.out.println("");
-            Arrays.fill(result, (byte) 0);
+            Arrays.fill(bytes, (byte) 0);
         }
 
 
