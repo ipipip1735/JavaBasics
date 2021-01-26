@@ -1,5 +1,6 @@
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class DeflaterInflaterTrail {
 
 
         deflaterInflaterTrail.def();
+//        deflaterInflaterTrail.inf(deflaterInflaterTrail.def());
 
 
 //        deflaterInflaterTrail.deflaterFile();
@@ -124,36 +126,55 @@ public class DeflaterInflaterTrail {
 
     }
 
-    private void def() {
 
-        ArrayList<Byte> byteArrayList = new ArrayList<>();
+    private void inf(ByteBuffer byteBuffer) {
+
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(data.size());
+//        byteBuffer.
+//
+//        Inflater inflater = new Inflater();
+//
+//
+//        System.out.println(inflater.finished());
+//
+//        Byte[] bytes;
+//        data.toArray(bytes);
+//
+//
+//        inflater.setInput();
+//
+
+    }
+
+    private ByteBuffer def() {
+
 
         Deflater deflater = new Deflater();
         int count = 0, compressedDataLength = 0;
 
-        byte[] bytes = "abcdefghijklmnopqrstuvwxyz".getBytes(UTF_8);
-        System.out.println("byte[] size is " + bytes.length);
-        deflater.setInput(bytes);
+        ByteBuffer byteBuffer = UTF_8.encode("abcdefghijklmnopqrstuvwxyz");
+        deflater.setInput(byteBuffer);
         deflater.finish();
 
 
-        bytes = new byte[10];
-        while (!deflater.finished()) {
+        byteBuffer = ByteBuffer.allocate(10);
+
+        while (!deflater.finished() || !deflater.needsInput()) {
             System.out.println("writing!");
-            count = deflater.deflate(bytes);
+            count = deflater.deflate(byteBuffer);
 
             compressedDataLength += count;
             System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
-            for (byte b : bytes) {
-                System.out.print(b + ", ");
-            }
 
-            for (int i = 0; i < count; i++) {
-                byteArrayList.add(bytes[i]);
+            byteBuffer.rewind();
+
+
+            while (byteBuffer.hasRemaining()) {
+                System.out.print(byteBuffer.get() + ", ");
             }
 
             System.out.println("");
-            Arrays.fill(bytes, (byte) 0);
+            return byteBuffer.flip();
         }
 
 
@@ -163,6 +184,7 @@ public class DeflaterInflaterTrail {
         deflater.end();
 
 
+        return byteBuffer.flip();
     }
 
     private void inflater(byte[] inData) {
