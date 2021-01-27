@@ -43,8 +43,8 @@ public class DeflaterInflaterTrail {
 //        deflaterInflaterTrail.inflater(output);
 
 
-        deflaterInflaterTrail.def();
-//        deflaterInflaterTrail.inf(deflaterInflaterTrail.def());
+//        deflaterInflaterTrail.def();
+        deflaterInflaterTrail.inf();
 
 
 //        deflaterInflaterTrail.deflaterFile();
@@ -127,64 +127,96 @@ public class DeflaterInflaterTrail {
     }
 
 
-    private void inf(ByteBuffer byteBuffer) {
-
-//        ByteBuffer byteBuffer = ByteBuffer.allocate(data.size());
-//        byteBuffer.
-//
-//        Inflater inflater = new Inflater();
-//
-//
-//        System.out.println(inflater.finished());
-//
-//        Byte[] bytes;
-//        data.toArray(bytes);
-//
-//
-//        inflater.setInput();
-//
-
-    }
-
-    private ByteBuffer def() {
-
+    private void inf() {
 
         Deflater deflater = new Deflater();
-        int count = 0, compressedDataLength = 0;
-
         ByteBuffer byteBuffer = UTF_8.encode("abcdefghijklmnopqrstuvwxyz");
         deflater.setInput(byteBuffer);
         deflater.finish();
 
-
-        byteBuffer = ByteBuffer.allocate(10);
-
-        while (!deflater.finished() || !deflater.needsInput()) {
-            System.out.println("writing!");
-            count = deflater.deflate(byteBuffer);
-
-            compressedDataLength += count;
-            System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
-
-            byteBuffer.rewind();
-
-
-            while (byteBuffer.hasRemaining()) {
-                System.out.print(byteBuffer.get() + ", ");
-            }
-
-            System.out.println("");
-            return byteBuffer.flip();
-        }
-
-
-        System.out.println("");
-        System.out.println("compressedDataLength = " + compressedDataLength);
-
+        byteBuffer = ByteBuffer.allocate(1024);
+        deflater.deflate(byteBuffer);
         deflater.end();
 
 
-        return byteBuffer.flip();
+        int count = 0, uncompressedDataLength = 0;
+        Inflater inflater = new Inflater();
+        inflater.setInput(byteBuffer.flip());
+
+        try {
+            while (!inflater.finished() || !inflater.needsInput()) {
+                ByteBuffer temp = ByteBuffer.allocate(10);
+                count = inflater.inflate(temp);
+                uncompressedDataLength += count;
+                System.out.println("count = " + count + ", uncompressedDataLength = " + uncompressedDataLength);
+
+                temp.rewind();
+                while (temp.hasRemaining()) {
+                    System.out.print(temp.get() + ",");
+                }
+                System.out.println("");
+            }
+
+        } catch (DataFormatException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    private void def() {
+
+        //方式一
+//        Deflater deflater = new Deflater();
+//        int count = 0, compressedDataLength = 0;
+//
+//        ByteBuffer byteBuffer = UTF_8.encode("abcdefghijklmnopqrstuvwxyz");
+//        deflater.setInput(byteBuffer);
+//        deflater.finish();
+//
+//
+//        while (!deflater.finished() || !deflater.needsInput()) {
+//            byteBuffer = ByteBuffer.allocate(10);
+//            System.out.println("writing!");
+//            count = deflater.deflate(byteBuffer);
+//
+//            compressedDataLength += count;
+//            System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
+//
+//            byteBuffer.rewind();
+//            while (byteBuffer.hasRemaining()) {
+//                System.out.print(byteBuffer.get() + ",");
+//            }
+//            System.out.println("");
+//        }
+//
+//        deflater.end();
+
+        //方式二
+        Deflater deflater = new Deflater();
+        int count = 0, compressedDataLength = 0;
+
+        byte[] bytes = "abcdefghijklmnopqrstuvwxyz".getBytes(UTF_8);
+        System.out.println("bytes length is " + bytes.length);
+        deflater.setInput(bytes);
+        deflater.finish();
+
+        bytes = new byte[10];
+
+        while (!deflater.finished() || !deflater.needsInput()) {
+
+            System.out.println("writing!");
+            count = deflater.deflate(bytes);
+            compressedDataLength += count;
+            System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
+
+
+            for (byte b : bytes) System.out.print(b + ",");
+            System.out.println("");
+        }
+
+
     }
 
     private void inflater(byte[] inData) {
