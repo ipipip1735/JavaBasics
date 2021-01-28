@@ -20,74 +20,63 @@ public class DeflaterInflaterTrail {
 
 //        deflaterInflaterTrail.deflater();
 //        deflaterInflaterTrail.inflater();
-//        deflaterInflaterTrail.test();
+
+        deflaterInflaterTrail.finish();
 
 
 //        deflaterInflaterTrail.deflateWithByteBuffer();
 //        deflaterInflaterTrail.inflateWithByteBuffer();
 
 
-        deflaterInflaterTrail.deflaterFile();
-        deflaterInflaterTrail.inflaterFile();
+//        deflaterInflaterTrail.deflaterFile();
+//        deflaterInflaterTrail.inflaterFile();
 
     }
 
-    private void test() {
+    private void finish() {
 
 
-        byte[] bytes = new byte[15 * 1024];
+        byte[] bytes = new byte[16 * 1024 + 512];
         byte[] result = new byte[32 * 1024];
         Random random = new Random();
 
 
         Deflater deflater = new Deflater();
 
-        System.out.println("in|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        System.out.println("[in]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) random.nextInt(256);
         }
         deflater.setInput(bytes);
+        System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
 
-        System.out.println("out|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
         System.out.println("count = " + deflater.deflate(result));
-
-        System.out.println("in|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = (byte) random.nextInt(256);
-        }
-        deflater.setInput(bytes);
+        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
 
 
-        System.out.println("out|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        System.out.println("count = " + deflater.deflate(result));
+//        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+//        System.out.println("count = " + deflater.deflate(result));
+//        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
 
 
-        System.out.println("in|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = (byte) random.nextInt(256);
-        }
-        deflater.setInput(bytes);
 
 
-        System.out.println("out|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        System.out.println("count = " + deflater.deflate(result));
+//        System.out.println("[in]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+//        deflater.setInput(bytes);
+//        System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+
+
+
+//        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+//        System.out.println("count = " + deflater.deflate(result));
+//        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+
 
 
         deflater.finish();
 
-        System.out.println("out|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        System.out.println("count = " + deflater.deflate(result));
 
-        System.out.println("out|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        System.out.println("count = " + deflater.deflate(result));
-
-
-//        while (deflater.needsInput()) {
-//            System.out.println("s|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-//            deflater.setInput(bytes, 0, length);
-//
-//
-//        }
 
 
     }
@@ -146,7 +135,7 @@ public class DeflaterInflaterTrail {
 
 
     private void deflaterFile() {
-        try (InputStream inputStream = Files.newInputStream(Path.of("Security/res/big.txt"));
+        try (InputStream inputStream = Files.newInputStream(Path.of("Util/res/big.txt"));
              OutputStream outputStream = Files.newOutputStream(Path.of("Util/res/big.txt.gz"))) {
 
             byte[] bytes = new byte[128];
@@ -183,7 +172,6 @@ public class DeflaterInflaterTrail {
             e.printStackTrace();
         }
 
-
     }
 
 
@@ -206,7 +194,7 @@ public class DeflaterInflaterTrail {
         inflater.setInput(byteBuffer.flip());//设置待解压的数据（就是上面压缩后的数据）
 
         try {
-            while (!inflater.finished() || !inflater.needsInput()) {
+            while (!inflater.finished()) {
                 ByteBuffer temp = ByteBuffer.allocate(10);
                 count = inflater.inflate(temp);
                 uncompressedDataLength += count;
@@ -234,7 +222,7 @@ public class DeflaterInflaterTrail {
         deflater.finish();
 
 
-        while (!deflater.finished() || !deflater.needsInput()) {
+        while (!deflater.finished()) {
             byteBuffer = ByteBuffer.allocate(10);
             System.out.println("writing!");
             count = deflater.deflate(byteBuffer);
@@ -274,7 +262,7 @@ public class DeflaterInflaterTrail {
 
         bytes = new byte[10];
         try {
-            while (!inflater.finished() || !inflater.needsInput()) {
+            while (!inflater.finished()) {
                 Arrays.fill(bytes, (byte) 0);
                 count = inflater.inflate(bytes);//解压
                 uncompressedDataLength += count;
@@ -306,7 +294,7 @@ public class DeflaterInflaterTrail {
         deflater.finish();
 
         bytes = new byte[32];
-        while (!deflater.finished() || !deflater.needsInput()) {
+        while (!deflater.finished()) {
             System.out.println("finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
             System.out.println("writing!");
             Arrays.fill(bytes, (byte) 0);
