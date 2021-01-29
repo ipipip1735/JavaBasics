@@ -4,9 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+import java.util.zip.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -18,28 +16,195 @@ public class DeflaterInflaterTrail {
     public static void main(String[] args) {
         DeflaterInflaterTrail deflaterInflaterTrail = new DeflaterInflaterTrail();
 
+        //使用字节数组
 //        deflaterInflaterTrail.deflater();
 //        deflaterInflaterTrail.inflater();
 
-        deflaterInflaterTrail.finish();
-
-
+        //使用ByteBuffer
 //        deflaterInflaterTrail.deflateWithByteBuffer();
 //        deflaterInflaterTrail.inflateWithByteBuffer();
 
 
+        //刷新模式
+//        deflaterInflaterTrail.noFlush();
+//        deflaterInflaterTrail.syncFLUSH();
+//        deflaterInflaterTrail.fullFLUSH();
+
+
+        //压缩解压文件
 //        deflaterInflaterTrail.deflaterFile();
 //        deflaterInflaterTrail.inflaterFile();
 
+        //压缩解压文件使用
+//        deflaterInflaterTrail.deflaterInputStream();//压缩输入流中的数据（创建.gz文件）
+//        deflaterInflaterTrail.inflaterInputStream();//解压输入流中的数据（解压.gz文件）
+
+
+        //压缩解压文件使用
+        deflaterInflaterTrail.deflaterOutputStream();//压缩数据后交给输出流输出（创建.gz文件）
+        deflaterInflaterTrail.inflaterOutputStream();//解压数据后交给输出流输出（解压.gz文件）
+
     }
 
-    private void finish() {
+    private void inflaterOutputStream() {
 
+        try (FileInputStream fileInputStream = new FileInputStream("Util/res/big.txt.gz");
+             FileOutputStream fileOutputStream = new FileOutputStream("Util/res/big1.txt");
+             InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(fileOutputStream)) {
+
+            int n;
+            byte[] bytes = new byte[1024];
+            while ((n = fileInputStream.read(bytes)) != -1) {
+                System.out.println("n = " + n);
+                inflaterOutputStream.write(bytes, 0, n);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deflaterOutputStream() {
+
+        try (FileInputStream fileInputStream = new FileInputStream("Util/res/big.txt");
+             FileOutputStream fileOutputStream = new FileOutputStream("Util/res/big.txt.gz");
+             DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(fileOutputStream)) {
+
+            int n;
+            byte[] bytes = new byte[1024];
+            while ((n = fileInputStream.read(bytes)) != -1) {
+                System.out.println("n = " + n);
+                deflaterOutputStream.write(bytes, 0, n);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void inflaterInputStream() {
+
+        try (FileInputStream fileInputStream = new FileInputStream("Util/res/big.txt.gz");
+             InflaterInputStream inflaterInputStream = new InflaterInputStream(fileInputStream);
+             FileOutputStream fileOutputStream = new FileOutputStream("Util/res/big1.txt")) {
+
+            int n;
+            byte[] bytes = new byte[10];
+            while ((n = inflaterInputStream.read(bytes)) != -1) {
+                System.out.println("n = " + n);
+                fileOutputStream.write(bytes, 0, n);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deflaterInputStream() {
+
+        try (FileInputStream fileInputStream = new FileInputStream("Util/res/big.txt");
+             FileOutputStream outputStream = new FileOutputStream("Util/res/big.txt.gz");
+             DeflaterInputStream deflaterInputStream = new DeflaterInputStream(fileInputStream)) {
+
+            int n;
+            byte[] bytes = new byte[10];
+
+            while ((n = deflaterInputStream.read(bytes)) != -1) {
+                System.out.println("n = " + n);
+                outputStream.write(bytes, 0, n);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //方式二
+//        try (FileInputStream fileInputStream = new FileInputStream("Util/res/big.txt");
+//             FileOutputStream outputStream = new FileOutputStream("Util/res/big.txt.gz");
+//             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+//             DeflaterInputStream deflaterInputStream = new DeflaterInputStream(fileInputStream)) {
+//
+//            while (deflaterInputStream.available() != 0) {
+//                bufferedOutputStream.write(deflaterInputStream.read());
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+    }
+
+    private void fullFLUSH() {
+
+        Deflater deflater = new Deflater();
+
+        System.out.println("[in]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        deflater.setInput(UTF_8.encode("abcdefghijklmnopqrstuvwxyz"));
+        System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(byteBuffer, Deflater.FULL_FLUSH));//使用完全刷新模式
+            byteBuffer.clear();
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
+
+        System.out.println("-------------------");
+        deflater.finish();
+        System.out.println("finish!");
+        System.out.println("-------------------");
+
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(byteBuffer, Deflater.FULL_FLUSH));
+            byteBuffer.clear();
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
+
+        deflater.end();
+    }
+
+    private void syncFLUSH() {
+
+        Deflater deflater = new Deflater();
+
+        System.out.println("[in]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        deflater.setInput(UTF_8.encode("abcdefghijklmnopqrstuvwxyz"));
+        System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(byteBuffer, Deflater.SYNC_FLUSH));//使用同步刷新模式
+            byteBuffer.clear();
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
+
+        System.out.println("-------------------");
+        deflater.finish();
+        System.out.println("finish!");
+        System.out.println("-------------------");
+
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(byteBuffer, Deflater.SYNC_FLUSH));
+            byteBuffer.clear();
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
+
+        deflater.end();
+
+    }
+
+    private void noFlush() {
 
         byte[] bytes = new byte[16 * 1024 + 512];
-        byte[] result = new byte[32 * 1024];
+        byte[] result = new byte[8 * 1024];
         Random random = new Random();
-
 
         Deflater deflater = new Deflater();
 
@@ -50,35 +215,25 @@ public class DeflaterInflaterTrail {
         deflater.setInput(bytes);
         System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
 
-        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-        System.out.println("count = " + deflater.deflate(result));
-        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
 
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(result));
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
 
-//        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-//        System.out.println("count = " + deflater.deflate(result));
-//        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-
-
-
-
-//        System.out.println("[in]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-//        deflater.setInput(bytes);
-//        System.out.println("[in]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-
-
-
-//        System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-//        System.out.println("count = " + deflater.deflate(result));
-//        System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
-
-
-
+        System.out.println("-------------------");
         deflater.finish();
+        System.out.println("finish!");
+        System.out.println("-------------------");
 
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[out]start|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+            System.out.println("count = " + deflater.deflate(result));
+            System.out.println("[out]end|finished = " + deflater.finished() + ", needsInput = " + deflater.needsInput());
+        }
 
-
-
+        deflater.end();
     }
 
 
@@ -107,7 +262,6 @@ public class DeflaterInflaterTrail {
                     System.out.println("count = " + count + ", uncompressedDataLength = " + (compressedDataLength += count));
                     outputStream.write(result, 0, count);
                 }
-
 
 
             }
