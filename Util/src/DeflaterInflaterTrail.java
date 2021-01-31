@@ -22,7 +22,7 @@ public class DeflaterInflaterTrail {
 
         //使用ByteBuffer
 //        deflaterInflaterTrail.deflateWithByteBuffer();
-//        deflaterInflaterTrail.inflateWithByteBuffer();
+        deflaterInflaterTrail.inflateWithByteBuffer();
 
 
         //刷新模式
@@ -35,14 +35,43 @@ public class DeflaterInflaterTrail {
 //        deflaterInflaterTrail.deflaterFile();
 //        deflaterInflaterTrail.inflaterFile();
 
+        //数据统计
+//        deflaterInflaterTrail.getByte();
+
+
         //压缩解压文件使用
 //        deflaterInflaterTrail.deflaterInputStream();//压缩输入流中的数据（创建.gz文件）
 //        deflaterInflaterTrail.inflaterInputStream();//解压输入流中的数据（解压.gz文件）
 
 
         //压缩解压文件使用
-        deflaterInflaterTrail.deflaterOutputStream();//压缩数据后交给输出流输出（创建.gz文件）
-        deflaterInflaterTrail.inflaterOutputStream();//解压数据后交给输出流输出（解压.gz文件）
+//        deflaterInflaterTrail.deflaterOutputStream();//压缩数据后交给输出流输出（创建.gz文件）
+//        deflaterInflaterTrail.inflaterOutputStream();//解压数据后交给输出流输出（解压.gz文件）
+
+    }
+
+    private void getByte() {
+
+        byte[] bytes = new byte[1024];
+        byte[] result = new byte[1024];
+        Random random = new Random();
+
+        Deflater deflater = new Deflater();
+
+        for (int n = 1; n < 20; n++) {
+
+//            for (int i = 0; i < bytes.length; i++) {
+//                bytes[i] = (byte) random.nextInt(256);
+//            }
+            deflater.setInput(bytes);
+            deflater.deflate(result);
+
+            System.out.println(n + "|getTotalIn is " + deflater.getTotalIn() + ", " +
+                    "getTotalOut is " + deflater.getTotalOut());
+        }
+
+        deflater.finish();
+        deflater.end();
 
     }
 
@@ -353,7 +382,7 @@ public class DeflaterInflaterTrail {
                 count = inflater.inflate(temp);
                 uncompressedDataLength += count;
                 System.out.println("count = " + count + ", uncompressedDataLength = " + uncompressedDataLength);
-
+                System.out.println("getTotalIn is " + inflater.getTotalIn() + ", getTotalOut is " + inflater.getTotalOut() + ", count = " + count);
                 temp.rewind();
                 while (temp.hasRemaining()) {
                     System.out.print(temp.get() + ",");
@@ -383,6 +412,7 @@ public class DeflaterInflaterTrail {
 
             compressedDataLength += count;
             System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
+            System.out.println("getTotalIn is " + deflater.getTotalIn() + ", getTotalOut is " + deflater.getTotalOut() + ", count = " + count);
 
             byteBuffer.rewind();
             while (byteBuffer.hasRemaining()) {
@@ -396,33 +426,37 @@ public class DeflaterInflaterTrail {
 
     private void inflater() {
 
-        int count = 0, uncompressedDataLength = 0;
+        int count;
 
         //压缩
         Deflater deflater = new Deflater();
         byte[] bytes = "abcdefghijklmnopqrstuvwxyz".getBytes(UTF_8);
         System.out.println("bytes length is " + bytes.length);
         deflater.setInput(bytes);//输入数据
-        deflater.finish();//输入完毕，后续没有数据输入
+        deflater.finish();//输入完毕（后续没有数据输入）
 
         bytes = new byte[128];
         count = deflater.deflate(bytes);//压缩
+        deflater.end();
 
 
         //解压
         Inflater inflater = new Inflater();//创建解压器
-        inflater.setInput(Arrays.copyOfRange(bytes, 0, count));//输入数据
-        inflater.finished();//输入完毕，后续没有数据输入
+
+        inflater.setInput(Arrays.copyOf(bytes, count));//输入数据
+        inflater.finished();//输入结束（后续没有数据输入）
+        System.out.println("input count is " + count);
 
         bytes = new byte[10];
         try {
             while (!inflater.finished()) {
                 Arrays.fill(bytes, (byte) 0);
                 count = inflater.inflate(bytes);//解压
-                uncompressedDataLength += count;
 
-                System.out.println("count = " + count + ", uncompressedDataLength = " + uncompressedDataLength);
+                System.out.println("getTotalIn is " + inflater.getTotalIn() + ", getTotalOut is " + inflater.getTotalOut() + ", count = " + count);
+
                 for (byte b : bytes) System.out.print(b + ", ");
+                System.out.println("");
             }
 
         } catch (DataFormatException e) {
@@ -435,7 +469,7 @@ public class DeflaterInflaterTrail {
 
     private void deflater() {
 
-        int count = 0, compressedDataLength = 0;
+        int count;
 
         byte[] bytes = new byte[128];
         Random random = new Random();
@@ -444,8 +478,9 @@ public class DeflaterInflaterTrail {
         }
 
         Deflater deflater = new Deflater();
-        deflater.setInput(bytes);
-        deflater.finish();
+        deflater.setInput(bytes);//输入数据
+        deflater.finish();//输入结束
+        System.out.println("input count is " + bytes.length);
 
         bytes = new byte[32];
         while (!deflater.finished()) {
@@ -453,8 +488,11 @@ public class DeflaterInflaterTrail {
             System.out.println("writing!");
             Arrays.fill(bytes, (byte) 0);
             count = deflater.deflate(bytes);
-            compressedDataLength += count;
-            System.out.println("count = " + count + ", compressedDataLength = " + compressedDataLength);
+
+            System.out.println("getTotalIn is " + deflater.getTotalIn() + ", " +
+                    "getTotalOut is " + deflater.getTotalOut() + ", " +
+                    "count = " + count);
+
             for (byte b : bytes) System.out.print(b + ",");
             System.out.println("");
         }
