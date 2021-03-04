@@ -13,8 +13,6 @@ public class StringTrial {
 //        stringTrial.equal();
         stringTrial.base();
 
-
-
     }
 
     private void prefix() {
