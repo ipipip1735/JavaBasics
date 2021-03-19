@@ -8,10 +8,17 @@ import java.util.List;
 public class GenericTrial {
     public static void main(String[] args) {
         GenericTrial genericTrial = new GenericTrial();
-//        genericTrial.method();
+//        genericTrial.method();//方法泛型
 //        genericTrial.Class();//绑定类型
 
-        genericTrial.multipleBounds();//复合绑定
+        genericTrial.up();//泛型上界
+//        genericTrial.multipleBounds();//复合绑定
+    }
+
+    private void up() {
+        Up up = new Up();
+        up.setT(new D());
+        System.out.println(up.getT());
     }
 
     private void multipleBounds() {
@@ -55,6 +62,21 @@ class GGC {
     }
 }
 
+
+class Up<T extends D> {
+    T t;
+
+    public Up() {
+    }
+
+    public void setT(T t) {
+        this.t = t;
+    }
+
+    public T getT() {
+        return t;
+    }
+}
 
 class BoundAB<T extends A & B> {
 
@@ -112,4 +134,8 @@ class A implements B, C {
     public void showClass() {
 
     }
+}
+
+class D {
+    int age;
 }
