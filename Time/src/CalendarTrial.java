@@ -1,6 +1,7 @@
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -16,8 +17,38 @@ public class CalendarTrial {
         CalendarTrial calendarTrial = new CalendarTrial();
 //        calendarTrial.zoneID();
 //        calendarTrial.constructor();
-        calendarTrial.format();
+//        calendarTrial.format();
+        calendarTrial.getDate();
 
+    }
+
+    private void getDate() {
+
+        long absSeconds = Math.abs(167069600000L - 1617067909275L);
+        System.out.println("absSeconds = " + absSeconds);
+
+        String[] dhms = new String[3];
+
+
+        long seconds = absSeconds / 1000 % 60;
+        long minutes = absSeconds / (1000 * 60) % 60;
+        long hours = absSeconds / (1000 * 60 * 60) % 24;
+
+
+        String temp = Long.valueOf(hours).toString();
+        System.out.println("temp = " + temp);
+        dhms[0] = temp.length() < 2 ? "0" + temp : temp;
+
+        temp = Long.valueOf(minutes).toString();
+        System.out.println("temp = " + temp);
+        dhms[1] = temp.length() < 2 ? "0" + temp : temp;
+
+        temp = Long.valueOf(seconds).toString();
+        System.out.println("temp = " + temp);
+        dhms[2] = temp.length() < 2 ? "0" + temp : temp;
+
+
+        System.out.println(dhms[0] + "时" + dhms[1] + "分" + dhms[2] + "秒");
     }
 
 
