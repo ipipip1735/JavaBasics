@@ -10,12 +10,21 @@ public class CollectionsTrial {
         CollectionsTrial collectionsTrial = new CollectionsTrial();
 //        collectionsTrial.sync();
 //        collectionsTrial.swap();
-        collectionsTrial.sort();
+//        collectionsTrial.sort();
 //        collectionsTrial.reverse();
 //        collectionsTrial.rotate();
 //        collectionsTrial.disjoint();
 //        collectionsTrial.max();
 //        collectionsTrial.copy();
+        collectionsTrial.singletonList();
+    }
+
+    private void singletonList() {
+
+        List<String> list = Collections.singletonList("ok");
+        System.out.println("list = " + list);
+        list = Collections.singletonList("no");
+        System.out.println("list = " + list);
     }
 
     private void copy() {
