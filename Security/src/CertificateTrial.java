@@ -1,3 +1,4 @@
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -5,8 +6,8 @@ import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2019/7/29.
@@ -17,28 +18,44 @@ public class CertificateTrial {
     public static void main(String[] args) {
         CertificateTrial certificateTrial = new CertificateTrial();
 
-        certificateTrial.certificate();//创建证书对象
+//        certificateTrial.certificate();//创建证书对象
+//        certificateTrial.principal();//创建证书主体信息
 //        certificateTrial.verify();//验证证书
-
         certificateTrial.certPath();//创建信任链对象
 
 
+    }
 
+    private void principal() {
 
+        //        X500Principal x500Principal1 = new X500Principal("CN=");
+//        System.out.println("x500Principal1 = " + x500Principal1);
+//
+//        X500Principal x500Principal2 = new X500Principal("CN=, OU=b");
+//        System.out.println("x500Principal2 = " + x500Principal2);
+//
+//        X500Principal x500Principal3 = new X500Principal("CN=a, CN=b");
+//        System.out.println("x500Principal3 = " + x500Principal3);
+
+        HashMap<String, String> attr = new HashMap<>();
+        attr.put("AA", "1.2.3.4.");
+        X500Principal x500Principal4 = new X500Principal("CN=a, CN=b", attr);
+        System.out.println("x500Principal4 = " + x500Principal4);
 
     }
 
     private void certPath() {
 
         //方式一
-        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.crt"))) {
+        try (InputStream inStream = Files.newInputStream(Path.of("Security/res/ca/chain.crt"))) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");//创建工厂对象
             Collection collection = cf.generateCertificates(inStream);//获取证书对象集
 
             ArrayList crts = new ArrayList();
             crts.addAll(collection);//转为List容器
 
-            CertPath certPath = cf.generateCertPath(crts); //创建信任链对象
+            CertPath certPath = cf.generateCertPath(crts); //创建证书链
+            System.out.println("certPath = " + certPath);
 
 
         } catch (IOException e) {
@@ -50,7 +67,70 @@ public class CertificateTrial {
         }
 
 
-        //方式二：Java API不支持解析信任链文件创建CertPath
+        //方式二
+//        try (InputStream inStreamRootCA = Files.newInputStream(Path.of("Security/res/test/root.cer"));
+//             InputStream inStreamChain = Files.newInputStream(Path.of("Security/res/test/chain.p7b"))) {
+//            CertificateFactory cf = CertificateFactory.getInstance("X.509");//创建工厂对象
+//            X509Certificate rootCA = (X509Certificate) cf.generateCertificate(inStreamRootCA);//获取根CA
+//            Collection chain = cf.generateCertificates(inStreamChain);//获取证书对象集
+//            System.out.println("chain = " + chain);
+//
+//            CertPathBuilder certPathBuilder = CertPathBuilder.getInstance("PKIX");
+//
+//            //信任锚点
+//            TrustAnchor trustAnchor = new TrustAnchor(rootCA, null);
+//            X509CertSelector selector = new X509CertSelector();
+////            targetConstraints.setCertificate((X509Certificate) chain.toArray()[0]);
+//            selector.setSubject("CN=privateobject.com");
+//            PKIXParameters params = new PKIXBuilderParameters(Collections.singleton(trustAnchor), selector);
+//
+//
+//            //证书吊销检测器
+//            PKIXRevocationChecker rc = (PKIXRevocationChecker) certPathBuilder.getRevocationChecker();
+//            rc.setOptions(EnumSet.of(PKIXRevocationChecker.Option.PREFER_CRLS));
+//            params.addCertPathChecker(rc);
+////            params.setRevocationEnabled(false);
+//
+//
+//            //设置证书仓库（仓库中包含所有证书，后面构建证书路径时都源于此仓库）
+//            CollectionCertStoreParameters ccsp = new CollectionCertStoreParameters(chain);
+//            CertStore certStore = CertStore.getInstance("Collection", ccsp);
+//            params.addCertStore(certStore);//增加仓库
+//
+//            //构建器证书路径（遍历检查）
+//            CertPathBuilderResult certPathBuilderResult = certPathBuilder.build(params);
+//            CertPath certPath = certPathBuilderResult.getCertPath();
+//            System.out.println("certPath = " + certPath);
+//
+//
+//            //使用验证器（验证器实际上没什么用）
+//            CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+//            rc = (PKIXRevocationChecker)cpv.getRevocationChecker();
+//            rc.setOptions(EnumSet.of(PKIXRevocationChecker.Option.SOFT_FAIL));
+//            CertPathValidatorResult cpvr = cpv.validate(certPath, params);
+//            System.out.println("cpvr = " + cpvr);
+//
+//
+//
+//
+//
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InvalidAlgorithmParameterException e) {
+//            e.printStackTrace();
+//        } catch (CertPathBuilderException e) {
+//            e.printStackTrace();
+//        } catch (CertificateException e) {
+//            e.printStackTrace();
+//        }
+//        catch (CertPathValidatorException e) {
+//            e.printStackTrace();
+//        }
+
+
+        //方式三：Java API不支持解析信任链文件创建CertPath
 //        try (InputStream inStream = Files.newInputStream(Path.of("Security\\res\\ca\\chain.crt"))) {
 //            CertificateFactory cf = CertificateFactory.getInstance("X.509");
 //            CertPath certPath = cf.generateCertPath(inStream);
