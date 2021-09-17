@@ -3,6 +3,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.*;
 import java.util.Base64;
 import java.util.stream.Collectors;
@@ -20,10 +21,9 @@ public class RSATrial {
 
 
 //        rsaTrial.publicKeyX509();
-        rsaTrial.privateKeyPKCS8();
-//        rsaTrial.sign();
+//        rsaTrial.privateKeyPKCS8();
+        rsaTrial.sign();
 //        rsaTrial.verify();
-
 
     }
 
@@ -61,9 +61,19 @@ public class RSATrial {
             byte[] key = Base64.getDecoder().decode(privateKeyPKCS8);//Base64解码
             PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(key);//创建KeySpec对象
 
+            //生成私钥
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");//实例化工厂
             PrivateKey privateKey = keyFactory.generatePrivate(priPKCS8);//转换KeySpec为key对象
             System.out.println(privateKey);
+            
+            
+            //从私钥导出公钥
+            RSAPrivateCrtKey privk = (RSAPrivateCrtKey)privateKey;//强制类型转换
+            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(privk.getModulus(), privk.getPublicExponent());
+            System.out.println("publicKeySpec = " + publicKeySpec);
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {

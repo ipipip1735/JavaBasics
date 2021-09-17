@@ -1,5 +1,6 @@
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,8 +10,10 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.*;
 import java.security.cert.Certificate;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +27,7 @@ public class KeyStoreTrial {
     private String storePasswd = "sp";
     private String privateKeyPasswd = "pp";
     private KeyStore ks;
-    private Path path = Path.of("Security\\res\\keyStore");
+    private Path path = Path.of("Security/res/keyStore");
 
     public static void main(String[] args) {
 
@@ -32,8 +35,10 @@ public class KeyStoreTrial {
 
 
         keyStoreTrial.load();//加载Key容器
+//        keyStoreTrial.build();//加载Key容器
 
-        keyStoreTrial.setPrivateKeyEntry();
+
+//        keyStoreTrial.setPrivateKeyEntry();
 //        keyStoreTrial.getPrivateKeyEntry();
 
 
@@ -44,6 +49,16 @@ public class KeyStoreTrial {
 //        keyStoreTrial.getTrustedCertificateEntry();
 
     }
+
+//    private void build() {
+//
+//        try {
+//
+//
+//        } catch (KeyStoreException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void getTrustedCertificateEntry() {
 
@@ -184,10 +199,19 @@ public class KeyStoreTrial {
     private void load() {
 
         try {
+            //创建KeyStore
             String type = KeyStore.getDefaultType();//默认是PKCS12
             ks = KeyStore.getInstance(type); //等价于KeyStore.getInstance("PKCS12")
 //            ks = KeyStore.getInstance("JKS");//无法存储对称加密密钥
 //            ks = KeyStore.getInstance("JCEKS");
+
+            //使用构建器创建KeyStore
+//            File file = new File("Security/res/keyStore");
+//            KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(null);
+//            ks = KeyStore.Builder
+//                    .newInstance(type, null, file, protectionParameter)
+//                    .getKeyStore();
+
 
             //加载Key容器
             char[] password = storePasswd.toCharArray();//容器密码
@@ -218,8 +242,11 @@ public class KeyStoreTrial {
 
 
     private void setPrivateKeyEntry() {
+        //方式一
+        storePriKey();
+    }
 
-
+    private void storePriKey() {
         try {
 
             //设置保护密码
@@ -248,7 +275,7 @@ public class KeyStoreTrial {
             }
 
 
-            //生成信任链
+            //生成证书链
             Certificate[] certificates = null;
             try (InputStream inStream = Files.newInputStream(Path.of("Security/res/ca/chain.crt"))) {
 //            try (InputStream inStream = Files.newInputStream(Path.of("Security/res/ca/chain.pem"))) {
@@ -268,7 +295,6 @@ public class KeyStoreTrial {
 
 
             // 存储私钥
-//            KeyStore.PrivateKeyEntry keyEntry = new KeyStore.PrivateKeyEntry(privateKey, certificates);
             KeyStore.PrivateKeyEntry keyEntry = new KeyStore.PrivateKeyEntry(privateKey, certificates);
             ks.setEntry("prikey", keyEntry, protParam);
 

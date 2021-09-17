@@ -1,13 +1,16 @@
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
-import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.security.cert.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 2019/7/29.
@@ -21,14 +24,53 @@ public class CertificateTrial {
 //        certificateTrial.certificate();//创建证书对象
 //        certificateTrial.principal();//创建证书主体信息
 //        certificateTrial.verify();//验证证书
-        certificateTrial.certPath();//创建信任链对象
+//        certificateTrial.certPath();//创建信任链对象
+        certificateTrial.trustManager();//创建受信管理器
+
+
+    }
+
+    private void trustManager() {
+
+        try (InputStream inStream = Files.newInputStream(Path.of("Security/res/test/chain.p7b"))) {
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");//创建工厂对象
+            Collection collection = cf.generateCertificates(inStream);//获取证书对象集
+            X509Certificate[] x509Certificates = (X509Certificate[]) collection.toArray(X509Certificate[]::new);
+
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("root", x509Certificates[1]);
+
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("PKIX");
+            // trustManagerFactory.init(keyStore);
+            trustManagerFactory.init((KeyStore) null);
+
+
+            X509TrustManager trustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+            System.out.println(trustManager.getAcceptedIssuers().length + "trustManager.getAcceptedIssuers() = " + trustManager.getAcceptedIssuers());
+
+
+            trustManager.checkServerTrusted(x509Certificates, "RSA");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateEncodingException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     private void principal() {
 
-        //        X500Principal x500Principal1 = new X500Principal("CN=");
+//        X500Principal x500Principal1 = new X500Principal("CN=");
 //        System.out.println("x500Principal1 = " + x500Principal1);
 //
 //        X500Principal x500Principal2 = new X500Principal("CN=, OU=b");
