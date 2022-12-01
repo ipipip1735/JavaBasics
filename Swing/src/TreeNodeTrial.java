@@ -1,6 +1,10 @@
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by Administrator on 2018/10/21.
@@ -11,11 +15,131 @@ public class TreeNodeTrial {
 //        treePathTrial.base();
 //        treePathTrial.add();
 //        treePathTrial.romove();
-        treePathTrial.enumeration();
+//        treePathTrial.enumeration();
 //        treePathTrial.status();
+
+
+        //创建数
+        DefaultMutableTreeNode root = treePathTrial.create();
+//        treePathTrial.depth(root, System.out::println); //打印
+
+        //复制
+//        DefaultMutableTreeNode root = treePathTrial.create(); //打印
+//        DefaultMutableTreeNode rootNew = treePathTrial.copy(root); //打印
+//        treePathTrial.depth(rootNew, System.out::println); //打印
+
+        //获取叶子节点
+//        DefaultMutableTreeNode root = treePathTrial.create();
+//        for (DefaultMutableTreeNode node : treePathTrial.getLeaves(root)) {
+//            System.out.println("node = " + node);
+//        }
     }
 
 
+    private DefaultMutableTreeNode create() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+        DefaultMutableTreeNode one = new DefaultMutableTreeNode("one");
+        DefaultMutableTreeNode two = new DefaultMutableTreeNode("two");
+        DefaultMutableTreeNode three = new DefaultMutableTreeNode("three");
+        DefaultMutableTreeNode four = new DefaultMutableTreeNode("four");
+        DefaultMutableTreeNode five = new DefaultMutableTreeNode("five");
+        DefaultMutableTreeNode six = new DefaultMutableTreeNode("six");
+        DefaultMutableTreeNode seven = new DefaultMutableTreeNode("seven");
+        DefaultMutableTreeNode eight = new DefaultMutableTreeNode("eight");
+        DefaultMutableTreeNode nine = new DefaultMutableTreeNode("nine");
+        DefaultMutableTreeNode ten = new DefaultMutableTreeNode("ten");
+
+        /* 拓扑图如下所示：
+         * root
+         *  |-one
+         *      |-four
+         *      |-five
+         *          |-seven
+         *              |-eight
+         *                  |-nine
+         *                      |-ten
+         *  |-two
+         *  |-three
+         *      |-six
+         */
+
+        //L1
+        root.add(one);
+        root.add(two);
+        root.add(three);
+
+        //L2
+        one.add(four);
+        one.add(five);
+        three.add(six);
+
+        //L3
+        five.add(seven);
+
+        //L4
+        seven.add(eight);
+
+        //L5
+        eight.add(nine);
+
+        //L6
+        nine.add(ten);
+
+
+        //遍历树
+//        root.preorderEnumeration().asIterator().forEachRemaining(System.out::println); //先根遍历
+//        root.postorderEnumeration().asIterator().forEachRemaining(System.out::println); //后根遍历
+//        root.breadthFirstEnumeration().asIterator().forEachRemaining(System.out::println); //广度遍历 或 层级优先遍历
+//        root.depthFirstEnumeration().asIterator().forEachRemaining(System.out::println); //深度优先遍历
+
+        //获取路径
+//        root.getFirstLeaf()
+//                .getNextLeaf()
+//                .pathFromAncestorEnumeration(root).asIterator()
+//                .forEachRemaining(System.out::println);
+
+        //获取路径数组
+        TreeNode[] nodes = root.getFirstLeaf().getNextLeaf().getPath();
+        Arrays.stream(nodes).forEach(System.out::println);
+
+
+        return root;
+    }
+
+    public DefaultMutableTreeNode copy(DefaultMutableTreeNode src) {
+
+        DefaultMutableTreeNode des = new DefaultMutableTreeNode("new - " + src.getUserObject());
+
+        src.children().asIterator().forEachRemaining(treeNode -> {
+            des.add(copy((DefaultMutableTreeNode) treeNode));
+        });
+
+        return des;
+    }
+
+    /**
+     * 深度优先遍历
+     *
+     * @param root
+     * @param consumer
+     */
+    private void depth(DefaultMutableTreeNode root, Consumer<DefaultMutableTreeNode> consumer) {
+        consumer.accept(root);
+        root.children().asIterator().forEachRemaining(treeNode ->
+                depth((DefaultMutableTreeNode) treeNode, consumer)
+        );
+    }
+
+    public List<DefaultMutableTreeNode> getLeaves(DefaultMutableTreeNode root) {
+
+        List<DefaultMutableTreeNode> list = new ArrayList<>();
+
+        for (DefaultMutableTreeNode node = root.getFirstLeaf(); node != null; node = node.getNextLeaf()) {
+            list.add(node);
+        }
+
+        return list;
+    }
 
     private void enumeration() {
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Root");
@@ -33,12 +157,11 @@ public class TreeNodeTrial {
         twoBNode.add(oneCNode);
 
         /*拓扑图如下所示：
-         *            Root
-         *       oneA    twoA
-         *    oneB         twoB
-         *                   oneC
-         *
-         * */
+         *         Root
+         *    oneA    twoA
+         * oneB         twoB
+         *                oneC
+         */
 
         Enumeration e;
         StringBuilder stringBuilder = new StringBuilder(128);
@@ -52,7 +175,6 @@ public class TreeNodeTrial {
         stringBuilder.delete(0, stringBuilder.length());
 
 
-
         //后根遍历
         e = rootNode.postorderEnumeration();
         while (e.hasMoreElements()) {
@@ -60,7 +182,6 @@ public class TreeNodeTrial {
         }
         System.out.println(stringBuilder.substring(0, stringBuilder.length() - 2));
         stringBuilder.delete(0, stringBuilder.length());
-
 
 
         //宽度优先遍历 或 层级遍历
@@ -90,7 +211,6 @@ public class TreeNodeTrial {
         stringBuilder.delete(0, stringBuilder.length());
 
 
-
         //返回所有子节点（不包括后代）
         e = rootNode.children();
         while (e.hasMoreElements()) {
@@ -98,7 +218,6 @@ public class TreeNodeTrial {
         }
         System.out.println(stringBuilder.substring(0, stringBuilder.length() - 2));
         stringBuilder.delete(0, stringBuilder.length());
-
 
 
     }
@@ -120,13 +239,12 @@ public class TreeNodeTrial {
         twoANode.add(twoBNode);
         twoBNode.add(oneCNode);
 
-        /*拓扑图如下所示：
-         *            Root
-         *       oneA    twoA
-         *    oneB         twoB
-         *                   oneC
-         *
-         * */
+        /* 拓扑图如下所示：
+         *         Root
+         *    oneA    twoA
+         * oneB         twoB
+         *                oneC
+         */
 
         rootNode.insert(threeANode, 1);
         /* 插入后的拓扑图如下所示：
@@ -135,8 +253,7 @@ public class TreeNodeTrial {
          *     oneA threeA twoA
          *  oneB              twoB
          *                        oneC
-         *
-         * */
+         */
 
         //遍历打印
         StringBuilder stringBuilder = new StringBuilder(128);
@@ -166,12 +283,11 @@ public class TreeNodeTrial {
         twoBNode.add(oneCNode);
 
         /*拓扑图如下所示：
-         *            Root
-         *       oneA    twoA
-         *    oneB         twoB
-         *                   oneC
-         *
-         * */
+         *         Root
+         *    oneA    twoA
+         * oneB         twoB
+         *                oneC
+         */
 
 //        rootNode.remove(twoANode);
         twoBNode.removeFromParent();
@@ -202,13 +318,12 @@ public class TreeNodeTrial {
         twoANode.add(oneBNode);
         oneBNode.add(oneCNode);
 
-        /*拓扑图如下所示：
-         *           Root
-         *       oneA   twoA
-         *                oneB
-         *                  oneC
-         *
-         * */
+        /* 拓扑图如下所示：
+         *     Root
+         * oneA   twoA
+         *          oneB
+         *            oneC
+         */
 
         System.out.println("isLeaf is " + oneBNode.isLeaf());
         System.out.println("isNodeAncestor​ is " + oneBNode.isNodeAncestor(rootNode));
@@ -234,13 +349,12 @@ public class TreeNodeTrial {
         twoANode.add(oneBNode);
         oneBNode.add(oneCNode);
 
-        /*拓扑图如下所示：
-         *           Root
-         *       oneA   twoA
-         *                oneB
-         *                  oneC
-         *
-         * */
+        /* 拓扑图如下所示：
+         *     Root
+         * oneA   twoA
+         *          oneB
+         *            oneC
+         */
 
 
 //        gets(rootNode);
