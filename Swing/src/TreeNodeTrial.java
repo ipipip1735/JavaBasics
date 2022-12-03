@@ -1,9 +1,6 @@
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -19,9 +16,13 @@ public class TreeNodeTrial {
 //        treePathTrial.status();
 
 
-        //创建数
+        //创建树
         DefaultMutableTreeNode root = treePathTrial.create();
-//        treePathTrial.depth(root, System.out::println); //打印
+
+
+//        treePathTrial.firstRoot(root, System.out::println); //先根遍历
+//        treePathTrial.depth(root, System.out::println); //先根遍历
+//        treePathTrial.breadth(root, System.out::println); //广度遍历
 
         //复制
 //        DefaultMutableTreeNode root = treePathTrial.create(); //打印
@@ -98,9 +99,18 @@ public class TreeNodeTrial {
 //                .pathFromAncestorEnumeration(root).asIterator()
 //                .forEachRemaining(System.out::println);
 
+
         //获取路径数组
-        TreeNode[] nodes = root.getFirstLeaf().getNextLeaf().getPath();
-        Arrays.stream(nodes).forEach(System.out::println);
+//        for (TreeNode node : root.getFirstLeaf().getNextLeaf().getPath()) System.out.println(node);
+
+
+        //获取任意路径节点
+////        DefaultMutableTreeNode current = six, destination = root; //节点6到根节点的路径
+//        DefaultMutableTreeNode current = ten, destination = seven; //节点10到节点6的路径
+//
+//        current.pathFromAncestorEnumeration(destination)
+//                .asIterator()
+//                .forEachRemaining(System.out::println);
 
 
         return root;
@@ -124,10 +134,43 @@ public class TreeNodeTrial {
      * @param consumer
      */
     private void depth(DefaultMutableTreeNode root, Consumer<DefaultMutableTreeNode> consumer) {
+        root.children()
+                .asIterator()
+                .forEachRemaining(treeNode -> depth((DefaultMutableTreeNode) treeNode, consumer));
+        consumer.accept(root);
+    }
+
+    /**
+     * 先根遍历
+     *
+     * @param root
+     * @param consumer
+     */
+    private void firstRoot(DefaultMutableTreeNode root, Consumer<DefaultMutableTreeNode> consumer) {
         consumer.accept(root);
         root.children().asIterator().forEachRemaining(treeNode ->
-                depth((DefaultMutableTreeNode) treeNode, consumer)
+                firstRoot((DefaultMutableTreeNode) treeNode, consumer)
         );
+    }
+
+    /**
+     * 广度遍历
+     *
+     * @param root
+     * @param consumer
+     */
+    private void breadth(DefaultMutableTreeNode root, Consumer<DefaultMutableTreeNode> consumer) {
+
+        Queue<DefaultMutableTreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            DefaultMutableTreeNode node = queue.remove();
+            consumer.accept(node);
+            node.children()
+                    .asIterator()
+                    .forEachRemaining(treeNode -> queue.add((DefaultMutableTreeNode) treeNode));
+        }
     }
 
     public List<DefaultMutableTreeNode> getLeaves(DefaultMutableTreeNode root) {
